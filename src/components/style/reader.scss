@@ -1,0 +1,40 @@
+@import './var.scss';
+
+.fc-reader {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+    background-color: $bg-reader;
+}
+
+.fc-reader-detail-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 30%;
+    z-index: 10;
+    display: block;
+    background-color: #fff;
+
+    &.has-bar {
+        top: $ht-filter-bar;
+    }
+
+    .fc-reader-detail-scroll {
+        height: 100%;
+    }
+}
+
+.fc-reader-body {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+
+    &.has-bar {
+        top: $ht-filter-bar;
+    }
+}

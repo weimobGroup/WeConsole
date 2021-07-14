@@ -1,0 +1,12 @@
+{
+    "component": true,
+    "usingComponents": {
+        "tabs": "../tabs/index",
+        "json-viewer": "../json-viewer/index",
+        "api-reader": "../api-reader/index",
+        "console-reader": "../console-reader/index",
+        "component-reader": "../component-reader/index",
+        "storage-reader": "../storage-reader/index",
+        "custom-action": "../custom-action/index"
+    }
+}

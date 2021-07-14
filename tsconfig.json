@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "lib": ["ES2020", "DOM"],
+        "module": "ES6",
+        "target": "ES6",
+        "moduleResolution": "Node",
+        "declaration": true
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}

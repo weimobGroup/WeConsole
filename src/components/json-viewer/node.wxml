@@ -1,0 +1,47 @@
+<import src="./chunk-left.wxml" />
+<import src="./chunk-right.wxml" />
+<block wx:if="{{data}}">
+    <view wx:if="{{data.node===true&&!data.value}}" class="json-node {{data.type}} {{data.open?'open':''}}">
+        <view class="json-node-content {{data.type==='object'&&!data.empty?'has-arrow':''}} {{data.open?'open':''}}" bind:tap="tap">
+            <view wx:if="{{data.type==='object'&&!data.empty}}" class="json-arrow" style="margin-top:{{fontSize*0.42}}rpx;{{data.open?'transform: rotate(90deg) translateX(4rpx) translateY(10rpx);':''}}"></view>
+            <template is="json-chunk-left" data="{{data, fontSize, smallFontSize}}"></template>
+            <block wx:if="{{data.content && data.content.length && (data.content[0].type||data.content[0].content)}}">
+                <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" class="json-node-content-item" wx:for="{{data.content}}" wx:key="index" data="{{item}}"></json-node>
+            </block>
+            <block wx:elif="{{data.content && data.content.type}}">
+                <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" class="json-node-content-item" data="{{data.content}}"></json-node>
+            </block>
+            <view wx:elif="{{data.content && data.content.length}}" class="json-content {{data.prop?'jn-prop':''}} {{data.className||''}} {{data.protected?'protected':''}} {{data.type?data.type:''}}" style="font-size:{{data.prop?smallFontSize:fontSize}}rpx;">{{data.content}}</view>
+            <template is="json-chunk-right" data="{{data, fontSize, smallFontSize}}"></template>
+        </view>
+        <view wx:if="{{data.open && data.tree}}" class="json-tree">
+            <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" wx:for="{{data.tree}}" data="{{item}}" wx:key="index" bind:toggle="toggle"></json-node>
+        </view>
+    </view>
+    <block wx:elif="{{data.node===true && data.value===true}}">
+        <template is="json-chunk-left" data="{{data, fontSize, smallFontSize}}"></template>
+        <block wx:if="{{data.content}}">
+            <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" class="json-value-item" wx:if="{{data.content.type}}" data="{{data.content}}"></json-node>
+            <block wx:if="{{data.content.length && (data.content[0].type||data.content[0].content)}}">
+                <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" class="json-value-item" wx:for="{{data.content}}" wx:key="index" data="{{item}}" bind:toggle="toggle"></json-node>
+            </block>
+            <view wx:elif="{{data.content.length}}" class="json-content {{data.prop?'jn-prop':''}} {{data.className||''}} {{item.protected?'protected':''}} {{data.type?data.type:''}}" style="font-size:{{fontSize}}rpx;">{{data.content}}</view>
+        </block>
+        <template is="json-chunk-right" data="{{data, fontSize, smallFontSize}}"></template>
+    </block>
+    <view wx:elif="{{data.row===true}}" class="json-row {{data.value && data.value.type==='object'&&!data.value.empty?'has-arrow':''}} {{data.open?'open':''}}">
+        <view wx:if="{{data.value && data.value.type==='object'&&!data.value.empty}}" class="json-arrow" style="margin-top:{{fontSize*0.42}}rpx;{{data.open?'transform: rotate(90deg) translateX(4rpx) translateY(8rpx);':''}}"></view>
+        <view class="json-row-content" bind:tap="{{data.value.type==='compute'?'':'tap'}}">
+            <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" class="json-row-item" wx:if="{{data.prop}}" data="{{data.prop}}"></json-node>
+            <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" class="json-row-item" wx:if="{{data.value}}" data="{{data.value}}" bind:toggle="toggle"></json-node>
+        </view>
+        <view wx:if="{{data.open && data.tree}}" class="json-tree">
+            <json-node smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}" wx:for="{{data.tree}}" wx:key="index" data="{{item}}" bind:toggle="toggle"></json-node>
+        </view>
+    </view>
+    <view wx:else class="json-chunk {{data.type}}" bind:tap="{{data.type==='compute'?'tapChunk':''}}">
+        <template is="json-chunk-left" data="{{data, fontSize, smallFontSize}}"></template>
+        <view wx:if="{{data.content}}" class="json-content {{data.prop?'jn-prop':''}} {{data.className||''}} {{data.protected?'protected':''}} {{data.type?data.type:''}}" style="font-size:{{data.type==='compute'?smallFontSize:fontSize}}rpx;">{{data.content}}</view>
+        <template is="json-chunk-right" data="{{data, fontSize, smallFontSize}}"></template>
+    </view>
+</block>

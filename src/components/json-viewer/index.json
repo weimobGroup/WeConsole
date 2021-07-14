@@ -1,0 +1,7 @@
+{
+    "component": true,
+    "usingComponents": {
+        "json-node": "./node",
+        "tabs": "../tabs/index"
+    }
+}

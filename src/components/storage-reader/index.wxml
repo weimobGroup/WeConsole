@@ -1,0 +1,19 @@
+<view class="fc-reader fc-re-storage">
+    <filter-bar bind:clear="clear" bind:filter="filter" bind:remove="remove" bind:refresh="replaceData" refresh filter clear remove>
+        <view class="progress-bar {{sizeProgress>60&&sizeProgress<90?'warn':''}} {{sizeProgress>90?'danger':''}}">
+            <view class="progress-val" style="width:{{sizeProgress}}%;"></view>
+            <view class="progress-text">{{currentSize}}kb/{{limitSize}}kb</view>
+        </view>
+    </filter-bar>
+    <data-grid class="fc-reader-body has-bar" outerClass="fc-api-datagrid {{detailMaterialId&& detailFrom!=='longpressRow'?'show-detail':''}}" vlItemHeight="{{30}}" selected="{{detailMaterialId}}" affixable affixIds="{{affixIds}}" cols="{{readerCols}}" bind:ready="gridReady" bind:tapCell="tapGridCell" bind:longpressRow="longpressGridRow"></data-grid>
+    <view wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" class="fc-reader-detail-container has-th has-bar">
+        <scroll-view class="fc-detail" scroll-y>
+            <json-viewer from="StorageDetail_{{detailMaterialId}}">
+                <view class="fc-detail-action right-border" bind:tap="setDetailMaterial" slot="tabHeadBefore">
+                    <view class="fc-detail-close wic-close"></view>
+                </view>
+                <view slot="tabHeadAfter" class="fc-detail-action absolute btn-link" bind:tap="copyDetail">Copy</view>
+            </json-viewer>
+        </scroll-view>
+    </view>
+</view>

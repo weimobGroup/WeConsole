@@ -1,0 +1,5 @@
+<template name="json-chunk-left">
+    <view wx:if="{{data.className}}" class="class-name {{data.prop?'jn-prop':''}} {{data.className}} {{data.protected?'protected':''}} {{data.type?data.type:''}} {{belong?('belong-'+belong):''}}" style="font-size:{{data.type==='compute'?smallFontSize:fontSize}}rpx;">{{data.className}}</view>
+    <view wx:if="{{data.remark}}" class="jn-remark {{data.className||''}} {{data.prop?'jn-prop':''}} {{data.protected?'protected':''}} {{data.type?data.type:''}} {{belong?('belong-'+belong):''}}" style="font-size:{{data.type==='compute'?smallFontSize:fontSize}}rpx;">{{data.remark}}</view>
+    <view wx:if="{{data.leftBoundary}}" class="left-boundary {{data.className||''}} {{data.prop?'jn-prop':''}} {{data.protected?'protected':''}} {{data.type?data.type:''}} {{belong?('belong-'+belong):''}}" style="font-size:{{data.type==='compute'?smallFontSize:fontSize}}rpx;">{{data.leftBoundary}}</view>
+</template>

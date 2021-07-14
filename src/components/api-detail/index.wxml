@@ -1,0 +1,126 @@
+<view wx:if="{{loading}}" class="fc-detail fc-status-container fc-status-loading">
+    <view class="fc-status-msg">正在获取详情数据...</view>
+    <view class="btn-link fc-status-action" bindtap="close">关闭</view>
+</view>
+<view wx:elif="{{error}}" class="fc-detail fc-status-container fc-status-error">
+    <view class="fc-status-msg">{{error}}</view>
+    <view class="btn-link fc-status-action" bindtap="close">关闭</view>
+</view>
+<tabs wx:elif="{{detail && detail.id}}" class="fc-detail" tabs="{{tabs}}" active="{{activeTabIndex}}"  size="small" bind:change="setTab">
+    <view slot="headBefore" class="fc-detail-action right-border" bindtap="close">
+        <view class="fc-detail-close wic-close"></view>
+    </view>
+    <scroll-view wx:if="{{activeTabIndex===0}}" slot="panel-headers" class="detail-tab-panel" scroll-y>
+        <view class="detail-tab-plc"></view>
+        <collapse open="{{true}}">
+            <view class="fc-detail-title" slot="head">General</view>
+            <view wx:for="{{detail.general}}" class="{{item.name!=='$$HR$$'?'fc-headers-item':'fc-headers-hr'}}" wx:key="name">
+                <block wx:if="{{item.name!=='$$HR$$'}}">
+                    <view class="fc-headers-name">{{item.name}}</view>
+                    <view wx:if="{{item.name==='Work Status'}}" class="fc-headers-val">
+                        {{item.value}}
+                        <view wx:if="{{item.remark}}" class="fc-headers-remark">
+                            ({{item.remark}})
+                        </view>
+                    </view>
+                    <view wx:else class="fc-headers-val {{item.name==='Status Code'?(item.value!==200?'fc-status-error':'fc-status-success'):''}}">
+                        {{item.value}}
+                    </view>
+                </block>
+            </view>
+        </collapse>
+        <collapse wx:if="{{detail.responseHeaders}}">
+            <view class="fc-detail-title" slot="head">Response Headers</view>
+            <view wx:for="{{detail.responseHeaders}}" class="{{item.name!=='$$HR$$'?'fc-headers-item':'fc-headers-hr'}}" wx:key="name">
+                <block wx:if="{{item.name!=='$$HR$$'}}">
+                    <view class="fc-headers-name">{{item.name}}</view>
+                    <view class="fc-headers-val">{{item.value}}</view>
+                </block>
+            </view>
+        </collapse>
+        <collapse wx:if="{{detail.requestHeaders}}">
+            <view class="fc-detail-title" slot="head">Request Headers</view>
+            <view wx:for="{{detail.requestHeaders}}" class="{{item.name!=='$$HR$$'?'fc-headers-item':'fc-headers-hr'}}" wx:key="name">
+                <block wx:if="{{item.name!=='$$HR$$'}}">
+                    <view class="fc-headers-name">{{item.name}}</view>
+                    <view class="fc-headers-val">{{item.value}}</view>
+                </block>
+            </view>
+        </collapse>
+        <collapse wx:if="{{detail.queryStringParameters}}" open="{{true}}">
+            <view class="fc-detail-title" slot="head">Query String</view>
+            <view wx:for="{{detail.queryStringParameters}}" class="{{item.name!=='$$HR$$'?'fc-headers-item':'fc-headers-hr'}}" wx:key="name">
+                <block wx:if="{{item.name!=='$$HR$$'}}">
+                    <view class="fc-headers-name">{{item.name}}</view>
+                    <view class="fc-headers-val">{{item.value}}</view>
+                </block>
+            </view>
+        </collapse>
+        <collapse wx:if="{{detail.originalRequestData}}" open="{{true}}">
+            <view class="fc-detail-title" slot="head">Request Data</view>
+            <json-viewer init="{{false}}" from="ApiDetail_{{detail.id}}_RequestData"></json-viewer>
+        </collapse>
+        <collapse>
+            <view class="fc-detail-title" slot="head">Options</view>
+            <json-viewer mode="{{1}}" init="{{false}}" from="ApiDetail_{{detail.id}}_Options"></json-viewer>
+        </collapse>
+        <view class="detail-tab-plc"></view>
+    </scroll-view>
+    <scroll-view wx:if="{{activeTabIndex===1}}" slot="panel-preview" class="detail-tab-panel" scroll-y>
+        <view class="detail-tab-plc"></view>
+        <collapse title="preview">
+            <view class="fc-detail-title" slot="head">Result</view>
+            <json-viewer mode="{{2}}" init="{{false}}" from="ApiDetail_{{detail.id}}_PreviewResult"></json-viewer>
+        </collapse>
+        <collapse open="{{true}}">
+            <view class="fc-detail-title" slot="head">Response</view>
+            <json-viewer mode="{{2}}" init="{{false}}" from="ApiDetail_{{detail.id}}_PreviewResponse"></json-viewer>
+        </collapse>
+        <view class="detail-tab-plc"></view>
+    </scroll-view>
+    <scroll-view wx:if="{{activeTabIndex===2}}" slot="panel-response" class="detail-tab-panel" scroll-y>
+        <view class="detail-tab-plc"></view>
+        <collapse>
+            <view class="fc-detail-title" slot="head">Result</view>
+            <json-viewer mode="{{3}}" init="{{false}}" from="ApiDetail_{{detail.id}}_Result"></json-viewer>
+        </collapse>
+        <collapse>
+            <view class="fc-detail-title" slot="head">Response</view>
+            <json-viewer mode="{{3}}" init="{{false}}" from="ApiDetail_{{detail.id}}_Response"></json-viewer>
+        </collapse>
+        <view class="detail-tab-plc"></view>
+    </scroll-view>
+    <!-- <scroll-view wx:if="{{activeTabIndex===3}}" slot="panel-initiator" class="detail-tab-panel" scroll-y>
+        <view class="detail-tab-plc"></view>
+        <collapse>
+            <view class="fc-detail-title" slot="head">
+                Call stack
+                <view class="btn-link collapse-action" catchtap="toggleVisableStackHooks">
+                    {{stackHideHooks?'Show':'Hide'}}hooks
+                </view>
+            </view>
+            <view wx:for="{{detail.stack}}" class="fc-headers-item fc-headers-stack" wx:key="index">
+                <view class="fc-headers-name">{{item.name}}</view>
+                <view wx:if="{{item.value}}" class="fc-headers-val">@{{item.value}}</view>
+            </view>
+        </collapse>
+        <json-viewer target="{{stack}}"></json-viewer>
+        <view class="detail-tab-plc"></view>
+    </scroll-view> -->
+    <view wx:if="{{activeTabIndex===3}}" slot="panel-cookies" class="detail-tab-panel">
+        <view class="detail-tab-plc"></view>
+        <view class="fc-table-container">
+            <view class="fc-table">
+                <view class="fc-table-tr">
+                    <view class="fc-table-th" style="width:30%">Name</view>
+                    <view class="fc-table-th">Value</view>
+                </view>
+                <view wx:for="{{detail.cookies}}" class="fc-table-tr {{index%2?'fc-table-tr-odd':'fc-table-tr-even'}}" wx:key="name">
+                    <view class="fc-table-td">{{item.name}}</view>
+                    <view class="fc-table-td">{{item.value}}</view>
+                </view>
+            </view>
+        </view>
+        <view class="detail-tab-plc"></view>
+    </view>
+</tabs>

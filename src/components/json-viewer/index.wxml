@@ -1,0 +1,12 @@
+<tabs wx:if="{{mode==1}}" tabs="{{tabs}}" active="{{activeTab}}" outerClass="json-tabs {{outerClass}}" headScroll="{{false}}" bodyFill="{{false}}" size="small" bind:change="changeTab">
+    <slot name="tabHeadBefore" slot="headBefore"></slot>
+    <slot name="tabHeadAfter" slot="headAfter"></slot>
+    <view slot="panel-3" class="json-string {{outerClass}}">{{JSONString}}</view>
+    <view slot="panel-2" class="json-viewer {{outerClass}}">
+        <json-node wx:if="{{root}}" data="{{root}}" bind:toggle="toggle" smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}"></json-node>
+    </view>
+</tabs>
+<view wx:elif="{{mode==2}}" class="json-viewer {{outerClass}}">
+    <json-node wx:if="{{root}}" data="{{root}}" bind:toggle="toggle" smallFontSize="{{smallFontSize}}" fontSize="{{fontSize}}"></json-node>
+</view>
+<view wx:elif="{{mode==3 && JSONString}}" class="json-string {{outerClass}}">{{JSONString}}</view>

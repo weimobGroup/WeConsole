@@ -1,0 +1,61 @@
+@import './var.scss';
+@import './icon.scss';
+
+.fc-detail {
+    display: block;
+    height: 100%;
+    background-color: #fff;
+    border-left: 2px solid $bg-th-bar-border;
+
+    &.fc-status-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 12rpx;
+        color: $cr-muted;
+
+        .fc-status-action {
+            margin-top: 15rpx;
+        }
+    }
+}
+
+.btn-link {
+    font-size: inherit;
+    color: $cr-link;
+    text-decoration: underline;
+}
+
+.fc-detail-close {
+    @include wic;
+    @include ic-close;
+
+    width: ($ht-tab-bar - 20rpx) / 2.2;
+    height: ($ht-tab-bar - 20rpx) / 2.2;
+}
+
+.fc-detail-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $ht-tab-bar - 20rpx;
+    height: $ht-tab-bar - 20rpx;
+
+    &.absolute {
+        position: absolute;
+        z-index: 5;
+    }
+
+    &.right-border {
+        &::after {
+            position: absolute;
+            top: 10rpx;
+            right: 0;
+            bottom: 10rpx;
+            width: 1rpx;
+            content: '';
+            background-color: $bg-tab-border;
+        }
+    }
+}

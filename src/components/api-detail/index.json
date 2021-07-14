@@ -1,0 +1,8 @@
+{
+    "component": true,
+    "usingComponents": {
+        "tabs": "../tabs/index",
+        "collapse": "../collapse/index",
+        "json-viewer": "../json-viewer/index"
+    }
+}

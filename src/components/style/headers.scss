@@ -1,0 +1,53 @@
+@import './var.scss';
+
+.fc-headers-item {
+    padding: 8rpx 10rpx;
+    font-family: $ft-code;
+    font-size: 24rpx;
+    line-height: 1.6;
+    color: #545454;
+
+    &:active {
+        color: $cr-active !important;
+        background-color: $bg-active;
+    }
+}
+
+// .fc-headers-stack {
+//     .fc-headers-name {
+//         &:after {
+//             display: none;
+//         }
+//     }
+// }
+
+.fc-headers-hr {
+    margin: 6rpx 0;
+    border-bottom: 1px solid $bg-tab-border;
+}
+
+.fc-headers-name {
+    font-family: $ft-name;
+    font-weight: bold;
+
+    &::after {
+        display: inline;
+        margin-right: 8rpx;
+        margin-left: 2rpx;
+        content: ':';
+    }
+}
+
+.fc-headers-remark {
+    display: inline;
+    font-size: 20rpx;
+    opacity: 0.7;
+}
+
+.fc-headers-name,
+.fc-headers-key,
+.fc-headers-val {
+    display: inline;
+    word-break: break-all;
+    white-space: normal;
+}

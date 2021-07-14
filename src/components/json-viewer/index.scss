@@ -1,0 +1,24 @@
+@import '../style/var.scss';
+
+.json-viewer {
+    padding: 20rpx;
+    font-family: $ft-code;
+    font-size: 0;
+    line-height: 0;
+    color: #424242;
+
+    &.console-jw {
+        display: inherit;
+        min-width: 100%;
+        padding: 0;
+    }
+}
+
+.json-string {
+    padding: 20rpx;
+    font-family: $ft-code;
+    font-size: 20rpx;
+    color: #424242;
+    word-break: break-all;
+    white-space: pre-wrap;
+}

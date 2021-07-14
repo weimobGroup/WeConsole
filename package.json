@@ -1,0 +1,69 @@
+{
+    "name": "weconsole",
+    "version": "1.0.4",
+    "description": "功能全面、界面与体验对标 Chrome devtools 的可定制化的小程序开发调试面板",
+    "main": "dist/npm/index.js",
+    "types": "dist/npm/index.d.ts",
+    "miniprogram": "dist/npm",
+    "files": [
+        "dist",
+        "LICENSE"
+    ],
+    "scripts": {
+        "eslint": "npx eslint 'src/**/*.ts' 'build/**/*.js' '*.js'",
+        "stylelint": "npx stylelint 'src/**/*.scss'",
+        "fix:es": "npx eslint 'src/**/*.ts' 'build/**/*.js' '*.js' --fix",
+        "fix:style": "npx stylelint 'src/**/*.scss' --fix",
+        "lint": "npm run eslint && npm run stylelint",
+        "build:npm": "npx tsc --outDir ./dist/npm && node ./build/npm.js",
+        "build:full": "npx tsc --outDir ./dist/full && node ./build/full.js",
+        "build": "npm run lint && npm run build:npm && npm run build:full",
+        "dev": "npx tsc --outDir ./dist/full -w && node ./build/watch.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/weimobGroup/WeConsole.git"
+    },
+    "keywords": [],
+    "author": {
+        "name": "weimob",
+        "email": "weimob-tech@weimob.com"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/weimobGroup/WeConsole/issues"
+    },
+    "homepage": "https://github.com/weimobGroup/WeConsole#readme",
+    "devDependencies": {
+        "@mpkit/mpxml-parser": "^1.1.2",
+        "@typescript-eslint/eslint-plugin": "^4.28.2",
+        "@typescript-eslint/parser": "^4.28.2",
+        "autoprefixer": "^10.2.4",
+        "cssnano": "^5.0.6",
+        "eslint": "^7.30.0",
+        "eslint-config-alloy": "^4.1.0",
+        "eslint-config-standard": "^16.0.3",
+        "eslint-plugin-import": "^2.23.4",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-promise": "^5.1.0",
+        "eslint-plugin-standard": "^5.0.0",
+        "fse": "^4.0.1",
+        "junk": "^3.1.0",
+        "node-sass": "^5.0.0",
+        "postcss": "^8.3.5",
+        "relative": "^3.0.2",
+        "stylelint": "^13.13.1",
+        "stylelint-config-recess-order": "^2.4.0",
+        "stylelint-config-standard": "^22.0.0",
+        "stylelint-order": "^4.1.0",
+        "stylelint-scss": "^3.19.0",
+        "terser": "^5.7.1",
+        "typescript": "^4.3.5",
+        "watch": "^1.0.2"
+    },
+    "dependencies": {
+        "@mpkit/func-helper": "^1.1.2",
+        "@mpkit/types": "^1.1.2",
+        "@mpkit/util": "^1.1.2"
+    }
+}

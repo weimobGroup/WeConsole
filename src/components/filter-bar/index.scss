@@ -1,0 +1,131 @@
+@import '../style/var.scss';
+@import '../style/icon.scss';
+
+.fc-filter-bar {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    height: $ht-filter-bar;
+    font-size: $sz-filter-bar;
+    color: $cr-filter-bar;
+    background-color: $bg-filter-bar;
+    border-bottom: 2px solid $bg-filter-bar-border;
+
+    &.has-refresh {
+        .fc-filter-items {
+            padding-left: 0;
+        }
+    }
+
+    &.has-remove.has-clear {
+        .fc-filter-main {
+            width: 740rpx - ($ht-filter-bar + $ht-filter-bar);
+        }
+    }
+
+    &.has-remove,
+    &.has-clear {
+        .fc-filter-main {
+            width: 740rpx - $ht-filter-bar;
+        }
+    }
+}
+
+.fc-filter-items {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    height: 100%;
+    padding: 0 15rpx;
+}
+
+.fc-filter-input {
+    flex-shrink: 0;
+    width: 200rpx;
+    height: $ht-filter-bar - 16rpx;
+    padding: 0 5rpx;
+    margin-right: 15rpx;
+    font-size: $sz-filter-bar - 4rpx;
+    font-weight: bold;
+    line-height: $ht-filter-bar - 16rpx;
+    background-color: #fff;
+}
+
+.fc-filter-category {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    padding: 8rpx 10rpx;
+    margin-right: 15rpx;
+    line-height: 1;
+    border-radius: 4rpx;
+
+    &.active {
+        color: $cr-filter-active;
+        background-color: $bg-filter-active;
+    }
+}
+
+.fc-filter-category-br {
+    height: 100%;
+    margin-right: 15rpx;
+}
+
+.fc-filter-category-br,
+.fc-filter-actions {
+    position: relative;
+    z-index: 5;
+
+    &::after {
+        position: absolute;
+        top: $ht-filter-bar / 4;
+        bottom: $ht-filter-bar / 4;
+        left: 1px;
+        width: 1rpx;
+        content: '';
+        background-color: $bg-filter-bar-border;
+    }
+}
+
+.fc-filter-main,
+.fc-filter-actions {
+    height: 100%;
+}
+
+.fc-filter-main {
+    flex-grow: 0;
+}
+
+.fc-filter-actions {
+    display: flex;
+    flex-shrink: 0;
+}
+
+.fc-filter-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $ht-filter-bar;
+    height: $ht-filter-bar;
+}
+
+.fc-filter-clear,
+.fc-filter-remove,
+.fc-filter-refresh {
+    @include wic;
+
+    width: $ht-filter-bar / 2;
+    height: $ht-filter-bar / 2;
+}
+
+.fc-filter-refresh {
+    @include ic-refresh;
+}
+
+.fc-filter-clear {
+    @include ic-clear;
+}
+
+.fc-filter-remove {
+    @include ic-close;
+}

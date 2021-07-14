@@ -1,0 +1,41 @@
+@import './var.scss';
+
+.fc-table-container {
+    padding: 15rpx;
+}
+
+.fc-table {
+    display: table;
+    width: 100%;
+    font-size: 20rpx;
+    color: $cr-bar;
+    border-collapse: collapse;
+    border: 1px solid $bg-tab-border;
+}
+
+.fc-table-tr {
+    display: table-row;
+}
+
+.fc-table-tr-even {
+    background-color: $bg-row-odd;
+}
+
+.fc-table-tr-odd {
+    background-color: $bg-row-even;
+}
+
+.fc-table-th,
+.fc-table-td {
+    display: table-cell;
+    padding: 6rpx;
+    word-break: break-all;
+    white-space: normal;
+    border-right: 1px solid $bg-tab-border;
+}
+
+.fc-table-th {
+    font-size: 22rpx;
+    background-color: $bg-tab-head;
+    border-bottom: 1px solid $bg-tab-border;
+}

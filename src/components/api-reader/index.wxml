@@ -1,0 +1,5 @@
+<view class="fc-reader fc-re-api">
+    <filter-bar categorys="{{categoryList}}" activeCategory="{{activeCategory}}" bind:category="onCategoryChange" bind:clear="clear" bind:filter="filter" filter clear></filter-bar>
+    <data-grid class="fc-reader-body has-bar" outerClass="fc-api-datagrid {{detailMaterialId&& detailFrom!=='longpressRow'?'show-detail':''}}" rowClass="method" vlPageSize="{{gridPageSize}}" vlItemHeight="{{40}}" selected="{{detailMaterialId}}" affixable affixIds="{{affixIds}}" cols="{{readerCols}}" bind:ready="gridReady" bind:tapCell="tapGridCell" bind:longpressRow="longpressGridRow"></data-grid>
+    <api-detail wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" data="{{detailMaterialId}}" tab="{{detailTab}} " class="fc-reader-detail-container has-th has-bar" bind:changeTab="changeDetailTab" bind:close="clearDetailMaterial"></api-detail>
+</view>

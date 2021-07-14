@@ -1,0 +1,24 @@
+<view class="fc-reader fc-re-view">
+    <!-- <filter-bar bind:filter="filter" filter></filter-bar> -->
+    <view class="fc-reader-body">
+        <scroll-view class="wc-elements" scroll-y>
+            <wc-element data="{{root}}" bind:toggle="toggle" bind:tapName="showJSON" selectId="{{selectId}}"></wc-element>
+        </scroll-view>
+        <view wx:if="{{detailId}}" class="fc-reader-detail">
+            <view class="action-bar">
+                <view class="fc-detail-action absolute right-border" bind:tap="clearDetail">
+                    <view class="fc-detail-close wic-close"></view>
+                </view>
+                <view wx:if="{{detailLable}}" class="detail-label">
+                    <scroll-view scroll-x style="width:100%;white-space: nowrap;">{{detailLable}}</scroll-view>
+                </view>
+            </view>
+            <view class="detail-scroll">
+                <scroll-view scroll-y style="height:100%">
+                    <view wx:if="{{!detailAlive}}" class="death-tip">该组件实例已不在节点树中</view>
+                    <json-viewer from="View_{{detailId}}" mode="{{2}}" init="{{false}}"></json-viewer>
+                </scroll-view>
+            </view>
+        </view>
+    </view>
+</view>
