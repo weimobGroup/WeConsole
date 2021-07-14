@@ -1,0 +1,44 @@
+@import '../style/var.scss';
+@import '../style/reader.scss';
+@import '../style/icon.scss';
+@import '../style/detail.scss';
+
+.btn-link {
+    top: 0;
+    right: 15rpx;
+    font-size: 80%;
+}
+
+.progress-bar {
+    position: relative;
+    min-width: 224rpx;
+    height: 44rpx;
+    margin: 0 5rpx;
+    overflow: hidden;
+    background-color: #cdcdcd;
+    border-radius: 8rpx;
+    box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, 0.1);
+
+    &.warn {
+        .progress-val {
+            background-color: #f0ad4e;
+        }
+    }
+
+    &.danger {
+        .progress-val {
+            background-color: #d9534f;
+        }
+    }
+}
+
+.progress-val {
+    height: 100%;
+    background-color: #5cb85c;
+}
+
+.progress-text {
+    position: absolute;
+    top: 6rpx;
+    left: 10rpx;
+}

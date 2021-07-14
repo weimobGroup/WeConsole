@@ -1,0 +1,63 @@
+@import '../style/var.scss';
+
+.ca-button {
+    box-sizing: border-box;
+    display: block;
+    height: 60rpx;
+    padding: 0 20rpx;
+    margin-bottom: 15rpx;
+    overflow: hidden;
+    font-size: 24rpx;
+    line-height: 60rpx;
+    color: #fff;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: $bg-primary;
+    border-radius: 30rpx;
+
+    &:disabled,
+    &.disabled {
+        opacity: 0.5;
+    }
+}
+
+.ca-scroll {
+    height: 100%;
+}
+
+.ca-section {
+    padding: 20rpx;
+}
+
+.ca-text {
+    padding: 0 15rpx;
+    font-size: 24rpx;
+    line-height: 1.4;
+    word-break: break-all;
+    white-space: normal;
+}
+
+.ca-err {
+    padding: 0 15rpx;
+    font-family: $ft-code;
+    font-size: 24rpx;
+    line-height: 1.4;
+    color: $cr-error;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.ca-container {
+    position: relative;
+    height: 100%;
+}
+
+.ca-grid,
+.ca-component {
+    position: absolute;
+    top: 100rpx;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}

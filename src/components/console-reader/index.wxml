@@ -1,0 +1,23 @@
+<import src="./row.wxml" />
+<view class="fc-reader fc-re-console" bind:tap="selectRow">
+    <filter-bar categorys="{{categoryList}}" activeCategory="{{activeCategory}}" bind:category="onCategoryChange" bind:clear="clear" bind:filter="filter" filter clear></filter-bar>
+    <!-- 吸顶的数据 -->
+    <scroll-view class="console-affixs" wx:if="{{affixList && affixList.length}}" class="console-affixs" scroll-y="{{true}}">
+            <block wx:for="{{affixList}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="id">
+                <template is="data-row" data="{{row, rowIndex, type:'affix', selectRowId,selectRowFrom, heightMap:$vlItemHeightMap}}"></template>
+            </block>
+        </scroll-view>
+    <!-- 正常的数据 -->
+    <view class="fc-reader-body has-bar" style="margin-top:{{scrollMarginTop}}">
+        <scroll-view scroll-y class="vl-scroller" bindscroll="localVlScroll" scroll-top="{{$vlScrollTop}}">
+            <view class="vl-list-placeholder is-start" style="height:{{ $vlStartPlaceholderHeight }}px;"></view>
+            <view class="vl-list">
+                <view wx:for="{{ $vlShowList }}" wx:for-item="$vlItem" wx:for-index="$vlItemIndex" wx:key="id" class="vl-item-container vl-item-{{$vlItem.id}}">
+                    <template is="data-row" data="{{row:$vlItem,rowIndex:$vlItem.$vlIndex,selectRowId,selectRowFrom, heightMap:$vlItemHeightMap}}"></template>
+                </view>
+            </view>
+            <view class="vl-list-placeholder is-end" style="height:{{ $vlEndPlaceholderHeight }}px;"></view>
+            <view class="vl-list-placeholder is-patch"></view>
+        </scroll-view>
+    </view>
+</view>

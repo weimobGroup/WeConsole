@@ -1,0 +1,30 @@
+<template name="data-grid-row">
+    <view
+        wx:key="id"
+        class="fc-datagrid-row fc-i{{rowIndex}} fc-{{rowIndex%2===0?'even':'odd'}} fc-{{row.code||''}} {{rowClass?(row[rowClass]?('fc-datagrid-row-'+row[rowClass]):rowClass):''}} row{{row.id}} {{selectedMap[row.id]?'fc-selected':''}}"
+        data-rowid="{{row.id}}"
+        data-type="{{type}}"
+        bindtap="tapRow"
+        bindlongpress="longpressRow"
+    >
+        <view
+            wx:for="{{cols}}"
+            wx:for-item="col"
+            wx:for-index="colIndex"
+            wx:key="field"
+            class="fc-datagrid-col {{col.visable===false?'fc-hide':''}} fc-i{{colIndex}} {{colIndex===cols.length-1?'fc-last':''}} {{col.wrap===false?'fc-nowrap':''}}"
+            style="width:{{columnWidthMap[col.field]}}%;height:{{vlItemHeight?(vlItemHeight+'px'):''}};"
+            bindtap="tapCell"
+            data-col="{{colIndex}}"
+            data-rowid="{{row.id}}"
+        >
+            <block wx:if="{{row[col.field].json===1}}">
+                <json-viewer mode="{{2}}" init="{{false}}" from="GridCol_{{row[col.field].key}}"></json-viewer>
+            </block>
+            <block wx:else>
+                <view class="fc-datagrid-col-content">{{row[col.field]}}</view>
+                <view wx:if="{{row[col.field+'Desc']}}" class="fc-datagrid-col-desc">{{row[col.field+'Desc']}}</view>
+            </block>
+        </view>
+    </view>
+</template>

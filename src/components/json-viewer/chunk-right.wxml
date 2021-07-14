@@ -1,0 +1,3 @@
+<template name="json-chunk-right">
+    <view wx:if="{{data.rightBoundary}}" class="right-boundary {{data.className||''}} {{data.prop?'jn-prop':''}} {{data.protected?'protected':''}} {{data.type?data.type:''}} {{belong?('belong-'+belong):''}}" style="font-size:{{data.type==='compute'?smallFontSize:fontSize}}rpx;">{{data.rightBoundary}}</view>
+</template>

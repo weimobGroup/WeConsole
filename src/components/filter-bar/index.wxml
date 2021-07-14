@@ -1,0 +1,27 @@
+<view class="fc-filter-bar {{refresh?'has-refresh':''}} {{clear?'has-clear':''}} {{remove ?'has-remove':''}}">
+    <scroll-view scroll-x class="fc-filter-main">
+        <view class="fc-filter-items">
+            <view wx:if="{{refresh}}" class="fc-filter-action" bindtap="onRefresh">
+                <view class="fc-filter-refresh wic-refresh">
+                    <view class="wic-arrow-1"></view>
+                </view>
+            </view>
+            <input wx:if="{{filter}}" type="text" placeholder="{{filterPlaceholder}}" class="fc-filter-input" maxlength="-1" bindconfirm="onFilterConfirm" />
+            <block wx:if="{{categorys && categorys.length}}">
+                <view class="fc-filter-category-br"></view>
+                <view class="fc-filter-category {{activeCategory===item.value?'active':''}}" wx:for="{{categorys}}" bindtap="tapCategory" data-val="{{item.value}}" wx:key="value">
+                    {{item.name}}
+                </view>
+            </block>
+            <slot></slot>
+        </view>
+    </scroll-view>
+    <view wx:if="{{remove || clear}}" class="fc-filter-actions">
+        <view wx:if="{{remove}}" class="fc-filter-action" bindtap="onRemove">
+            <view class="fc-filter-remove wic-close"></view>
+        </view>
+        <view wx:if="{{clear}}" class="fc-filter-action" bindtap="onClear">
+            <view class="fc-filter-clear wic-clear"></view>
+        </view>
+    </view>
+</view>

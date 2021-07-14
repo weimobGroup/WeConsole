@@ -17,7 +17,7 @@
 
 我们将这款工具命名为`Weimob Console`，简写为`WeConsole`。
 
-![组件效果](./docs/img/wcapi.gif)
+<img src='./docs/img/wcapi.gif' width="400"></img>
 
 ## 二、安装与使用
 
@@ -39,16 +39,16 @@ WeConsole 分为`核心`和`组件`两部分，使用时需要全部引用后方
 
 ```javascript
 // NPM方式引用
-import 'weconsole/init';
+import "weconsole/init";
 
 // 普通方式引用
-import 'xxx/weconsole/init';
+import "xxx/weconsole/init";
 ```
 
 引入`weconsole/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
 
 ```javascript
-import { replace, restore, showWeConsole, hideWeConsole } from 'weconsole'; // scope可选值：App/Page/Component/Console/Api
+import { replace, restore, showWeConsole, hideWeConsole } from "weconsole"; // scope可选值：App/Page/Component/Console/Api
 // 按需替换系统变量或函数以达到监控
 replace(scope); // 可还原
 restore(scope);
@@ -209,87 +209,87 @@ properties: {
 -   几个简单的定制案例如下，效果如图 11：
 
 ```javascript
-import { setUIRunConfig } from 'xxx/weconsole/index.js';
+import { setUIRunConfig } from "xxx/weconsole/index.js";
 
 setUIRunConfig({
     customActions: [
         {
-            id: 'test1',
-            title: '显示文本',
-            autoCase: 'show',
+            id: "test1",
+            title: "显示文本",
+            autoCase: "show",
             cases: [
                 {
-                    id: 'show',
-                    button: '查看',
+                    id: "show",
+                    button: "查看",
                     showMode: WcCustomActionShowMode.text,
                     handler(): string {
-                        return '测试文本';
-                    }
+                        return "测试文本";
+                    },
                 },
                 {
-                    id: 'show2',
-                    button: '查看2',
+                    id: "show2",
+                    button: "查看2",
                     showMode: WcCustomActionShowMode.text,
                     handler(): string {
-                        return '测试文本2';
-                    }
-                }
-            ]
+                        return "测试文本2";
+                    },
+                },
+            ],
         },
         {
-            id: 'test2',
-            title: '显示JSON',
-            autoCase: 'show',
+            id: "test2",
+            title: "显示JSON",
+            autoCase: "show",
             cases: [
                 {
-                    id: 'show',
-                    button: '查看',
+                    id: "show",
+                    button: "查看",
                     showMode: WcCustomActionShowMode.json,
                     handler() {
                         return wx;
-                    }
-                }
-            ]
+                    },
+                },
+            ],
         },
         {
-            id: 'test3',
-            title: '显示表格',
-            autoCase: 'show',
+            id: "test3",
+            title: "显示表格",
+            autoCase: "show",
             cases: [
                 {
-                    id: 'show',
-                    button: '查看',
+                    id: "show",
+                    button: "查看",
                     showMode: WcCustomActionShowMode.grid,
                     handler(): WcCustomActionGrid {
                         return {
                             cols: [
                                 {
-                                    title: 'Id',
-                                    field: 'id',
-                                    width: 30
+                                    title: "Id",
+                                    field: "id",
+                                    width: 30,
                                 },
                                 {
-                                    title: 'Name',
-                                    field: 'name',
-                                    width: 70
-                                }
+                                    title: "Name",
+                                    field: "name",
+                                    width: 70,
+                                },
                             ],
                             data: [
                                 {
                                     id: 1,
-                                    name: 'Tom'
+                                    name: "Tom",
                                 },
                                 {
                                     id: 2,
-                                    name: 'Alice'
-                                }
-                            ]
+                                    name: "Alice",
+                                },
+                            ],
                         };
-                    }
-                }
-            ]
-        }
-    ]
+                    },
+                },
+            ],
+        },
+    ],
 });
 ```
 
@@ -377,15 +377,15 @@ interface WcCustomAction {
 
 const enum WcCustomActionShowMode {
     /**显示JSON树 */
-    json = 'json',
+    json = "json",
     /**显示数据表格 */
-    grid = 'grid',
+    grid = "grid",
     /** 固定显示<weconsole-customer>组件，该组件需要在app.json中注册，同时需要支持传入data属性，属性值就是case handler执行后的结果 */
-    component = 'component',
+    component = "component",
     /**显示一段文本 */
-    text = 'text',
+    text = "text",
     /**什么都不做 */
-    none = 'none'
+    none = "none",
 }
 
 interface WcCustomActionCase {
@@ -432,15 +432,15 @@ interface WcCustomActionGrid {
 ```typescript
 const enum WeConsoleEvents {
     /**UIConfig对象发生变化时 */
-    WcUIConfigChange = 'WcUIConfigChange',
+    WcUIConfigChange = "WcUIConfigChange",
     /**入口图标显示性发生变化时 */
-    WcVisableChange = 'WcVisableChange',
+    WcVisableChange = "WcVisableChange",
     /**CanvasContext准备好时，CanvasContext用于JSON树组件的界面文字宽度计算 */
-    WcCanvasContextReady = 'WcCanvasContextReady',
+    WcCanvasContextReady = "WcCanvasContextReady",
     /**CanvasContext销毁时 */
-    WcCanvasContextDestory = 'WcCanvasContextDestory',
+    WcCanvasContextDestory = "WcCanvasContextDestory",
     /**主组件的宽高发生变化时 */
-    WcMainComponentSizeChange = 'WcMainComponentSizeChange'
+    WcMainComponentSizeChange = "WcMainComponentSizeChange",
 }
 
 interface IEventEmitter<T = any> {

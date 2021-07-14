@@ -1,0 +1,101 @@
+@import '../style/var.scss';
+@import '../style/icon.scss';
+@import '../style/reader.scss';
+@import '../style/headers.scss';
+
+.wc-elements {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 0 20rpx;
+}
+
+.action-bar {
+    position: relative;
+    height: $ht-tab-bar - 20rpx;
+    border-bottom: 1px solid $bg-tab-border;
+}
+
+.fc-detail-close {
+    @include wic;
+    @include ic-close;
+
+    width: ($ht-tab-bar - 20rpx) / 2.2;
+    height: ($ht-tab-bar - 20rpx) / 2.2;
+}
+
+.fc-reader-detail {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 30%;
+    background-color: #fff;
+    border-left: 2px solid $bg-tab-border;
+}
+
+.detail-scroll {
+    position: absolute;
+    top: $ht-tab-bar - 20rpx;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+}
+
+.fc-detail-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 24rpx;
+    font-weight: bold;
+    color: #616161;
+}
+
+.fc-headers-item {
+    padding-right: 20rpx;
+    padding-left: 20rpx;
+}
+
+.fc-detail-action {
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $ht-tab-bar - 20rpx;
+    height: $ht-tab-bar - 20rpx;
+
+    &::after {
+        position: absolute;
+        top: 10rpx;
+        right: 0;
+        bottom: 10rpx;
+        width: 1rpx;
+        content: '';
+        background-color: $bg-tab-border;
+    }
+}
+
+.detail-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: $ht-tab-bar - 20rpx;
+    padding-right: 20rpx;
+    padding-left: 20rpx;
+    font-size: 28rpx;
+    line-height: $ht-tab-bar - 20rpx;
+    color: #424242;
+}
+
+.death-tip {
+    padding: 15rpx;
+    margin-bottom: 15rpx;
+    font-size: 20rpx;
+    color: #8a6d3b;
+    text-align: center;
+    background-color: #fcf8e3;
+    border-bottom: 1px solid #faebcc;
+}

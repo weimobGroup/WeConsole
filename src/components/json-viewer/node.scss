@@ -1,0 +1,79 @@
+$entity-mgr: 6rpx;
+
+.json-chunk,
+.json-node-content-item,
+.json-row-item,
+.json-value-item {
+    display: inline;
+    font-size: 0;
+    line-height: 0;
+    word-break: break-all;
+}
+
+.left-boundary,
+.right-boundary,
+.json-content,
+.jn-remark,
+.class-name {
+    display: inline;
+    font-size: 28rpx;
+    line-height: 1.4;
+    word-break: break-all;
+}
+
+.json-node-content,
+.json-tree,
+.json-row {
+    padding-left: 20rpx;
+}
+
+.left-boundary.string,
+.right-boundary.string,
+.json-content.string {
+    color: #c41a16;
+}
+
+.json-content.num,
+.json-content.bool,
+.json-content.func {
+    color: #1c00cf;
+}
+
+.json-node-content.has-arrow,
+.json-row.has-arrow {
+    position: relative;
+
+    .json-arrow {
+        position: absolute;
+        left: 0;
+        content: '';
+        border-color: transparent;
+        border-style: solid;
+        border-width: 8rpx 10rpx;
+        border-left-color: #565656;
+        transition: all 0.3s;
+    }
+}
+
+.jn-prop {
+    color: #881391;
+
+    &.protected {
+        opacity: 0.5;
+    }
+}
+
+.json-node-content .jn-prop {
+    font-size: (28 * 0.8) rpx;
+    color: #565656;
+}
+
+.jn-remark {
+    font-style: italic;
+}
+
+.jn-remark,
+.class-name,
+.ellipsis {
+    color: #808080;
+}

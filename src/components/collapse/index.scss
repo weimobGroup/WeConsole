@@ -1,0 +1,46 @@
+@import '../style/headers.scss';
+
+.fc-collapse {
+    box-sizing: border-box;
+    width: 100%;
+    height: 40rpx;
+    padding-left: 30rpx;
+    margin-bottom: 20rpx;
+    overflow: hidden;
+
+    &.is-open {
+        height: auto;
+
+        .fc-collapse-head {
+            &::before {
+                content: '';
+                transform: rotate(90deg) translateX(4rpx) translateY(8rpx);
+            }
+        }
+    }
+}
+
+.fc-collapse-head {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    padding-top: 6rpx;
+    padding-bottom: 6rpx;
+    font-family: $ft-name;
+    font-size: 26rpx;
+    color: #616161;
+
+    &::before {
+        position: relative;
+        top: 0;
+        display: block;
+        margin-left: -15rpx;
+        content: '';
+        border-color: transparent;
+        border-style: solid;
+        border-width: 8rpx 10rpx;
+        border-left-color: $cr-bar;
+        transition: all 0.3s;
+    }
+}

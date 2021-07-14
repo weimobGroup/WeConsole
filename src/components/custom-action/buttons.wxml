@@ -1,0 +1,7 @@
+<template name="ca-buttons">
+    <view class="ca-section">
+        <button wx:for="{{buttons}}" class="ca-button {{caseLoading[item.value]?'disabled':''}}" data-id="{{item.value}}" disabled="{{caseLoading[item.value]}}" bind:tap="tapCaseButton">
+            {{item.name}}
+        </button>
+    </view>
+</template>

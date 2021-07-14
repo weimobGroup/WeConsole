@@ -1,0 +1,8 @@
+{
+    "component": true,
+    "usingComponents": {
+        "api-detail": "../api-detail/index",
+        "filter-bar": "../filter-bar/index",
+        "data-grid": "../data-grid/index"
+    }
+}

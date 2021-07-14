@@ -1,0 +1,41 @@
+@import '../style/var.scss';
+@import '../style/icon.scss';
+@import '../style/headers.scss';
+@import '../style/detail.scss';
+@import '../style/status.scss';
+@import '../style/table.scss';
+
+.fc-detail-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 24rpx;
+    font-weight: bold;
+    color: #616161;
+}
+
+.collapse-action {
+    margin-right: 20rpx;
+    font-size: 20rpx;
+    font-weight: normal;
+}
+
+.detail-tab-plc {
+    height: 20rpx;
+}
+
+.detail-tab-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.wc-link {
+    margin: 0 20rpx;
+    font-size: 80%;
+    font-weight: normal;
+    color: $bg-primary;
+}

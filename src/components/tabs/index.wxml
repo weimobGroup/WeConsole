@@ -1,0 +1,31 @@
+<view class="fc-tabs fc-tabs-{{direction}} fc-size-{{size}} {{bodyFill?'body-fill':'body-notfill'}} tc-tabs-{{position}} {{outerClass}}">
+    <view class="fc-tabs-head">
+        <view class="fc-tabs-head-before">
+            <slot name="headBefore"></slot>
+        </view>
+        <view wx:if="{{headScroll}}" class="fc-tabs-head-scroll">
+            <scroll-view scroll-into-view="{{toView}}" scroll-x="{{direction==='horizontal'}}" scroll-y="{{direction!=='horizontal'}}">
+                <view class="fc-tabs-heads">
+                    <view id="tabTitle_{{index}}" wx:for="{{tabs}}" class="fc-tab-title {{active===index?'active':''}}" wx:key="value" bindtap="tapTab" data-tab="{{index}}">
+                        {{item.name}}
+                    </view>
+                </view>
+            </scroll-view>
+        </view>
+        <block wx:else>
+            <view id="tabTitle_{{index}}" wx:for="{{tabs}}" class="fc-tab-title {{active===index?'active':''}}" wx:key="value" bindtap="tapTab" data-tab="{{index}}">
+                {{item.name}}
+            </view>
+        </block>
+        <view class="fc-tabs-head-after">
+            <slot name="headAfter"></slot>
+        </view>
+    </view>
+    <view class="fc-tabs-body" style="position:{{bodyFill?'absolute':'static'}};">
+        <view class="fc-tab-panels" style="{{direction==='horizontal'?'width':'height'}}:{{tabs.length*100}}%;{{direction==='horizontal'?'height':'width'}}:{{bodyFill?'100%':'auto'}};transform: translate{{direction==='horizontal'?'X':'Y'}}(-{{(active/tabs.length)*100}}%);">
+            <view class="fc-tab-panel {{active===index?'active':''}}" style="{{direction==='horizontal'?'height':'width'}}:{{bodyFill?'100%':active===index?'auto':'0'}};" wx:for="{{tabs}}" wx:for-item="tab" wx:key="value">
+                <slot name="panel-{{tab.value}}"></slot>
+            </view>
+        </view>
+    </view>
+</view>

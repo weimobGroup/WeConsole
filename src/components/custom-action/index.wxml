@@ -1,0 +1,14 @@
+<import src="./content.wxml" />
+<import src="./buttons.wxml" />
+<block wx:if="{{caseList && caseList.length}}">
+    <template wx:if="{{everyNoUI}}" is="ca-buttons" data="{{caseState, buttons:noUICaseList, caseLoading}}"></template>
+    <template wx:elif="{{caseList.length===1}}" is="ca-content" data="{{caseState, caseButton:buttons[0], caseLoading, action, gridSelected}}"></template>
+    <tabs wx:else tabs="{{caseList}}" active="{{activeCaseIndex}}" bind:change="changeCaseTab" size="small" style="height:100%;display:block;">
+        <block wx:for="{{caseList}}" wx:key="value">
+            <view wx:if="{{index===activeCaseIndex || buttonTabState['s'+index]}}" class="ca-scroll" slot="panel-{{item.value}}">
+                <template wx:if="{{item.value==='$$$NO_UI$$$'}}" is="ca-buttons" data="{{caseState, buttons:noUICaseList, caseLoading}}"></template>
+                <template wx:else is="ca-content" data="{{caseState, caseButton:item,buttonText:'执行', caseLoading, action, gridSelected}}"></template>
+            </view>
+        </block>
+    </tabs>
+</block>

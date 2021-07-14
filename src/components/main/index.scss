@@ -1,0 +1,147 @@
+@import '../style/var.scss';
+@import '../style/icon.scss';
+
+.fc-hand {
+    position: fixed;
+    right: 20rpx;
+    bottom: 20rpx;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $ht-hand;
+    height: $ht-hand;
+    cursor: pointer;
+    background: $bg-primary;
+    border-radius: 50%;
+    box-shadow: 0 0 20rpx $bg-primary;
+    -webkit-tap-highlight-color: transparent;
+
+    &.fc-adap {
+        bottom: 120rpx;
+    }
+
+    &:hover,
+    &:focus {
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    &.is-hide {
+        display: none;
+    }
+}
+
+.fc-hand-icon {
+    width: 80%;
+    height: 80%;
+}
+
+.fc-modal {
+    position: fixed;
+    top: 40%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: none;
+    background-color: #fff;
+    border-top: 1px solid $bg-tab-border;
+
+    &.is-show {
+        display: block;
+    }
+
+    &.is-full {
+        top: 0;
+    }
+
+    &.fc-adap-scroll {
+        .fc-modal-body {
+            bottom: 100rpx;
+        }
+    }
+}
+
+.fc-modal-adap {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100rpx;
+    margin-bottom: -1px;
+    border-top: 1px solid $bg-tab-border;
+}
+
+.fc-modal-body {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.fc-ad {
+    font-family: fantasy;
+    font-size: 40rpx;
+    font-weight: 300;
+    color: #ccc;
+    text-align: center;
+    opacity: 0.5;
+}
+
+.fc-tabs-action {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: $ht-tab-bar;
+    height: $ht-tab-bar;
+
+    &::after {
+        position: absolute;
+        top: 15rpx;
+        right: 0;
+        bottom: 15rpx;
+        z-index: 15;
+        width: 1rpx;
+        content: '';
+        background-color: $bg-tab-border;
+    }
+}
+
+.fc-tabs-action-right {
+    &::after {
+        right: auto;
+        left: 0;
+    }
+}
+
+.fc-tabs-zoom,
+.fc-tabs-close {
+    @include wic;
+
+    width: $ht-tab-bar / 2;
+    height: $ht-tab-bar / 2;
+}
+
+.fc-tabs-zoom {
+    @include ic-expand-compress;
+}
+
+.fc-tabs-close {
+    @include ic-close;
+}
+
+.fc-tab-panel-reader {
+    position: absolute;
+    top: 1px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+}
