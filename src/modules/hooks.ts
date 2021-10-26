@@ -166,7 +166,10 @@ export const MpViewInitLifeHook: MkFuncHook<WeFuncHookState> = {
                     hooks.push(MpViewEventTriggerHook);
                 }
                 const hooker = Hooker.for(scope, hooks, method, name);
-                state.ctx[name] = hooker.target;
+                Object.defineProperty(state.ctx, name, {
+                    writable: true,
+                    value: hooker.target
+                });
                 hookers.push(hooker);
             });
         }

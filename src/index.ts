@@ -115,13 +115,18 @@ export const restore = (scope?: HookScope) => {
 /** 获取小程序内weconsole已经监控到的所有的App/Page/Component实例 */
 export const getWcControlMpViewInstances = (): any[] => wcScopeSingle('MpViewInstances', () => []) as any[];
 
-export const setUIConfig = (config: Partial<MpUIConfig>) => {
+export const getUIConfig = (): Partial<MpUIConfig> => {
     const scope = wcScope();
     if (!scope.UIConfig) {
         scope.UIConfig = {};
     }
-    Object.assign(scope.UIConfig, config);
-    emit(WeConsoleEvents.WcUIConfigChange, scope.UIConfig);
+    return scope.UIConfig;
+};
+
+export const setUIConfig = (config: Partial<MpUIConfig>) => {
+    const UIConfig = getUIConfig();
+    Object.assign(UIConfig, config);
+    emit(WeConsoleEvents.WcUIConfigChange, UIConfig);
 };
 
 export const addCustomAction = (action: WcCustomAction) => {
@@ -152,9 +157,6 @@ export const removeCustomAction = (actionId: string) => {
         }
     }
 };
-
-global.addCustomAction = addCustomAction;
-global.removeCustomAction = removeCustomAction;
 
 export const showWeConsole = () => {
     const scope = wcScope();

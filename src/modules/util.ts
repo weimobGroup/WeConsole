@@ -270,16 +270,27 @@ export const promiseifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> 
     });
 };
 
+export const isApp = (() => {
+    let app;
+    return (target): boolean => {
+        if (!app) {
+            app = getApp();
+        }
+        return target === app;
+    };
+})();
+
 export const getMpViewType = (obj: any): 'App' | 'Page' | 'Component' | undefined => {
-    if (('route' in obj || '__route__' in obj) && 'setData' in obj) {
-        return 'Page';
-    }
-    if ('triggerEvent' in obj && 'setData' in obj) {
-        return 'Component';
-    }
-    if (typeof getApp === 'function' && getApp() === obj) {
+    if (isApp(obj)) {
         return 'App';
     }
+    if (!obj || typeof obj !== 'object') {
+        return;
+    }
+    if (typeof obj.setData !== 'function') {
+        return;
+    }
+    return 'route' in obj ? 'Page' : 'Component';
 };
 
 const _has = Object.prototype.hasOwnProperty;

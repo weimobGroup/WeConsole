@@ -30,3 +30,12 @@ for (const prop in defaultConfig) {
         WcScope.UIConfig[prop] = defaultConfig[prop];
     }
 }
+
+const apiState = wcScopeSingle('ApiStateController') as ReaderStateController;
+if (WcScope.UIConfig.apiDefaultCategoryValue) {
+    apiState.setState('activeCategory', WcScope.UIConfig.apiDefaultCategoryValue);
+}
+const consoleState = wcScopeSingle('ConsoleStateController') as ReaderStateController;
+if (WcScope.UIConfig.consoleDefaultCategoryValue) {
+    consoleState.setState('activeCategory', WcScope.UIConfig.consoleDefaultCategoryValue);
+}
