@@ -168,3 +168,6 @@ export const hideWeConsole = () => {
     scope.visable = false;
     emit(WeConsoleEvents.WcVisableChange, scope.visable);
 };
+
+// TODO: 暂时这样简陋下，后面做全端时重写
+console.log('欢迎使用WeConsole v1.0.8，让小程序调试更高效！');
