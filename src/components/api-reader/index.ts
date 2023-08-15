@@ -299,18 +299,15 @@ const Spec: MpApiReaderComponentSpec = {
         if (this.$wcProductController) {
             const idList = this.ApiStateController.getProductIdList();
             const activeCategory = this.ApiStateController.getState('activeCategory');
-            const filterKeyWord = this.ApiStateController.getState('filterKeyWord');
+            // const filterKeyWord = this.ApiStateController.getState('filterKeyWord');
             const categorys = this.ApiStateController.getState('categorys');
             const selectedId = this.ApiStateController.getState('selectedId');
             const selectedIdFrom = this.ApiStateController.getState('selectedIdFrom');
-            if (filterKeyWord) {
-                this.filterKeyword = filterKeyWord;
-            }
+            // if (filterKeyWord) {
+            //     this.filterKeyword = filterKeyWord;
+            // }
 
             const reanderData: Partial<MpApiReaderComponentData & MpDataReaderComponentData> = {};
-            if (activeCategory) {
-                reanderData.activeCategory = activeCategory;
-            }
             if (categorys?.length) {
                 reanderData.categoryList = categorys;
             }
@@ -338,6 +335,11 @@ const Spec: MpApiReaderComponentSpec = {
             products.forEach((item) => {
                 this.addMaterial(item);
             });
+            if (activeCategory) {
+                setTimeout(() => {
+                    this.onCategoryChange(activeCategory);
+                });
+            }
         }
         this.syncGridPageSize();
     }

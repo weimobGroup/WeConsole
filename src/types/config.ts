@@ -24,4 +24,8 @@ export interface MpUIConfig {
     copyPolicy?: MpProductCopyPolicy;
     /** 定制化列表 */
     customActions?: WcCustomAction[];
+    /** 默认的api分类值 */
+    apiDefaultCategoryValue?: string;
+    /** 默认的console分类值 */
+    consoleDefaultCategoryValue?: string;
 }

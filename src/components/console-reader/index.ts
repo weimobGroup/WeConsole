@@ -288,6 +288,7 @@ const Spec: MpConsoleReaderComponentSpec = {
     attached() {
         if (this.$wcProductController) {
             const idList = this.ConsoleStateController.getProductIdList();
+            const activeCategory = this.ConsoleStateController.getState('activeCategory');
             const filterKeyWord = this.ConsoleStateController.getState('filterKeyWord');
             const selectedId = this.ConsoleStateController.getState('selectedId');
             if (filterKeyWord) {
@@ -295,6 +296,9 @@ const Spec: MpConsoleReaderComponentSpec = {
             }
 
             const reanderData: any = {};
+            if (activeCategory) {
+                reanderData.activeCategory = activeCategory;
+            }
             if (selectedId) {
                 reanderData.detailMaterialId = selectedId;
             }
