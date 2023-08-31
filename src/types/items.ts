@@ -1,4 +1,5 @@
 import { RequireId } from './common';
+import { AnyFunction } from './util';
 import { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
 import { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
 
@@ -24,8 +25,8 @@ export interface MpItemsComponentExports<T extends RequireId = RequireId> {
     replaceAllList: (list: T[]) => any;
     reloadAffixList: (allList?: T[]) => any;
     scrollTo?: (top: number) => any;
-    onScroll?: (handler: Function) => any;
-    onJSONReady?: (handler: Function) => any;
+    onScroll?: (handler: AnyFunction) => any;
+    onJSONReady?: (handler: AnyFunction) => any;
 }
 export interface MpItemsComponentMethods<C extends MpItemsComponent = MpItemsComponent> {
     triggerReady: (this: C, fireInit: boolean, exports?: Partial<MpItemsComponentExports>) => any;

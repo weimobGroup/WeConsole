@@ -49,7 +49,7 @@ export const getPathValue = <T = any>(obj: any, path: JSONPropPath, throwError =
     const readyPath: JSONPropPath = [];
     for (let i = 0, len = arr.length; i < len; i++) {
         if (!isObject(obj) && !isArray(obj)) {
-            const err = new Error(`此${readyPath}路径对应的值非对象`);
+            const err = new Error(`此${readyPath.join('.')}路径对应的值非对象`);
             (err as any).stopPath = readyPath;
             if (throwError) {
                 throw err;
@@ -64,7 +64,7 @@ export const getPathValue = <T = any>(obj: any, path: JSONPropPath, throwError =
         if (propName === PROTO_PROP) {
             obj = getPrototypeOf(obj);
             if (typeof obj === 'undefined') {
-                const err = new Error(`无法找到在对象上找到${readyPath}路径对应的值`);
+                const err = new Error(`无法找到在对象上找到${readyPath.join('.')}路径对应的值`);
                 (err as any).stopPath = readyPath;
                 if (throwError) {
                     throw err;
@@ -76,7 +76,7 @@ export const getPathValue = <T = any>(obj: any, path: JSONPropPath, throwError =
             continue;
         }
         if (!(propName in obj)) {
-            const err = new Error(`无法找到在对象上找到${readyPath}路径对应的值`);
+            const err = new Error(`无法找到在对象上找到${readyPath.join('.')}路径对应的值`);
             (err as any).stopPath = readyPath;
             if (throwError) {
                 throw err;
@@ -162,7 +162,7 @@ export const getJSONType = (obj: any): JSONType => {
     }
 };
 
-export const getGlobalObjectConstructor = (clsName: GlobalObjectConstructorNames): Function => {
+export const getGlobalObjectConstructor = (clsName: GlobalObjectConstructorNames): AnyFunction => {
     if (clsName === 'Number') {
         return Number;
     }
@@ -228,7 +228,7 @@ export const getGlobalObjectJSONChunk = (obj: any, chunk?: JSONChunk) => {
             chunk.leftBoundary = ' {';
             chunk.rightBoundary = '}';
             const tschunk: JSONChunk<JSONChunk> = chunk as JSONChunk<JSONChunk>;
-            tschunk.content = getSummaryJSONChunk((obj as Object).valueOf());
+            tschunk.content = getSummaryJSONChunk(obj.valueOf());
             return chunk;
         }
         // if (clsName === "BigInt") {
@@ -707,9 +707,9 @@ const type1Include = (type: string, obj: any, keyword: string): boolean | undefi
     ) {
         let str;
         if (type === 'symbol') {
-            str = (obj as Symbol).toString();
+            str = (obj as symbol).toString();
         } else if (type === 'bigint') {
-            str = (obj as Symbol).toString() + 'n';
+            str = (obj as symbol).toString() + 'n';
         } else {
             str = String(obj);
         }
@@ -722,19 +722,19 @@ const type2Include = (clsName: string, obj: any, keyword: string): boolean | und
         return _include((obj as Date).toString(), keyword);
     }
     if (clsName === 'String') {
-        return _include((obj as String).valueOf(), keyword);
+        return _include((obj as string).valueOf(), keyword);
     }
     if (clsName === 'Number') {
-        return _include((obj as Number).valueOf(), keyword);
+        return _include((obj as number).valueOf(), keyword);
     }
     if (clsName === 'Boolean') {
-        return _include((obj as Number).valueOf(), keyword);
+        return _include((obj as number).valueOf(), keyword);
     }
     if (clsName === 'Symbol') {
-        return _include((obj as Symbol).valueOf(), keyword);
+        return _include((obj as symbol).valueOf(), keyword);
     }
     if (clsName === 'BigInt') {
-        return _include((obj as BigInt).valueOf(), keyword);
+        return _include((obj as bigint).valueOf(), keyword);
     }
 };
 

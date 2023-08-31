@@ -159,9 +159,9 @@ export const getElementAttrs = (vw: any): Promise<MpAttrNode[] | undefined> => {
     return Promise.resolve(attrs);
 };
 
-export const findPageIns = (id: string): any | undefined => {
+export const findPageIns = (id: string): any => {
     return findComponentIns(id);
 };
-export const findComponentIns = (id: string): any | undefined => {
+export const findComponentIns = (id: string): any => {
     return getMpViewInstances().find((item) => item.__wxExparserNodeId__ === id);
 };

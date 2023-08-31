@@ -10,3 +10,10 @@ export interface IEventEmitter<T = any> {
 }
 
 export type WcListFilterHandler<T = any> = (item: T, index: number, list: T[]) => any;
+
+export type AnyFunction = (...args: any[]) => any;
+export type AnyClass = new (...args: any[]) => any;
+
+export type EmptyObject = Record<string, never>;
+
+export type AnyObject = Record<string | number | symbol, any>;

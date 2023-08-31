@@ -1,7 +1,7 @@
 import { MkFuncHook } from '@mpkit/types';
 import { HookScope, MpComponentMethodSeat, RequireId } from './common';
 import { MpProduct } from './product';
-import { IEventEmitter, WcListFilterHandler } from './util';
+import { AnyFunction, IEventEmitter, WcListFilterHandler } from './util';
 
 export type MpProductFilter = WcListFilterHandler<MpProduct>;
 
@@ -16,7 +16,7 @@ export interface IHooker {
     restore: () => any;
     readonly scope: HookScope;
     readonly hooks: MkFuncHook[];
-    readonly target?: Function;
+    readonly target?: AnyFunction;
 }
 
 export interface WeFuncHookState {

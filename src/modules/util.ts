@@ -1,4 +1,4 @@
-import { WcListFilterHandler } from '../types/util';
+import { AnyFunction, WcListFilterHandler } from '../types/util';
 import { MpStackInfo } from '../types/common';
 import { WeConsoleScope } from '../types/scope';
 
@@ -24,7 +24,7 @@ export const getGlobal = (() => {
             res = globalThis;
             // eslint-disable-next-line @typescript-eslint/no-invalid-this
         } else if (typeof this === 'object' && this) {
-            // eslint-disable-next-line @typescript-eslint/no-invalid-this
+            // eslint-disable-next-line @typescript-eslint/no-invalid-this, @typescript-eslint/no-this-alias
             res = this;
         } else if (typeof wx === 'object' && wx) {
             (wx as any).__wcGlobal__ = wx.__wcGlobal__ || {};
@@ -58,7 +58,7 @@ export const wcScopeSingle = (() => {
     if (!G.SingleMapPromise) {
         G.SingleMapPromise = {};
     }
-    return <T = any>(name: string, creater?: Function): undefined | T | Promise<T> => {
+    return <T = any>(name: string, creater?: AnyFunction): undefined | T | Promise<T> => {
         if (!G.SingleMap) {
             G.SingleMap = {};
         }
@@ -180,7 +180,7 @@ export const log = (type = 'log', ...args) => {
     if ((console as any).org && (console as any).org[type]) {
         return (console as any).org[type].apply(null, args);
     }
-    return console[type].apply(console, args);
+    return console[type](...args);
 };
 
 export const FILTER_BREAK = Symbol('break');
@@ -199,7 +199,7 @@ export const filter = <T = any>(list: T[], filter: WcListFilterHandler<T>): T[] 
     return res;
 };
 
-export const hookApiMethodCallback = (apiName: string, onSuccess: Function, onFail: Function, args: any[]) => {
+export const hookApiMethodCallback = (apiName: string, onSuccess: AnyFunction, onFail: AnyFunction, args: any[]) => {
     if (!apiName.endsWith('Sync') && (!args.length || args[0] === null)) {
         args[0] = {};
     }
@@ -298,7 +298,7 @@ export const has = (obj: any, prop: string): boolean => _has.call(obj, prop);
 
 export const EACH_BREAK = Symbol('EACH_BREAK');
 
-export const each = (obj: any, handler: Function) => {
+export const each = (obj: any, handler: AnyFunction) => {
     if (
         Array.isArray(obj) ||
         (obj && 'length' in obj && typeof obj.length === 'number' && parseInt(obj.length) === obj.length)

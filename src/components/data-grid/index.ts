@@ -2,7 +2,7 @@ import { WeComponent } from '../mixins/component';
 import VirtualListMixin from '../mixins/virtual-list';
 import ItemsMixin from '../mixins/items';
 import EbusMixin from '../mixins/ebus';
-import { DataGridCol, MpDataGridComponentSpec } from '../../types/data-grid';
+import { MpDataGridComponentSpec } from '../../types/data-grid';
 import { MpEvent } from '../../types/view';
 import { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
 const Spec: MpDataGridComponentSpec = {
@@ -79,7 +79,7 @@ const Spec: MpDataGridComponentSpec = {
             }
             this.computeColWidthTimer = setTimeout(() => {
                 const widthList: Array<number> = [];
-                const cols = this.$getProp('cols') as Array<Partial<DataGridCol>>;
+                const cols = this.$getProp('cols');
                 let readyWidth = 0;
                 const notReadyIndexs: number[] = [];
                 const readyIndexs: number[] = [];
@@ -104,7 +104,7 @@ const Spec: MpDataGridComponentSpec = {
                 });
                 if (readyWidth !== 100 || notReadyIndexs.length) {
                     const surplusWidth = 100 - readyWidth;
-                    let minWidth = this.$getProp('colMinWidth') as number;
+                    let minWidth = this.$getProp('colMinWidth');
                     if (typeof minWidth !== 'number' || !minWidth) {
                         minWidth = 5;
                     }

@@ -1,6 +1,7 @@
 import { RequireId } from './common';
 import { MpItemsComponent, MpItemsComponentExports, MpItemsComponentMethods } from './items';
 import { MpJSONViewerComponentEbusDetail } from './json-viewer';
+import { AnyFunction } from './util';
 import { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
 import { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
 
@@ -39,8 +40,8 @@ export interface MpDataGridComponentProps<T extends RequireId = RequireId> {
 export interface MpDataGridComponent<T extends RequireId = RequireId> {
     computeColWidthTimer?: any;
     data: MpDataGridComponentData & MpDataGridComponentProps<T>;
-    outerScollerHandler?: Function;
-    outerJSONViewerHandler?: Function;
+    outerScollerHandler?: AnyFunction;
+    outerJSONViewerHandler?: AnyFunction;
     JSONViewerReadyList?: MpJSONViewerComponentEbusDetail[];
 }
 export interface MpDataGridComponentMethods<C extends MpDataGridComponent = MpDataGridComponent> {

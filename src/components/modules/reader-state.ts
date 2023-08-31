@@ -8,7 +8,6 @@ import { MpReaderState, ProductControllerGetter } from '../../types/reader-state
 export class ReaderStateController extends EventEmitter {
     private state: MpReaderState;
     private recording = true;
-    // eslint-disable-next-line @typescript-eslint/no-parameter-properties
     constructor(private name: string, private productController?: IMpProductController | ProductControllerGetter) {
         super();
         this.state = {

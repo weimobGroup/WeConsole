@@ -1,7 +1,7 @@
 const { parseMpXml, serialize } = require('@mpkit/mpxml-parser');
 const { uuid } = require('@mpkit/util');
 
-exports.minify = (wxmlCode, options) => {
+exports.minify = (wxmlCode) => {
     const parseResult = parseMpXml(wxmlCode);
     if (parseResult.nodes) {
         const ids = [];

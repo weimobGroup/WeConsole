@@ -1,4 +1,5 @@
 import { RequireId } from './common';
+import { AnyFunction } from './util';
 import { MpEvent, MpScrollEventDetail, MpViewContext } from './view';
 
 export interface MpVirtualListComponentData<T extends RequireId = RequireId> {
@@ -25,7 +26,7 @@ export interface MpVirtualListComponentData<T extends RequireId = RequireId> {
 export interface MpVirtualListComponent<T extends RequireId = RequireId> {
     $vlContainerHeight?: number;
     $vlContainerHeightComputeing?: boolean;
-    $vlContainerHeightComputeQueue?: Function[];
+    $vlContainerHeightComputeQueue?: AnyFunction[];
     $vlIsLock?: boolean;
     $vlHasListUpdate?: boolean;
     $vlAllList?: T[];
@@ -36,7 +37,7 @@ export interface MpVirtualListComponent<T extends RequireId = RequireId> {
     $vlClearing?: boolean;
     $vlComputeShowListTimer?: any;
     $vlItemClientRectQueryMap?: {
-        [prop: string]: Function;
+        [prop: string]: AnyFunction;
     };
     $vlItemHeightMap: {
         [prop: string]: number;
@@ -72,7 +73,7 @@ export interface MpVirtualListComponentMethods<
     $vlComputeShowList: (this: C) => any;
     $vlOnContainerHeightComputed?: (this: C) => any;
     /** 计算容器高度/可视区域高度 */
-    $vlComputeContainerHeight: (this: C, callback?: Function) => any;
+    $vlComputeContainerHeight: (this: C, callback?: AnyFunction) => any;
     /** 当列表发生变化时，执行该函数 */
     $vlListChange: (this: C) => any;
     /** 重新计算容器高度，并计算showList */

@@ -2,7 +2,7 @@ import { MpSetDataHandler } from '@mpkit/types';
 import { MpUIConfig } from './config';
 import { IMpProductController } from './hook';
 import { MpProduct } from './product';
-import { EventHandler } from './util';
+import { AnyFunction, AnyObject, EventHandler } from './util';
 
 export interface MpClientRect {
     width: number;
@@ -61,7 +61,7 @@ export interface MpComponentMethod<T extends MpViewContext = MpViewContext> {
 }
 
 export interface MpComponentProp<T extends MpViewContext = MpViewContext> {
-    type: Function;
+    type: AnyFunction;
     observer?: MpComponentMethod<T>;
     value?: any;
 }
@@ -71,7 +71,7 @@ export interface MpComponentMethods<T extends MpViewContext = MpViewContext> {
 }
 
 export interface MpComponentProperties<T extends MpViewContext = MpViewContext> {
-    [prop: string]: Function | MpComponentProp<T>;
+    [prop: string]: AnyFunction | MpComponentProp<T>;
 }
 
 export interface MpComponentLifeSpec<T extends MpViewContext = MpViewContext> {
@@ -87,11 +87,11 @@ export interface MpComponentSpec<T extends MpViewContext = MpViewContext> extend
     options?: any;
     data?: any;
     properties?: MpComponentProperties<T>;
-    methods?: MpComponentMethods<T> & any;
-    $mixinEnd?: Function;
+    methods?: MpComponentMethods<T> & AnyObject;
+    $mixinEnd?: AnyFunction;
     pageLifetimes?: {
-        show?: Function;
-        hide?: Function;
-        resize?: Function;
+        show?: AnyFunction;
+        hide?: AnyFunction;
+        resize?: AnyFunction;
     };
 }

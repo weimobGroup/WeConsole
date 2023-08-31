@@ -7,7 +7,7 @@ import { wcScopeSingle, log } from './util';
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
 const SigleScopes = [HookScope.Api, HookScope.App, HookScope.Component, HookScope.Page, HookScope.Console];
 export class Hooker implements IHooker {
-    readonly target?: Function;
+    readonly target?: AnyFunction;
     readonly scope: HookScope;
     readonly hooks: MkFuncHook[];
     private stores?: MkReplaceFuncStore[];
@@ -16,7 +16,7 @@ export class Hooker implements IHooker {
     private constructor(
         scope: HookScope,
         hooks: MkFuncHook[],
-        original?: Function,
+        original?: AnyFunction,
         originalName?: string,
         otherState?: any
     ) {
@@ -162,7 +162,7 @@ export class Hooker implements IHooker {
     static for(
         scope: HookScope,
         hooks: MkFuncHook[],
-        original?: Function,
+        original?: AnyFunction,
         originalName?: string,
         otherState?: any
     ): Hooker {

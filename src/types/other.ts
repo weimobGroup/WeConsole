@@ -1,5 +1,5 @@
 import { DataGridCol } from './data-grid';
-import { IEventEmitter } from './util';
+import { AnyFunction, IEventEmitter } from './util';
 
 /** 定制化 */
 
@@ -21,7 +21,7 @@ export interface WcCustomActionCase {
     /** 按钮文案 */
     button?: string;
     /** 执行逻辑 */
-    handler: Function;
+    handler: AnyFunction;
     /** 显示方式 */
     showMode?: WcCustomActionShowMode;
 }

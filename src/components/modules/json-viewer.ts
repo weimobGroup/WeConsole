@@ -92,7 +92,7 @@ export class JSONViewer<T = any> implements IJSONViewer<T> {
             return [
                 {
                     fontSize: fontSize,
-                    word: str as string
+                    word: str
                 }
             ];
         }
@@ -270,7 +270,7 @@ export const cutJSONNode = (
         textWidth = measureText(doc, maxWidth);
     }
     if (lastValCut && doc.content.length) {
-        const tsItem = doc.content[doc.content.length - 1] as JSONChunk;
+        const tsItem = doc.content[doc.content.length - 1];
         if (tsItem.type === JSONType.string) {
             tsItem.content += ELLIPSIS_CHAR;
         }
@@ -282,7 +282,7 @@ export const cutJSONNode = (
             doc.content.push(ellipsisChunk);
             return doc;
         }
-        const tsItem = doc.content[doc.content.length - 1] as JSONChunk;
+        const tsItem = doc.content[doc.content.length - 1];
         if (tsItem.type === JSONType.string) {
             let lastWidth = measureText(tsItem);
             while (tsItem.content.length > 3 && ellipsisWidth + lastWidth > maxWidth) {

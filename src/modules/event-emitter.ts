@@ -11,8 +11,8 @@ export class EventEmitter<T = any> implements IEventEmitter<T> {
     }
 
     once(type: string, _handler: EventHandler<T>) {
-        const handler = (...args) => {
-            _handler.apply(null, args);
+        const handler = (...args: any[]) => {
+            _handler(...args);
             this.off(type, handler);
         };
         this.on(type, handler);
@@ -53,7 +53,7 @@ export class EventEmitter<T = any> implements IEventEmitter<T> {
         const fire = (handleType = type) => {
             let needReload;
             if (this.events[type]) {
-                const list = this.events[type] as EventHandler<T>[];
+                const list = this.events[type];
                 for (let i = 0, len = list.length; i < len; i++) {
                     if (!this.events[type]) {
                         break;

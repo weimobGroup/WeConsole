@@ -193,8 +193,8 @@ const Spec: MpConsoleReaderComponentSpec = {
         addMaterial(data: MpProduct) {
             const material = convertConsoleMaterial(data);
             this.addMaterialToCategory(material);
-            if (this.readerShowList.indexOf(material as MpConsoleMaterial) !== -1) {
-                this.$vlAddItem(material as MpConsoleMaterial);
+            if (this.readerShowList.indexOf(material) !== -1) {
+                this.$vlAddItem(material);
             }
         },
         onCategoryChange(activeCategory: string | MpEvent) {
@@ -215,7 +215,7 @@ const Spec: MpConsoleReaderComponentSpec = {
                 } else if (!this.materialExist[data.id]) {
                     this.materialExist[data.id] = 'other';
                 }
-                this.addMaterial(data as MpProduct);
+                this.addMaterial(data);
             }
         },
         syncMarkList() {

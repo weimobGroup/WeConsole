@@ -3,6 +3,7 @@ import { isNativeFunc, isFunc, isPlainObject, merge, isEmptyObject, uuid } from 
 import { each, has, wcScope } from '../../modules/util';
 import { MpComponentSpec, MpViewContext } from '../../types/view';
 import ToolMixin from './tool';
+import { AnyFunction } from '../../types/util';
 export const formatViewSpecList = (viewType: MpViewType, ...specList): MkViewFormatSpec => {
     const result: MkViewFormatSpec = {};
     const specialProps: any = {};
@@ -61,8 +62,8 @@ export const formatViewSpecList = (viewType: MpViewType, ...specList): MkViewFor
     return result;
 };
 
-// eslint-disable-next-line func-name-matching
-export const fireViewMethod = function ViewMethod(methodHandlers: Array<Function | string>, ...args: any[]): any {
+// eslint-disable-next-line func-name-matching, @typescript-eslint/no-redundant-type-constituents
+export const fireViewMethod = function ViewMethod(methodHandlers: Array<AnyFunction | string>, ...args: any[]): any {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const ctx = this;
     let methodResult;

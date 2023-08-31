@@ -124,7 +124,8 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                     });
                     this.orgDetail = apiProduct;
 
-                    this.apiOptinos = apiProduct?.request && apiProduct.request?.[0] ? apiProduct.request[0] : undefined;
+                    this.apiOptinos =
+                        apiProduct?.request && apiProduct.request?.[0] ? apiProduct.request[0] : undefined;
                     this.setJSONViewer('Options', this.apiOptinos);
                     if (apiProduct.category === 'request' && this.apiOptinos) {
                         this.apiRequestData = this.apiOptinos.data;
@@ -202,11 +203,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 if (type === 'PreviewResponse') {
                     vw.onInited((viewer: MpJSONViewerComponent) => {
                         if (viewer.data.from === `ApiDetail_${this.data.data}_PreviewResponse`) {
-                            viewer.openPath(
-                                (this as any).orgDetail && (this as any).orgDetail.category === 'request'
-                                    ? ['data']
-                                    : []
-                            );
+                            viewer.openPath(this.orgDetail && this.orgDetail.category === 'request' ? ['data'] : []);
                         }
                     });
                 }

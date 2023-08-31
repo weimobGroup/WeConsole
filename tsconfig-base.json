@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "allowJs": false,
+        "strictNullChecks": true,
+        "moduleResolution": "Node",
+        "downlevelIteration": true,
+        "module": "ESNext",
+        "target": "es2022",
+        "types": [],
+        "typeRoots": []
+    }
+}

@@ -163,7 +163,7 @@ const Spec: MpApiReaderComponentSpec = {
                 } else if (!this.materialExist[data.id]) {
                     this.materialExist[data.id] = 'other';
                 }
-                this.addMaterial(data as MpProduct);
+                this.addMaterial(data);
             }
         },
         appendDataToGrid(material) {

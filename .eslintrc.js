@@ -1,7 +1,9 @@
 module.exports = {
-    parser: '@typescript-eslint/parser',
-    extends: ['alloy', 'alloy/typescript', 'standard'],
-    plugins: ['@typescript-eslint', 'standard'],
+    root: true,
+    extends: ['standard', 'alloy', 'alloy/typescript'],
+    parserOptions: {
+        project: './tsconfig-eslint.json'
+    },
     globals: {
         global: 'readonly',
         wx: 'writable',
@@ -23,6 +25,30 @@ module.exports = {
         'max-nested-callbacks': ['error', 5]
     },
     overrides: [
+        {
+            extends: ['plugin:@typescript-eslint/recommended-requiring-type-checking'],
+            files: ['./**/*.{ts,tsx,vue}']
+        },
+        {
+            extends: ['plugin:@typescript-eslint/disable-type-checked'],
+            files: ['./**/*.js']
+        },
+        {
+            files: ['**/*.{ts,tsx,vue}'],
+            rules: {
+                'no-unused-vars': 'off',
+                '@typescript-eslint/no-unused-vars': ['error'],
+                '@typescript-eslint/no-unsafe-assignment': 'off',
+                '@typescript-eslint/unbound-method': 'off',
+                '@typescript-eslint/no-unsafe-return': 'off',
+                '@typescript-eslint/no-unsafe-argument': 'off',
+                '@typescript-eslint/no-unsafe-call': 'off',
+                '@typescript-eslint/no-unsafe-member-access': 'off',
+                '@typescript-eslint/no-floating-promises': 'off',
+                '@typescript-eslint/no-explicit-any': 'off',
+                '@typescript-eslint/explicit-member-accessibility': 'off'
+            }
+        },
         {
             files: ['**/*.ts'],
             rules: {

@@ -1,6 +1,7 @@
 import { Hooker } from '../modules/hooker';
 import { MpProductController } from '../modules/controller';
 import { MpUIConfig } from './config';
+import { AnyFunction } from './util';
 
 export interface WeConsoleScopeSingleMap {
     /** 数据监控控制器 */
@@ -28,7 +29,7 @@ export interface WeConsoleScope {
     /** UI配置 */
     UIConfig?: MpUIConfig;
     SingleMapPromise?: {
-        [prop: string]: Function[];
+        [prop: string]: AnyFunction[];
     };
     SingleMap?: WeConsoleScopeSingleMap;
     /** 公用Canvas Context */

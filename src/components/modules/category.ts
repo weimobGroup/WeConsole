@@ -109,7 +109,7 @@ export const getCategoryValue = (product: Partial<MpProduct>, runConfig?: MpUICo
             res = getter as string;
         }
     }
-    return Array.isArray(res) && res.length ? (res as string[]) : [!res ? 'other' : (res as string)];
+    return Array.isArray(res) && res.length ? res : [!res ? 'other' : (res as string)];
 };
 
 /**

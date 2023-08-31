@@ -104,7 +104,7 @@ WeComponent(EbusMixin, {
                 sysTabMountState: MainStateController.getState('sysTabMountState') || this.data.sysTabMountState
             };
             this.setData(data);
-            (this as any).getCanvasCtx().then((ctx) => {
+            this.getCanvasCtx().then((ctx) => {
                 if (this.$wcComponentIsDeatoryed) {
                     return;
                 }
@@ -241,7 +241,7 @@ WeComponent(EbusMixin, {
                     });
             }
             return Promise.all([winPromise, handPromise]).then(() => {
-                (this as any).syncState();
+                this.syncState();
             });
         }
     },

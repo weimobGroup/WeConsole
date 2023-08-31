@@ -12,6 +12,7 @@ import {
 } from '../../types/json-viewer';
 import { MpEvent } from '../../types/view';
 import { log } from '../../modules/util';
+import { AnyFunction } from '../../types/util';
 // eslint-disable-next-line quotes
 const fontName = "Consolas, Menlo, Monaco, 'Courier New', monospace";
 const Spec: MpJSONViewerComponentSpec = {
@@ -71,7 +72,7 @@ const Spec: MpJSONViewerComponentSpec = {
             this.JSONViewer.options.fontSize = this.data.fontSize || 28;
             this.JSONViewer.options.keyFontSize = this.data.smallFontSize || 28 * 0.8;
         },
-        onInited(func: Function) {
+        onInited(func: AnyFunction) {
             if (this.inited) {
                 return func(this);
             }
@@ -348,4 +349,4 @@ const Spec: MpJSONViewerComponentSpec = {
         });
     }
 };
-WeComponent(EbusMixin, CanvasMixin, Spec);
+WeComponent(EbusMixin, CanvasMixin as any, Spec);

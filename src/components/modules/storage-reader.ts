@@ -9,7 +9,7 @@ export const getStorageInfoAndList = (): Promise<[MpStorageInfo, MpStorageMateri
             return Promise.all([info].concat(info.keys.map((key) => getStorage(key)) as any));
         })
         .then((res) => {
-            return [res.splice(0, 1)[0] as MpStorageInfo, res as unknown as MpStorageMaterial[]];
+            return [res.splice(0, 1)[0], res as unknown as MpStorageMaterial[]];
         });
 };
 
@@ -35,7 +35,7 @@ export const removeStorage = (key: string): Promise<void> => {
     });
 };
 
-export const clearStorage = (ignore?: Function): Promise<void> => {
+export const clearStorage = (ignore?: AnyFunction): Promise<void> => {
     if (!ignore) {
         return promiseifyApi('clearStorage');
     }

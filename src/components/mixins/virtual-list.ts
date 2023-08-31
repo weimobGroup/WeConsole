@@ -124,9 +124,9 @@ const Mixin: MpVirtualListComponentSpec = {
             if (!this.$vlItemHeightComputeMap) {
                 this.$vlItemHeightComputeMap = {};
             }
-            if (!this.$vlItemHeightComputeMap[id]) {
+            if (!(id in this.$vlItemHeightComputeMap)) {
                 this.$vlItemHeightComputeMap[id] = this.$getBoundingClientRect(`.vl-item-${id}`).then((res) => {
-                    if (this?.$vlItemHeightComputeMap && this.$vlItemHeightComputeMap[id]) {
+                    if (this?.$vlItemHeightComputeMap && id in this.$vlItemHeightComputeMap) {
                         this.$vlSetItemHeight(id, res.height);
                         delete this.$vlItemHeightComputeMap[id];
                     }

@@ -1,6 +1,7 @@
 import { MpCanvasComponent, MpCanvasComponentMethods } from './canvas';
 import { MpNameValue } from './common';
 import { IJSONViewer, JSONChunk, JSONNode, JSONPropPath } from './json';
+import { AnyFunction } from './util';
 import { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
 
 export const enum MpJSONViewerComponentMode {
@@ -33,7 +34,7 @@ export interface MpJSONViewerComponentMethods<T> {
     syncFontSize: (this: T) => void;
     buildComputeObject: (this: T, path: JSONPropPath) => void;
     rpxToPx: (this: T, rpx: number) => number;
-    onInited: (this: T, func: Function) => void;
+    onInited: (this: T, func: AnyFunction) => void;
     changeTab: (this: T, e: MpEvent<any>) => void;
     toggle: (this: T, e: MpEvent<MpJSONViewerComponentEventDetail>) => void;
     init: (this: T) => Promise<any>;
@@ -56,7 +57,7 @@ export interface MpJSONViewerComponent
     JSONViewer?: IJSONViewer;
     target: any;
     windowWidth: number;
-    onInitedHandlers?: Function[];
+    onInitedHandlers?: AnyFunction[];
     lastPath?: JSONPropPath;
     lastOpen?: boolean;
 }
