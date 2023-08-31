@@ -3,6 +3,7 @@ import { MkFuncHook, MkReplaceFuncStore, MpViewFactory } from '@mpkit/types';
 import { HookScope } from '../types/common';
 import { IHooker } from '../types/hook';
 import { wcScopeSingle, log } from './util';
+import { AnyFunction } from '../types/util';
 
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
 const SigleScopes = [HookScope.Api, HookScope.App, HookScope.Component, HookScope.Page, HookScope.Console];
@@ -154,7 +155,7 @@ export class Hooker implements IHooker {
                 (store) => {
                     this.stores.push(store);
                 }
-            );
+            ) as AnyFunction;
         }
     }
 

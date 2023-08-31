@@ -344,4 +344,4 @@ const Spec: MpApiReaderComponentSpec = {
         this.syncGridPageSize();
     }
 };
-WeComponent(ProductControllerMixin, EbusMixin, DataReaderMixin, Spec);
+WeComponent(ProductControllerMixin, EbusMixin, DataReaderMixin as any, Spec as any);

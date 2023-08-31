@@ -13,6 +13,7 @@ import {
     JSONPropDesc,
     JSONPropPath
 } from '../../types/json';
+import { AnyClass, AnyFunction } from '../../types/util';
 export const ELLIPSIS_CHAR = '…';
 export const FUNC_CHAR = 'ƒ';
 export const PROTO_PROP = '__proto__';
@@ -162,7 +163,7 @@ export const getJSONType = (obj: any): JSONType => {
     }
 };
 
-export const getGlobalObjectConstructor = (clsName: GlobalObjectConstructorNames): AnyFunction => {
+export const getGlobalObjectConstructor = (clsName: GlobalObjectConstructorNames): AnyFunction | AnyClass => {
     if (clsName === 'Number') {
         return Number;
     }

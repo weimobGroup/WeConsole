@@ -11,7 +11,7 @@ export class EventEmitter<T = any> implements IEventEmitter<T> {
     }
 
     once(type: string, _handler: EventHandler<T>) {
-        const handler = (...args: any[]) => {
+        const handler = (...args: Parameters<EventHandler<T>>) => {
             _handler(...args);
             this.off(type, handler);
         };

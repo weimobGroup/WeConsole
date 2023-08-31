@@ -2,7 +2,7 @@ import { MpApiVar, MpViewFactory } from '@mpkit/types';
 
 declare global {
     let global: any;
-    let getApp: (spec: any) => void;
+    let getApp: (config?: any) => any;
     let getCurrentPages: () => undefined | any[];
     let wx: MpApiVar;
     let my: MpApiVar;

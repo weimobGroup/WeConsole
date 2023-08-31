@@ -331,4 +331,4 @@ const Spec: MpConsoleReaderComponentSpec = {
         }
     }
 };
-WeComponent(EbusMixin, ProductControllerMixin, VirtualListMixin, DataReaderMixin, Spec);
+WeComponent(EbusMixin, ProductControllerMixin, VirtualListMixin as any, DataReaderMixin as any, Spec as any);
