@@ -236,7 +236,7 @@ const Mixin: MpDataReaderComponentSpec = {
         changeCategory(activeCategory) {
             this.initMaterialCategoryMap();
             if (this.data.activeCategory !== activeCategory) {
-                this.setData({
+                this.updateData({
                     activeCategory
                 });
             }

@@ -26,6 +26,33 @@ const promiseifyMpApi = <T = any>(apiName: string, options?: any) => {
 export default {
     methods: {
         noop() {},
+        forceData(data: any, cb?: () => void) {
+            if (!isValidObject(data) || isEmptyObject(data)) {
+                cb?.();
+                return;
+            }
+            if (!this.waitingData) {
+                this.waitingData = {};
+                this.waitingDataCallbacks = [];
+            }
+            Object.assign(this.waitingData, data);
+            if (isFunc(cb)) {
+                this.waitingDataCallbacks.push(cb);
+            }
+            const d = this.waitingData;
+            const cbs = this.waitingDataCallbacks;
+            delete this.waitingDataCallbacks;
+            delete this.waitingData;
+            this.setData(d, () => {
+                cbs.forEach((item) => {
+                    try {
+                        item();
+                    } catch (error) {
+                        console.error(error);
+                    }
+                });
+            });
+        },
         updateData(data: any, cb?: () => void) {
             if (!isValidObject(data) || isEmptyObject(data)) {
                 cb?.();
@@ -57,7 +84,7 @@ export default {
                         }
                     });
                 });
-            }, 200);
+            }, 150);
         },
         $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<MpClientRect> {
             return new Promise<any>((resolve, reject) => {

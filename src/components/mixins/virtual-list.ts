@@ -15,7 +15,7 @@ const Mixin: MpVirtualListComponentSpec = {
     methods: {
         $vlReload() {
             this.$vlComputeContainerHeight(() => {
-                this.setData(
+                this.updateData(
                     {
                         $vlScrollTop: this.data.$vlScrollTop && this.data.$vlScrollTop < 5 ? 0 : 1
                     },
@@ -34,7 +34,7 @@ const Mixin: MpVirtualListComponentSpec = {
             }
             delete this.$vlContainerHeightComputeing;
             delete this.$vlContainerHeightComputeQueue;
-            this.setData({
+            this.updateData({
                 $vlShowList: [],
                 $vlStartPlaceholderHeight: 0,
                 $vlEndPlaceholderHeight: 0
@@ -65,7 +65,7 @@ const Mixin: MpVirtualListComponentSpec = {
             const readyShowIndex = this.data.$vlShowList.findIndex((it) => it.id === item.id);
             if (readyShowIndex !== -1) {
                 this.$vlLock();
-                this.setData(
+                this.updateData(
                     {
                         [`$vlShowList[${readyShowIndex}]`]: readyItem
                     },
@@ -78,7 +78,7 @@ const Mixin: MpVirtualListComponentSpec = {
             this.$vlListChange();
         },
         $vlListChange() {
-            this.setData({
+            this.updateData({
                 $vlTotalCount: this.$vlAllList.length
             });
             this.$vlComputeShowList();
@@ -103,7 +103,7 @@ const Mixin: MpVirtualListComponentSpec = {
                 delete this.$vlContainerHeightComputeQueue;
                 this.$vlStartIndex = 0;
                 this.$vlEndIndex = 0;
-                this.setData(
+                this.updateData(
                     {
                         $vlScrollTop: 0,
                         $vlTotalCount: 0,
@@ -137,7 +137,7 @@ const Mixin: MpVirtualListComponentSpec = {
         },
         $vlLockScrollTo(top: number) {
             this.$vlLock();
-            this.setData(
+            this.updateData(
                 {
                     $vlScrollTop: top
                 },
@@ -365,7 +365,7 @@ const Mixin: MpVirtualListComponentSpec = {
                 });
                 renderData.$vlShowList = mergeList;
                 if (!isEmptyObject(renderData)) {
-                    this.setData(renderData, () => {
+                    this.updateData(renderData, () => {
                         Promise.all(renderCallbacks.map((item) => item())).then(() => {
                             setTimeout(() => {
                                 this.$vlUnLock();

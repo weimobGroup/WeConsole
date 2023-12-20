@@ -104,7 +104,7 @@ WeComponent(DataReaderMixin as any, EbusMixin as any, {
                     return getStorageInfo();
                 })
                 .then((info) => {
-                    this.setData({
+                    this.updateData({
                         currentSize: info.currentSize,
                         limitSize: info.limitSize,
                         sizeProgress: ((info.currentSize / info.limitSize) * 100).toFixed(2)
@@ -112,7 +112,7 @@ WeComponent(DataReaderMixin as any, EbusMixin as any, {
                 });
         },
         setDetailMaterial(id?: string, from?: string) {
-            this.setData({
+            this.updateData({
                 detailMaterialId: typeof id === 'string' ? id : '',
                 detailFrom: from || ''
             });
@@ -155,7 +155,7 @@ WeComponent(DataReaderMixin as any, EbusMixin as any, {
             this.dataGridWaitMaterials.push(material);
         },
         syncAffixList() {
-            this.setData({
+            this.updateData({
                 affixIds: clone(this.topMaterials || [])
             });
             this.$DataGridMain.reloadAffixList(this.NormalMaterialCategoryMap.all);
@@ -206,7 +206,7 @@ WeComponent(DataReaderMixin as any, EbusMixin as any, {
         },
         replaceData(): Promise<void> {
             return getStorageInfoAndList().then(([info, list]) => {
-                this.setData({
+                this.updateData({
                     currentSize: info.currentSize,
                     limitSize: info.limitSize,
                     sizeProgress: ((info.currentSize / info.limitSize) * 100).toFixed(2)

@@ -18,7 +18,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         tab: {
             type: Number,
             observer(val) {
-                this.setData({
+                this.updateData({
                     activeTabIndex: val
                 });
             }
@@ -51,7 +51,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
     },
     methods: {
         // toggleVisableStackHooks() {
-        //     this.setData({
+        //     this.updateData({
         //         stackHideHooks: !this.data.stackHideHooks,
         //     });
         //     this.setStackHooks();
@@ -79,7 +79,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         //                 stack.splice(0, index + 2);
         //             }
         //         }
-        //         this.setData({
+        //         this.updateData({
         //             "detail.stack": stack,
         //         });
         //     }
@@ -92,7 +92,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         },
         setDetailData(showLoading = true) {
             showLoading &&
-                this.setData({
+                this.updateData({
                     loading: true,
                     detail: null
                 });
@@ -101,7 +101,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 if (!this.$wcProductController) {
                     return (
                         showLoading &&
-                        this.setData({
+                        this.updateData({
                             loading: false,
                             error: '未找到观察者，无法根据ID查询数据',
                             detail: null
@@ -119,7 +119,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 }
                 if (res?.length) {
                     const apiProduct = res[0];
-                    this.setData({
+                    this.updateData({
                         stack: apiProduct.stack
                     });
                     this.orgDetail = apiProduct;
@@ -149,7 +149,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                             value: 'cookies'
                         });
                     }
-                    this.setData({
+                    this.updateData({
                         tabs,
                         hasCookies,
                         loading: false,
@@ -159,19 +159,19 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                     // this.setStackHooks();
                     return;
                 }
-                this.setData({
+                this.updateData({
                     loading: false,
                     error: '',
                     detail: null
                 });
             } else if (data) {
-                this.setData({
+                this.updateData({
                     loading: false,
                     error: '',
                     detail: data
                 });
             } else {
-                this.setData({
+                this.updateData({
                     loading: false,
                     error: '请传递有效的数据',
                     detail: null

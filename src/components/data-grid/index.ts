@@ -20,7 +20,7 @@ const Spec: MpDataGridComponentSpec = {
             type: Number,
             value: 20,
             observer(val) {
-                this.setData({
+                this.updateData({
                     $vlPageSize: val
                 });
                 this.$vlComputeShowList();
@@ -29,7 +29,7 @@ const Spec: MpDataGridComponentSpec = {
         vlItemHeight: {
             type: null,
             observer(val) {
-                this.setData({
+                this.updateData({
                     $vlItemStaticHeight: val
                 });
                 this.$vlComputeShowList();
@@ -138,7 +138,7 @@ const Spec: MpDataGridComponentSpec = {
                     columnWidthMap[cols[index].field] = item;
                 });
                 let left = 0;
-                this.setData({
+                this.updateData({
                     columnWidthMap,
                     lineLefts: this.data.cols.map((item) => {
                         left += columnWidthMap[item.field];
@@ -177,7 +177,7 @@ const Spec: MpDataGridComponentSpec = {
         delete this.computeColWidthTimer;
     },
     attached() {
-        this.setData({
+        this.updateData({
             $vlPageSize: this.$getProp('vlPageSize'),
             $vlItemStaticHeight: this.$getProp('vlItemHeight')
         });

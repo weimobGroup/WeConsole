@@ -77,6 +77,8 @@ export const MpProductHook: MkFuncHook<WeFuncHookState> = {
     }
 };
 
+const needHookMethods = ['created', 'detached', 'onLoad', 'onUnload'];
+
 const hookSpecMethod = (
     spec,
     scope: HookScope,
@@ -123,7 +125,7 @@ const hookSpecMethod = (
             if (typeof spec[prop] === 'object' && typeof spec[prop].observer === 'function') {
                 spec[prop].observer = fireHook(prop, spec[prop].observer);
             }
-        } else if (typeof spec[prop] === 'function') {
+        } else if (typeof spec[prop] === 'function' && needHookMethods.includes(prop)) {
             spec[prop] = fireHook(prop, spec[prop]);
         }
     }

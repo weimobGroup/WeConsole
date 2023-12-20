@@ -140,7 +140,7 @@ const Spec: MpJSONViewerComponentSpec = {
         setPathVisable(open: boolean, path?: JSONPropPath) {
             this.lastOpen = open;
             this.lastPath = path;
-            this.setData(this.buildPath(open, path));
+            this.updateData(this.buildPath(open, path));
         },
         toggle(e: MpEvent<MpJSONViewerComponentEventDetail>) {
             const { open, path, fromCompute } = e.detail;
@@ -195,7 +195,7 @@ const Spec: MpJSONViewerComponentSpec = {
             node.path = this.JSONViewer.replaceJSONPropPath(jsonPath);
             mpPath += '.value';
             mpData[mpPath] = node;
-            this.setData(mpData);
+            this.updateData(mpData);
         },
         rpxToPx(rpx: number): number {
             return (this.windowWidth / 750) * rpx;
@@ -230,7 +230,7 @@ const Spec: MpJSONViewerComponentSpec = {
                         if (this.lastPath) {
                             Object.assign(mpData, this.buildPath(this.lastOpen, this.lastPath));
                         }
-                        this.setData(mpData, () => {
+                        this.updateData(mpData, () => {
                             this.triggerEvent('first', this.data.root);
                             resolve();
                         });
@@ -256,7 +256,7 @@ const Spec: MpJSONViewerComponentSpec = {
                 } else {
                     JSONString = JSON.stringify(target, null, 2);
                 }
-                this.setData(
+                this.updateData(
                     {
                         JSONString: JSONString
                     },
@@ -279,13 +279,13 @@ const Spec: MpJSONViewerComponentSpec = {
             ) {
                 this.JSONViewer.setTarget(this.target);
                 updateUI &&
-                    this.setData({
+                    this.updateData({
                         root: this.JSONViewer.getJSONNode()
                     });
             }
         },
         changeTab(e) {
-            this.setData({
+            this.updateData({
                 activeTab: parseInt(e.detail)
             });
             if (parseInt(e.detail) === 1) {
@@ -332,7 +332,7 @@ const Spec: MpJSONViewerComponentSpec = {
     },
     attached() {
         if (this.data.json) {
-            this.setData({
+            this.updateData({
                 root: this.data.json
             });
         }

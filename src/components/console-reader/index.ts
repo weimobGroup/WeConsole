@@ -99,19 +99,19 @@ const Spec: MpConsoleReaderComponentSpec = {
             const affixList = (this.topMaterials || []).map((id) => {
                 return convertConsoleMaterial(this.getProduct(id));
             });
-            this.setData(
+            this.updateData(
                 {
                     affixList
                 },
                 () => {
                     if (!this.data.affixList.length) {
-                        this.setData({
+                        this.updateData({
                             scrollMarginTop: '0px'
                         });
                         return;
                     }
                     this.$getBoundingClientRect('.console-affixs').then((res) => {
-                        this.setData({
+                        this.updateData({
                             scrollMarginTop: res.height + 'px'
                         });
                     });
@@ -151,12 +151,12 @@ const Spec: MpConsoleReaderComponentSpec = {
                 this.ConsoleStateController.removeState('selectedId');
             }
             if (!id) {
-                return this.setData({
+                return this.updateData({
                     selectRowId: null,
                     selectRowFrom: null
                 });
             }
-            return this.setData({
+            return this.updateData({
                 selectRowId: id,
                 selectRowFrom: from || ''
             });
@@ -312,7 +312,7 @@ const Spec: MpConsoleReaderComponentSpec = {
                 return sum;
             }, {});
             if (!isEmptyObject(reanderData)) {
-                this.setData({
+                this.updateData({
                     reanderData
                 });
             }
@@ -323,7 +323,7 @@ const Spec: MpConsoleReaderComponentSpec = {
 
             if (this.localVlScrollTop) {
                 // 还原上一次的滚动位置
-                this.setData({
+                this.updateData({
                     $vlScrollTop: this.localVlScrollTop
                 });
                 delete this.localVlScrollTop;

@@ -8,7 +8,7 @@ WeComponent<MpViewContext & MpViewContextAny>({
         open: {
             type: Boolean,
             observer(val) {
-                this.setData({
+                this.updateData({
                     innerOpen: val
                 });
             }
@@ -29,7 +29,7 @@ WeComponent<MpViewContext & MpViewContextAny>({
     methods: {
         toggle() {
             this.triggerEvent('toggle');
-            this.setData({
+            this.updateData({
                 innerOpen: !this.data.innerOpen
             });
         }

@@ -123,7 +123,7 @@ WeComponent(EbusMixin, {
             });
         },
         changeSysTab(e) {
-            this.updateData({
+            this.forceData({
                 activeSysTab: e.detail,
                 [`sysTabMountState.s${e.detail}`]: 1
             });
@@ -155,21 +155,21 @@ WeComponent(EbusMixin, {
             MainStateController.setState('mounted', this.data.mounted);
         },
         toggleZoom() {
-            this.updateData({
+            this.forceData({
                 fullScreen: !this.data.fullScreen
             });
             MainStateController.setState('fullScreen', this.data.fullScreen);
             this.$wcEmit(WeConsoleEvents.WcMainComponentSizeChange);
         },
         close() {
-            this.updateData({
+            this.forceData({
                 visable: false
             });
             MainStateController.setState('visable', this.data.visable);
         },
         setTab(e) {
             const activeTabIndex = parseInt(e.detail);
-            this.updateData({
+            this.forceData({
                 activeTabIndex,
                 [`tabMountState.s${activeTabIndex}`]: 1
             });

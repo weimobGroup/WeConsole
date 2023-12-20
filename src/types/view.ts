@@ -51,6 +51,7 @@ export interface MpViewContext<T = any> {
     selectComponent: (str: string) => MpViewContext;
     selectOwnerComponent: () => MpViewContext;
     updateData: (data: any, cb?: () => void) => void;
+    forceData: (data: any, cb?: () => void) => void;
 }
 
 export interface MpViewContextAny {

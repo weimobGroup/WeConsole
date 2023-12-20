@@ -77,7 +77,7 @@ const Spec: MpApiReaderComponentSpec = {
         },
         refreshCategory(categoryVals?: string[]) {
             if (!categoryVals || !categoryVals.length) {
-                this.setData({
+                this.updateData({
                     categoryList: getApiCategoryList(this.$wcUIConfig)
                 });
                 this.ApiStateController.setState('categorys', JSON.parse(JSON.stringify(this.data.categoryList)));
@@ -91,7 +91,7 @@ const Spec: MpApiReaderComponentSpec = {
                         });
                     }
                 });
-                this.setData({
+                this.updateData({
                     categoryList: list
                 });
                 this.ApiStateController.setState('categorys', JSON.parse(JSON.stringify(this.data.categoryList)));
@@ -125,7 +125,7 @@ const Spec: MpApiReaderComponentSpec = {
             this.ApiStateController.removeState('selectedId');
         },
         setDetailMaterial(id?: string, tab?: number, from?: string) {
-            this.setData({
+            this.updateData({
                 detailMaterialId: id || '',
                 detailTab: tab || 0,
                 detailFrom: from || ''
@@ -186,13 +186,13 @@ const Spec: MpApiReaderComponentSpec = {
             }
         },
         syncAffixList() {
-            this.setData({
+            this.updateData({
                 affixIds: clone(this.topMaterials || [])
             });
             this.$DataGridMain.reloadAffixList(this.NormalMaterialCategoryMap.all);
         },
         changeDetailTab(e) {
-            this.setData({
+            this.updateData({
                 detailTab: e.detail
             });
         },
@@ -279,7 +279,7 @@ const Spec: MpApiReaderComponentSpec = {
             if (grid) {
                 Promise.all([rpxToPx(40), grid.$getBoundingClientRect('.fc-datagrid-scroll')]).then(
                     ([itemHeight, { height }]) => {
-                        this.setData({
+                        this.updateData({
                             gridPageSize: Math.ceil(height / itemHeight)
                         });
                     }
@@ -328,7 +328,7 @@ const Spec: MpApiReaderComponentSpec = {
                 return sum;
             }, {});
             if (!isEmptyObject(reanderData)) {
-                this.setData({
+                this.updateData({
                     reanderData
                 });
             }

@@ -34,7 +34,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
             const actions = getCustomActions();
             this.actionDetail = actions.find((item) => item.id === this.data.action);
             if (!this.actionDetail) {
-                this.setData({
+                this.updateData({
                     caseList: null,
                     noUICaseList: null,
                     caseState: {},
@@ -76,7 +76,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
                     value: NoUICaseId
                 });
             }
-            this.setData({
+            this.updateData({
                 everyNoUI,
                 caseList,
                 noUICaseList,
@@ -116,7 +116,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
                     return;
                 }
             }
-            this.setData({
+            this.updateData({
                 activeCaseIndex: caseIndex,
                 [`caseTabState.s${caseIndex}`]: 1
             });
@@ -184,14 +184,14 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
                     // }
                 }
 
-                this.setData({
+                this.updateData({
                     [`caseLoading.${caseItem.id}`]: false,
                     [`caseState.${caseItem.id}`]: state
                 });
             };
             const res = caseItem.handler();
             if (typeof res === 'object' && res.then) {
-                this.setData({
+                this.updateData({
                     [`caseLoading.${caseItem.id}`]: true
                 });
                 res.then((val) => show(null, val));
@@ -229,7 +229,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
         },
         tapGridCell(e) {
             const caseId = e.currentTarget.dataset.case;
-            this.setData({
+            this.updateData({
                 [`gridSelected.${caseId}`]: e.detail.rowId || ''
             });
         },
