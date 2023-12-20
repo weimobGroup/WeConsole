@@ -1,6 +1,6 @@
 <view class="wc-el">
     <view class="wc-el-head {{!data.alive?'death':''}} {{data.id==selectId?'selected':''}} {{data.hasChild?'has-child':''}} {{data.open?'open':''}}" bind:tap="tap">
-        <view class="wc-el-boundary">{{'<'}}</view>
+        <view class="wc-el-boundary">{{l}}</view>
         <view class="wc-el-name {{data.group?'':'tapable'}}" catch:tap="tapName">{{data.name}}</view>
         <block wx:if="{{data.attrs}}">
             <block wx:for="{{data.attrs}}" wx:key="name">
@@ -15,24 +15,24 @@
         </block>
         <block wx:if="{{!data.open}}">
             <block wx:if="{{data.hasChild}}">
-                <view class="wc-el-boundary">{{'>'}}</view>
+                <view class="wc-el-boundary">{{r}}</view>
                 <view class="wc-el-ellipsis">{{'…'}}</view>
-                <view class="wc-el-boundary">{{'</'}}</view>
+                <view class="wc-el-boundary">{{l2}}</view>
                 <view class="wc-el-name">{{data.name}}</view>
-                <view class="wc-el-boundary">{{'>'}}</view>
+                <view class="wc-el-boundary">{{r}}</view>
             </block>
-            <view wx:else class="wc-el-boundary">{{' />'}}</view>
+            <view wx:else class="wc-el-boundary">{{' '+r2}}</view>
         </block>
-        <view wx:else class="wc-el-boundary">{{'>'}}</view>
+        <view wx:else class="wc-el-boundary">{{r}}</view>
     </view>
     <block wx:if="{{data.open}}">
         <view class="wc-el-body">
             <wc-element wx:for="{{data.children}}" wx:key="id" data="{{item}}" selectId="{{selectId}}" bind:toggle="toggle" bind:tapName="childTapName"></wc-element>
         </view>
         <view class="wc-el-footer">
-            <view class="wc-el-boundary">{{'</'}}</view>
+            <view class="wc-el-boundary">{{l2}}</view>
             <view class="wc-el-name">{{data.name}}</view>
-            <view class="wc-el-boundary">{{'>'}}</view>
+            <view class="wc-el-boundary">{{r}}</view>
         </view>
     </block>
 </view>

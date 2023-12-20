@@ -1,5 +1,5 @@
 import { wcScopeSingle } from '../../modules/util';
-import { MpComponentSpec } from '../../types/view';
+import type { MpComponentSpec } from '../../types/view';
 function OnProduct(type, data) {
     this && this.onWcProduct && this.onWcProduct(type, data);
 }

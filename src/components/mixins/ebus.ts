@@ -1,4 +1,4 @@
-import { EventHandler } from '../../types/util';
+import type { EventHandler } from '../../types/util';
 import { once, emit, on, off } from '../../modules/ebus';
 import { each } from '../../modules/util';
 export default {

@@ -1,4 +1,4 @@
-import { IEventEmitter, EventHandler } from '../types/util';
+import type { IEventEmitter, EventHandler } from '../types/util';
 export class EventEmitter<T = any> implements IEventEmitter<T> {
     private events: {
         [prop: string]: EventHandler<T>[];

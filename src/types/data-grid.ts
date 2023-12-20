@@ -1,9 +1,9 @@
-import { RequireId } from './common';
-import { MpItemsComponent, MpItemsComponentExports, MpItemsComponentMethods } from './items';
-import { MpJSONViewerComponentEbusDetail } from './json-viewer';
-import { AnyFunction } from './util';
-import { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
-import { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
+import type { RequireId } from './common';
+import type { MpItemsComponent, MpItemsComponentExports, MpItemsComponentMethods } from './items';
+import type { MpJSONViewerComponentEbusDetail } from './json-viewer';
+import type { AnyFunction } from './util';
+import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
+import type { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
 
 export interface DataGridCol {
     field: string;

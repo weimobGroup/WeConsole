@@ -1,7 +1,7 @@
-import { RequireId } from './common';
-import { AnyFunction } from './util';
-import { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
-import { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
+import type { RequireId } from './common';
+import type { AnyFunction } from './util';
+import type { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
+import type { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
 
 export interface MpItemsComponentData<T extends RequireId = RequireId> {
     affixList?: T[];

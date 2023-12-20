@@ -3,20 +3,7 @@
 
 .fc-hand {
     position: fixed;
-    right: 20rpx;
-    bottom: 20rpx;
     z-index: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: $ht-hand;
-    height: $ht-hand;
-    cursor: pointer;
-    background: $bg-primary;
-    border-radius: 50%;
-    box-shadow: 0 0 20rpx $bg-primary;
-    -webkit-tap-highlight-color: transparent;
-
     &.fc-adap {
         bottom: 120rpx;
     }
@@ -29,6 +16,24 @@
 
     &.is-hide {
         display: none;
+    }
+}
+
+.fc-hand-prefect {
+    right: 20rpx;
+    bottom: 20rpx;
+
+    .fc-hand-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: $ht-hand;
+        height: $ht-hand;
+        cursor: pointer;
+        background: $bg-primary;
+        border-radius: 50%;
+        box-shadow: 0 0 20rpx $bg-primary;
+        -webkit-tap-highlight-color: transparent;
     }
 }
 

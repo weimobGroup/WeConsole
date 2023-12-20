@@ -1,8 +1,8 @@
-import { MpCanvasComponent, MpCanvasComponentMethods } from './canvas';
-import { MpNameValue } from './common';
-import { IJSONViewer, JSONChunk, JSONNode, JSONPropPath } from './json';
-import { AnyFunction } from './util';
-import { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
+import type { MpCanvasComponent, MpCanvasComponentMethods } from './canvas';
+import type { MpNameValue } from './common';
+import type { IJSONViewer, JSONChunk, JSONNode, JSONPropPath } from './json';
+import type { AnyFunction } from './util';
+import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
 
 export const enum MpJSONViewerComponentMode {
     full = 1,

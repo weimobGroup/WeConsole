@@ -1,6 +1,6 @@
-import { RequireId } from './common';
-import { AnyFunction } from './util';
-import { MpEvent, MpScrollEventDetail, MpViewContext } from './view';
+import type { RequireId } from './common';
+import type { AnyFunction } from './util';
+import type { MpEvent, MpScrollEventDetail, MpViewContext } from './view';
 
 export interface MpVirtualListComponentData<T extends RequireId = RequireId> {
     $vlScrollTop: number;

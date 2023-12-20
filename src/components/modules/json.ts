@@ -1,7 +1,6 @@
 import { isEmptyObject, isPlainObject } from '@mpkit/util';
 import { getMpViewType, has, log } from '../../modules/util';
-import {
-    JSONType,
+import type {
     JSONValue,
     JSONChunk,
     JSONProp,
@@ -13,7 +12,8 @@ import {
     JSONPropDesc,
     JSONPropPath
 } from '../../types/json';
-import { AnyClass, AnyFunction } from '../../types/util';
+import { JSONType } from '../../types/json';
+import type { AnyClass, AnyFunction } from '../../types/util';
 export const ELLIPSIS_CHAR = '…';
 export const FUNC_CHAR = 'ƒ';
 export const PROTO_PROP = '__proto__';
@@ -114,17 +114,27 @@ export const getClassName = (obj: any): string => {
     if (viewType === 'Component') {
         return 'Component';
     }
-    if ('constructor' in obj && 'name' in obj.constructor && obj.constructor.name) {
-        return obj.constructor.name;
+    try {
+        if ('constructor' in obj && 'name' in obj.constructor && obj.constructor.name) {
+            return obj.constructor.name;
+        }
+    } catch (error) {
+        return '';
     }
-    if (
-        'prototype' in obj &&
-        'constructor' in obj.prototype &&
-        'name' in obj.prototype.constructor &&
-        obj.prototype.constructor.name
-    ) {
-        return obj.prototype.constructor.name;
+
+    try {
+        if (
+            'prototype' in obj &&
+            'constructor' in obj.prototype &&
+            'name' in obj.prototype.constructor &&
+            obj.prototype.constructor.name
+        ) {
+            return obj.prototype.constructor.name;
+        }
+    } catch (error) {
+        return '';
     }
+
     const proto = getPrototypeOf(obj);
     if (proto) {
         return getClassName(proto);

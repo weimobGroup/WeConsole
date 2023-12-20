@@ -1,11 +1,14 @@
 import { wcScope, wcScopeSingle } from '../../modules/util';
 import { ReaderStateController } from '../modules/reader-state';
 import { MpApiCategoryMap, reportCategoryMapToList } from '../modules/category';
-import { MpProduct } from '../../types/product';
-import { MpUIConfig } from '../../types/config';
+import type { MpProduct } from '../../types/product';
+import type { MpUIConfig } from '../../types/config';
 
 const WcScope = wcScope();
-export const MainStateController = wcScopeSingle('MainStateController', () => new ReaderStateController('Main'));
+export const MainStateController = wcScopeSingle(
+    'MainStateController',
+    () => new ReaderStateController('Main')
+) as ReaderStateController;
 wcScopeSingle('ApiStateController', () => new ReaderStateController('Api', () => wcScopeSingle('ProductController')));
 wcScopeSingle(
     'ConsoleStateController',

@@ -1,8 +1,8 @@
-import { MpSetDataHandler } from '@mpkit/types';
-import { MpUIConfig } from './config';
-import { IMpProductController } from './hook';
-import { MpProduct } from './product';
-import { AnyFunction, AnyObject, EventHandler } from './util';
+import type { MpSetDataHandler } from '@mpkit/types';
+import type { MpUIConfig } from './config';
+import type { IMpProductController } from './hook';
+import type { MpProduct } from './product';
+import type { AnyFunction, AnyObject, EventHandler } from './util';
 
 export interface MpClientRect {
     width: number;
@@ -50,6 +50,7 @@ export interface MpViewContext<T = any> {
     $wcOff?: (name: string, handler?: EventHandler) => any;
     selectComponent: (str: string) => MpViewContext;
     selectOwnerComponent: () => MpViewContext;
+    updateData: (data: any, cb?: () => void) => void;
 }
 
 export interface MpViewContextAny {
@@ -89,6 +90,7 @@ export interface MpComponentSpec<T extends MpViewContext = MpViewContext> extend
     properties?: MpComponentProperties<T>;
     methods?: MpComponentMethods<T> & AnyObject;
     $mixinEnd?: AnyFunction;
+    externalClasses?: string[];
     pageLifetimes?: {
         show?: AnyFunction;
         hide?: AnyFunction;

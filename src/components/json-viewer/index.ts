@@ -2,17 +2,14 @@ import { WeComponent } from '../mixins/component';
 import { equalJSONPropPath, getJSONNode, getPathValue } from '../modules/json';
 import { cutJSONNode, JSONViewer } from '../modules/json-viewer';
 import { getSystemInfo } from '../modules/util';
-import { JSONNode, JSONPropPath, JSONRow, JSONTree, JSONValue } from '../../types/json';
+import type { JSONNode, JSONPropPath, JSONRow, JSONTree, JSONValue } from '../../types/json';
 import EbusMixin from '../mixins/ebus';
 import CanvasMixin from '../mixins/canvas';
-import {
-    MpJSONViewerComponentEventDetail,
-    MpJSONViewerComponentMode,
-    MpJSONViewerComponentSpec
-} from '../../types/json-viewer';
-import { MpEvent } from '../../types/view';
+import type { MpJSONViewerComponentEventDetail, MpJSONViewerComponentSpec } from '../../types/json-viewer';
+import { MpJSONViewerComponentMode } from '../../types/json-viewer';
+import type { MpEvent } from '../../types/view';
 import { log } from '../../modules/util';
-import { AnyFunction } from '../../types/util';
+import type { AnyFunction } from '../../types/util';
 // eslint-disable-next-line quotes
 const fontName = "Consolas, Menlo, Monaco, 'Courier New', monospace";
 const Spec: MpJSONViewerComponentSpec = {
@@ -25,6 +22,7 @@ const Spec: MpJSONViewerComponentSpec = {
             type: Object
         },
         outerClass: String,
+        title: String,
         from: String,
         init: {
             type: Boolean,

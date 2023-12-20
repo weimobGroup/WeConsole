@@ -1,4 +1,4 @@
-import { HookScope, MethodExecStatus, MpCookie, MpDetailKV, MpStackInfo, RequireId } from './common';
+import type { HookScope, MethodExecStatus, MpCookie, MpDetailKV, MpStackInfo, RequireId } from './common';
 
 export interface MpProduct {
     id: string;

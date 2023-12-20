@@ -1,5 +1,6 @@
-import { MethodExecStatus, MpDetailKV } from '../../types/common';
-import { MpApiDetail, MpProduct } from '../../types/product';
+import type { MpDetailKV } from '../../types/common';
+import { MethodExecStatus } from '../../types/common';
+import type { MpApiDetail, MpProduct } from '../../types/product';
 import { parseCookie } from './cookie';
 import { computeTime, convertStockToInitiatorName, getStatusText } from './util';
 

@@ -1,6 +1,6 @@
-import { MpEvent } from '../../types/view';
-import { MpItemsComponentSpec } from '../../types/items';
-import { MpDataGridComponentExports } from '../../types/data-grid';
+import type { MpEvent } from '../../types/view';
+import type { MpItemsComponentSpec } from '../../types/items';
+import type { MpDataGridComponentExports } from '../../types/data-grid';
 
 const Spec: MpItemsComponentSpec = {
     data: {

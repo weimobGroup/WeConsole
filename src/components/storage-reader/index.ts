@@ -10,8 +10,8 @@ import {
     removeStorage
 } from '../modules/storage-reader';
 import EbusMixin from '../mixins/ebus';
-import { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
-import { MpStorageMaterial } from '../../types/product';
+import type { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
+import type { MpStorageMaterial } from '../../types/product';
 
 const substr = (str: string | undefined, len: number): string => {
     return typeof str === 'string' ? (str.length > len ? str.substr(0, len) + '...' : str) : 'undefined';

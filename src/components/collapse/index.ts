@@ -1,4 +1,4 @@
-import { MpViewContext, MpViewContextAny } from '../../types/view';
+import type { MpViewContext, MpViewContextAny } from '../../types/view';
 import { WeComponent } from '../mixins/component';
 WeComponent<MpViewContext & MpViewContextAny>({
     options: {

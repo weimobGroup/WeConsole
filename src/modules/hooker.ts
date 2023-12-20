@@ -1,9 +1,9 @@
 import { hookFunc, replaceFunc } from '@mpkit/func-helper';
-import { MkFuncHook, MkReplaceFuncStore, MpViewFactory } from '@mpkit/types';
+import type { MkFuncHook, MkReplaceFuncStore, MpViewFactory } from '@mpkit/types';
 import { HookScope } from '../types/common';
-import { IHooker } from '../types/hook';
+import type { IHooker } from '../types/hook';
 import { wcScopeSingle, log } from './util';
-import { AnyFunction } from '../types/util';
+import type { AnyFunction } from '../types/util';
 
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
 const SigleScopes = [HookScope.Api, HookScope.App, HookScope.Component, HookScope.Page, HookScope.Console];
@@ -74,27 +74,50 @@ export class Hooker implements IHooker {
         }
         if (scope === HookScope.Api) {
             this.native = wx;
+            const oldWx = this.native;
             const target = {};
-            for (const prop in wx) {
-                if (typeof wx[prop] === 'function') {
-                    const mehtod = wx[prop].bind(wx);
-                    target[prop] = replaceFunc(
-                        mehtod,
-                        hookFunc(mehtod, false, this.hooks, {
-                            funcName: prop,
-                            scope: this.scope,
-                            ...otherState
-                        }).func,
-                        (store) => {
-                            this.stores.push(store);
-                        }
+            let setFail;
+            try {
+                wx = target;
+            } catch (error) {
+                setFail = true;
+            }
+            const setTarget = (prop: string, val: any) => {
+                if (!setFail) {
+                    target[prop] = val;
+                    return;
+                }
+                Object.defineProperty(oldWx, prop, {
+                    value: val
+                });
+            };
+            const keys = Object.keys(oldWx);
+            keys.forEach((prop) => {
+                if (typeof oldWx[prop] === 'function') {
+                    const mehtod = oldWx[prop].bind(oldWx);
+                    setTarget(
+                        prop,
+                        replaceFunc(
+                            mehtod,
+                            hookFunc(mehtod, false, this.hooks, {
+                                funcName: prop,
+                                scope: this.scope,
+                                ...otherState
+                            }).func,
+                            (store) => {
+                                this.stores.push(store);
+                            }
+                        )
                     );
-                } else if (prop === 'cloud') {
+                    return;
+                }
+                if (prop === 'cloud') {
                     // 云开发相关
-                    for (const cloudProp in wx.cloud) {
-                        if (typeof wx.cloud[cloudProp] === 'function') {
-                            const mehtod = wx.cloud[cloudProp].bind(wx.cloud);
-                            wx.cloud[cloudProp] = replaceFunc(
+                    const newCloud = {};
+                    for (const cloudProp in oldWx.cloud) {
+                        if (typeof oldWx.cloud[cloudProp] === 'function') {
+                            const mehtod = oldWx.cloud[cloudProp].bind(oldWx.cloud);
+                            newCloud[cloudProp] = replaceFunc(
                                 mehtod,
                                 hookFunc(mehtod, false, this.hooks, {
                                     funcName: `cloud.${cloudProp}`,
@@ -106,14 +129,15 @@ export class Hooker implements IHooker {
                                     this.stores.push(store);
                                 }
                             );
+                        } else {
+                            newCloud[cloudProp] = oldWx.cloud[cloudProp];
                         }
                     }
-                    target[prop] = wx.cloud;
-                } else {
-                    target[prop] = wx[prop];
+                    setTarget(prop, newCloud);
+                    return;
                 }
-            }
-            wx = target;
+                setTarget(prop, oldWx[prop]);
+            });
             return;
         }
         if (scope === HookScope.Console) {

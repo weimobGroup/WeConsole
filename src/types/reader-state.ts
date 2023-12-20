@@ -1,4 +1,4 @@
-import { IMpProductController } from './hook';
+import type { IMpProductController } from './hook';
 
 export interface MpReaderProductIdMap {
     [prop: string]: 1;

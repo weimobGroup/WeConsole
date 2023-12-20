@@ -1,5 +1,6 @@
+import { isEmptyObject, isFunc, isValidObject } from '@mpkit/util';
 import { log } from '../../modules/util';
-import { MpClientRect } from '../../types/view';
+import type { MpClientRect } from '../../types/view';
 const promiseifyMpApi = <T = any>(apiName: string, options?: any) => {
     const api = wx;
     if (!api) {
@@ -25,6 +26,39 @@ const promiseifyMpApi = <T = any>(apiName: string, options?: any) => {
 export default {
     methods: {
         noop() {},
+        updateData(data: any, cb?: () => void) {
+            if (!isValidObject(data) || isEmptyObject(data)) {
+                cb?.();
+                return;
+            }
+            if (!this.waitingData) {
+                this.waitingData = {};
+                this.waitingDataCallbacks = [];
+            }
+            Object.assign(this.waitingData, data);
+            Object.assign(this.data, data);
+            if (isFunc(cb)) {
+                this.waitingDataCallbacks.push(cb);
+            }
+            if (this.updateDataTimer) {
+                clearTimeout(this.updateDataTimer);
+            }
+            this.updateDataTimer = setTimeout(() => {
+                const d = this.waitingData;
+                const cbs = this.waitingDataCallbacks;
+                delete this.waitingDataCallbacks;
+                delete this.waitingData;
+                this.setData(d, () => {
+                    cbs.forEach((item) => {
+                        try {
+                            item();
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    });
+                });
+            }, 200);
+        },
         $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<MpClientRect> {
             return new Promise<any>((resolve, reject) => {
                 const fire = () => {

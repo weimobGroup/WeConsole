@@ -1,5 +1,5 @@
 import { WeComponent } from '../mixins/component';
-import { MpViewContext, MpViewContextAny } from '../../types/view';
+import type { MpViewContext, MpViewContextAny } from '../../types/view';
 WeComponent<MpViewContext & MpViewContextAny>({
     properties: {
         filter: {

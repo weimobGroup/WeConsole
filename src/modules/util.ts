@@ -1,6 +1,6 @@
-import { AnyFunction, WcListFilterHandler } from '../types/util';
-import { MpStackInfo } from '../types/common';
-import { WeConsoleScope } from '../types/scope';
+import type { AnyFunction, WcListFilterHandler } from '../types/util';
+import type { MpStackInfo } from '../types/common';
+import type { WeConsoleScope } from '../types/scope';
 
 export const now = (() => {
     let p;
@@ -324,3 +324,8 @@ export const each = (obj: any, handler: AnyFunction) => {
         }
     }
 };
+
+/** 获取小程序内weconsole已经监控到的所有的App/Page/Component实例 */
+export const getWcControlMpViewInstances = (): any[] => wcScopeSingle('MpViewInstances', () => []) as any[];
+
+export const getMultiplePageSyncState = () => wcScopeSingle('MpViewInstances', () => ({})) as { value: boolean };

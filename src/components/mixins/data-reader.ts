@@ -1,7 +1,8 @@
 import { isEmptyObject } from '@mpkit/util';
 import { FILTER_BREAK } from '../../modules/util';
-import { MpMaterial, MpProduct } from '../../types/product';
-import { MpDataReaderAction, MpDataReaderComponentContext, MpDataReaderComponentSpec } from '../../types/reader';
+import type { MpMaterial, MpProduct } from '../../types/product';
+import type { MpDataReaderComponentContext, MpDataReaderComponentSpec } from '../../types/reader';
+import { MpDataReaderAction } from '../../types/reader';
 
 const filterPass = <T extends MpMaterial = MpMaterial>(
     item: T,

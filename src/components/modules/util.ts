@@ -1,4 +1,4 @@
-import { MpStackInfo, MpSystemInfo } from '../../types/common';
+import type { MpStackInfo, MpSystemInfo } from '../../types/common';
 
 export const removeEndZero = (num: number | string): string => {
     const str = String(num);

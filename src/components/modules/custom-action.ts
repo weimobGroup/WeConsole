@@ -1,5 +1,6 @@
 import { promiseifyApi, wcScope } from '../../modules/util';
-import { WcCustomAction, WcCustomActionShowMode } from '../../types/other';
+import type { WcCustomAction } from '../../types/other';
+import { WcCustomActionShowMode } from '../../types/other';
 
 const WcScope = wcScope();
 

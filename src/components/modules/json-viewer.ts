@@ -1,6 +1,5 @@
 import { uuid } from '@mpkit/util';
-import {
-    JSONType,
+import type {
     IJSONViewer,
     JSONWord,
     JSONViewerOptions,
@@ -11,6 +10,9 @@ import {
     JSONNode,
     JSONTree,
     JSONPropPath
+} from '../../types/json';
+import {
+    JSONType
 } from '../../types/json';
 import {
     createEllipsisJSONChunk,

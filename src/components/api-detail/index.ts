@@ -2,9 +2,9 @@ import { WeComponent } from '../mixins/component';
 import { convertApiDetail } from '../modules/detail';
 import EbusMixin from '../mixins/ebus';
 import ProductControllerMixin from '../mixins/product-controller';
-import { MpViewContext, MpViewContextAny } from '../../types/view';
-import { MpProduct } from '../../types/product';
-import { MpJSONViewerComponent, MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
+import type { MpViewContext, MpViewContextAny } from '../../types/view';
+import type { MpProduct } from '../../types/product';
+import type { MpJSONViewerComponent, MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
 import { FILTER_BREAK } from '../../modules/util';
 WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin, {
     properties: {

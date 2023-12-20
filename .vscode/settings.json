@@ -2,9 +2,18 @@
     "typescript.tsdk": "node_modules/typescript/lib",
     "editor.formatOnSave": true,
     "eslint.validate": ["javascript", "typescript"],
+    "files.associations": {
+        "*.wxss": "css",
+        "*.wxs": "javascript",
+        "*.wxml": "html"
+    },
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": "explicit",
         "source.fixAll.stylelint": "explicit"
+    },
+    "[html]": {
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "vscode.html-language-features"
     },
     "[javascript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"

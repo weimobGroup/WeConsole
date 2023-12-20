@@ -2,9 +2,9 @@ import { WeComponent } from '../mixins/component';
 import VirtualListMixin from '../mixins/virtual-list';
 import ItemsMixin from '../mixins/items';
 import EbusMixin from '../mixins/ebus';
-import { MpDataGridComponentSpec } from '../../types/data-grid';
-import { MpEvent } from '../../types/view';
-import { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
+import type { MpDataGridComponentSpec } from '../../types/data-grid';
+import type { MpEvent } from '../../types/view';
+import type { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
 const Spec: MpDataGridComponentSpec = {
     properties: {
         from: String,

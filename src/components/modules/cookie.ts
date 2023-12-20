@@ -1,4 +1,4 @@
-import { MpCookie } from '../../types/common';
+import type { MpCookie } from '../../types/common';
 
 export const parseCookie = (content: string): MpCookie => {
     const arr = content.split(';');

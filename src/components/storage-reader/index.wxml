@@ -8,7 +8,7 @@
     <data-grid class="fc-reader-body has-bar" outerClass="fc-api-datagrid {{detailMaterialId&& detailFrom!=='longpressRow'?'show-detail':''}}" vlItemHeight="{{30}}" selected="{{detailMaterialId}}" affixable affixIds="{{affixIds}}" cols="{{readerCols}}" bind:ready="gridReady" bind:tapCell="tapGridCell" bind:longpressRow="longpressGridRow"></data-grid>
     <view wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" class="fc-reader-detail-container has-th has-bar">
         <scroll-view class="fc-detail" scroll-y>
-            <json-viewer from="StorageDetail_{{detailMaterialId}}">
+            <json-viewer title="{{detailMaterialId}}" from="StorageDetail_{{detailMaterialId}}">
                 <view class="fc-detail-action right-border" bind:tap="setDetailMaterial" slot="tabHeadBefore">
                     <view class="fc-detail-close wic-close"></view>
                 </view>

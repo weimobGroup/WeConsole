@@ -1,4 +1,4 @@
-import { MpApiVar, MpViewFactory } from '@mpkit/types';
+import type { MpApiVar, MpViewFactory } from '@mpkit/types';
 
 declare global {
     let global: any;

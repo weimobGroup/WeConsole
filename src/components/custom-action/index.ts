@@ -1,11 +1,12 @@
-import { WcCustomAction, WcCustomActionCase, WcCustomActionGrid, WcCustomActionShowMode } from '../../types/other';
-import { MpEvent, MpViewContext, MpViewContextAny } from '../../types/view';
+import type { WcCustomAction, WcCustomActionCase, WcCustomActionGrid } from '../../types/other';
+import { WcCustomActionShowMode } from '../../types/other';
+import type { MpEvent, MpViewContext, MpViewContextAny } from '../../types/view';
 import { WeComponent } from '../mixins/component';
 import { getCustomActions } from '../modules/custom-action';
 import EbusMixin from '../mixins/ebus';
-import { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
-import { DataGridCol, MpDataGridComponentExports } from '../../types/data-grid';
-import { MpNameValue } from '../../types/common';
+import type { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
+import type { DataGridCol, MpDataGridComponentExports } from '../../types/data-grid';
+import type { MpNameValue } from '../../types/common';
 import { each } from '../../modules/util';
 const NoUICaseId = '$$$NO_UI$$$';
 WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {

@@ -1,6 +1,6 @@
-import { RequireId } from '../types/common';
-import { IMpProductController, MpProductFilter } from '../types/hook';
-import { MpProduct } from '../types/product';
+import type { RequireId } from '../types/common';
+import type { IMpProductController, MpProductFilter } from '../types/hook';
+import type { MpProduct } from '../types/product';
 import { EventEmitter } from './event-emitter';
 import { filter as filterList } from './util';
 

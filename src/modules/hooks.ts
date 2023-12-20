@@ -1,8 +1,8 @@
-import { MkFuncHook } from '@mpkit/types';
+import type { MkFuncHook } from '@mpkit/types';
 import { uuid } from '@mpkit/util';
-import { WeFuncHookState } from '../types/hook';
+import type { WeFuncHookState } from '../types/hook';
 import { HookScope, MethodExecStatus, MpComponentMethodSeat } from '../types/common';
-import { $$getStack, hookApiMethodCallback, isMpViewEvent, log, now, wcScopeSingle } from './util';
+import { $$getStack, getWcControlMpViewInstances, hookApiMethodCallback, isMpViewEvent, log, now } from './util';
 import { Hooker } from './hooker';
 export const FuncIDHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
@@ -132,8 +132,7 @@ const hookSpecMethod = (
 export const MpViewInsCacheSaveHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
         // 将组件实例缓存到全局，便于view取到
-        const MpViewInstances = wcScopeSingle('MpViewInstances', () => []) as any[];
-        MpViewInstances.push(state.ctx);
+        getWcControlMpViewInstances().push(state.ctx);
     }
 };
 export const MpViewInsDestoryMarkHook: MkFuncHook<WeFuncHookState> = {
@@ -141,6 +140,12 @@ export const MpViewInsDestoryMarkHook: MkFuncHook<WeFuncHookState> = {
         Object.defineProperty(state.ctx, '__wcDestoryed__', {
             value: true
         });
+        const MpViewInstances = getWcControlMpViewInstances();
+        const index = MpViewInstances.findIndex((item) => item === state.ctx);
+        if (index !== -1) {
+            // 销毁时要从缓存中删除，否则占用内存太严重，后面重构时避免此类设计
+            MpViewInstances.splice(index, 1);
+        }
     }
 };
 

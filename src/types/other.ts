@@ -1,5 +1,5 @@
-import { DataGridCol } from './data-grid';
-import { AnyFunction, IEventEmitter } from './util';
+import type { DataGridCol } from './data-grid';
+import type { AnyFunction, IEventEmitter } from './util';
 
 /** 定制化 */
 

@@ -1,6 +1,6 @@
 import { WeConsoleEvents } from '../../types/scope';
 import { wcScope } from '../../modules/util';
-import { MpCanvasComponentSpec } from '../../types/canvas';
+import type { MpCanvasComponentSpec } from '../../types/canvas';
 const WcScope = wcScope();
 
 const Mixin: MpCanvasComponentSpec = {

@@ -1,7 +1,7 @@
-import { MkFuncHook } from '@mpkit/types';
-import { HookScope, MpComponentMethodSeat, RequireId } from './common';
-import { MpProduct } from './product';
-import { AnyFunction, IEventEmitter, WcListFilterHandler } from './util';
+import type { MkFuncHook } from '@mpkit/types';
+import type { HookScope, MpComponentMethodSeat, RequireId } from './common';
+import type { MpProduct } from './product';
+import type { AnyFunction, IEventEmitter, WcListFilterHandler } from './util';
 
 export type MpProductFilter = WcListFilterHandler<MpProduct>;
 

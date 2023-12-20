@@ -1,4 +1,4 @@
-import { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
+import type { MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
 import { WeComponent } from '../mixins/component';
 import { findComponentIns, findPageIns, getChildrenElements, getElement } from '../modules/element';
 import EbusMixin from '../mixins/ebus';

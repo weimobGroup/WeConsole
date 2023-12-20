@@ -1,8 +1,9 @@
 import { isEmptyObject } from '@mpkit/util';
 import { each } from '../../modules/util';
-import { MethodExecStatus, RequireId } from '../../types/common';
-import { MpUIConfig } from '../../types/config';
-import { MpApiMaterial, MpConsoleMaterial, MpConsoleMaterialItem, MpProduct } from '../../types/product';
+import type { RequireId } from '../../types/common';
+import { MethodExecStatus } from '../../types/common';
+import type { MpUIConfig } from '../../types/config';
+import type { MpApiMaterial, MpConsoleMaterial, MpConsoleMaterialItem, MpProduct } from '../../types/product';
 import { getCategoryValue } from './category';
 import { computeTime, convertStockToInitiatorDesc, convertStockToInitiatorName, getStatusText } from './util';
 

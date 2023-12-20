@@ -1,5 +1,5 @@
 import { isEmptyObject } from '@mpkit/util';
-import { MpVirtualListComponentData, MpVirtualListComponentSpec } from '../../types/virtual-list';
+import type { MpVirtualListComponentData, MpVirtualListComponentSpec } from '../../types/virtual-list';
 
 const Mixin: MpVirtualListComponentSpec = {
     data: {

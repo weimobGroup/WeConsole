@@ -1,7 +1,7 @@
-import { MpStorageInfo } from '../../types/storage-reader';
-import { MpStorageMaterial } from '../../types/product';
+import type { MpStorageInfo } from '../../types/storage-reader';
+import type { MpStorageMaterial } from '../../types/product';
 import { promiseifyApi } from '../../modules/util';
-import { AnyFunction } from '../../types/util';
+import type { AnyFunction } from '../../types/util';
 
 export const getStorageInfoAndList = (): Promise<[MpStorageInfo, MpStorageMaterial[]]> => {
     return promiseifyApi('getStorageInfo')

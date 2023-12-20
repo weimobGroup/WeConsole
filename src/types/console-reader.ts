@@ -1,9 +1,9 @@
-import { ReaderStateController } from '../components/modules/reader-state';
-import { MpJSONViewerComponent } from './json-viewer';
-import { MpConsoleMaterial, MpProduct } from './product';
-import { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
-import { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
-import { MpVirtualListComponent, MpVirtualListComponentData, MpVirtualListComponentMethods } from './virtual-list';
+import type { ReaderStateController } from '../components/modules/reader-state';
+import type { MpJSONViewerComponent } from './json-viewer';
+import type { MpConsoleMaterial, MpProduct } from './product';
+import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
+import type { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
+import type { MpVirtualListComponent, MpVirtualListComponentData, MpVirtualListComponentMethods } from './virtual-list';
 export interface MpConsoleReaderComponentData {
     itemMinHeightMap?: {
         [prop: string]: number;

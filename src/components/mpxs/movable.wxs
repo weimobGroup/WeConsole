@@ -1,40 +1,44 @@
+// prettier-ignore
 var globalState = {};
+
 function touchStart(e, ownerInstance) {
-    var ds = (e.currentTarget.dataset || {});
+    var ds = e.currentTarget.dataset || {};
     // 节点上一定要有data-movid属性，用于保存状态，触发事件
     if (!ds.movid) {
         return;
     }
     var style = e.instance && e.instance.getComputedStyle ? e.instance.getComputedStyle() : {};
-    var rect = e.instance && e.instance.getBoundingClientRect ? e.instance.getBoundingClientRect() : {
-        left: 0,
-        top: 0,
-        width: 0,
-        height: 0
-    };
+    var rect =
+        e.instance && e.instance.getBoundingClientRect
+            ? e.instance.getBoundingClientRect()
+            : {
+                  left: 0,
+                  top: 0,
+                  width: 0,
+                  height: 0
+              };
     var type = style.position !== 'static' ? 1 : 2;
     globalState[ds.movid] = {
         start: Date.now(),
         startX: e.touches[0].clientX - rect.left,
-        startY: e.touches[0].clientY - rect.top,
+        startY: e.touches[0].clientY - rect.top + (parseFloat(ds.topoffset) || 0),
         minX: isNaN(parseFloat(ds.movminx)) ? 0 : parseFloat(ds.movminx),
         minY: isNaN(parseFloat(ds.movminy)) ? 0 : parseFloat(ds.movminy),
         maxX: isNaN(parseFloat(ds.movmaxx)) ? Infinity : parseFloat(ds.movmaxx),
-        maxY: isNaN(parseFloat(ds.movmaxy)) ? Infinity : parseFloat(ds.movmaxy),
+        maxY: isNaN(parseFloat(ds.movmaxy)) ? Infinity : parseFloat(ds.movmaxy) - (parseFloat(ds.topoffset) || 0),
         type: type
     };
     globalState[ds.movid].maxX -= rect.width;
     globalState[ds.movid].maxY -= rect.height;
+    globalState[ds.movid].minY += rect.height;
 }
+
 function touchMove(e, ownerInstance) {
-    var ds = (e.currentTarget.dataset || {});
+    var ds = e.currentTarget.dataset || {};
     if (!ds.movid) {
         return;
     }
     var state = globalState[ds.movid];
-    if (Date.now() - state.start < 300) {
-        return;
-    }
     var x = e.touches[0].clientX;
     var y = e.touches[0].clientY;
 
@@ -44,17 +48,18 @@ function touchMove(e, ownerInstance) {
     state.y = y - state.startY <= state.minY ? state.minY : y - state.startY;
     state.y = state.y > state.maxY ? state.maxY : state.y;
 
-    if (state.type === 1) {
-        e.instance.setStyle({
-            left: state.x + 'px',
-            top: state.y + 'px',
-        })
-    } else {
-        // TODO: 使用 transform 设置坐标
-    }
+    e.instance.setStyle({
+        left: state.x + 'px',
+        top: state.y + 'px',
+        right: 'auto',
+        bottom: 'auto',
+        position: 'fixed'
+    });
+    return false;
 }
+
 function touchEnd(e, ownerInstance) {
-    var ds = (e.currentTarget.dataset || {});
+    var ds = e.currentTarget.dataset || {};
     if (!ds.movid) {
         return;
     }
@@ -74,4 +79,4 @@ module.exports = {
     touchStart: touchStart,
     touchMove: touchMove,
     touchEnd: touchEnd
-}
+};

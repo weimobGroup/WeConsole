@@ -1,9 +1,9 @@
-import { ReaderStateController } from '../components/modules/reader-state';
-import { DataGridCol } from './data-grid';
-import { MpItemsComponentExports } from './items';
-import { MpApiMaterial, MpProduct } from './product';
-import { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
-import { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
+import type { ReaderStateController } from '../components/modules/reader-state';
+import type { DataGridCol } from './data-grid';
+import type { MpItemsComponentExports } from './items';
+import type { MpApiMaterial, MpProduct } from './product';
+import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
+import type { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
 export interface MpApiReaderComponentData {
     detailMaterialId: string;
     detailFrom: string;

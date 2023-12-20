@@ -7,6 +7,12 @@ WeComponent({
         },
         selectId: String
     },
+    data: {
+        l: '<',
+        l2: '</',
+        r: '>',
+        r2: '/>'
+    },
     methods: {
         tap() {
             this.triggerEvent('toggle', {

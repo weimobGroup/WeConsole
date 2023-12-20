@@ -1,7 +1,7 @@
-import { Hooker } from '../modules/hooker';
-import { MpProductController } from '../modules/controller';
-import { MpUIConfig } from './config';
-import { AnyFunction } from './util';
+import type { Hooker } from '../modules/hooker';
+import type { MpProductController } from '../modules/controller';
+import type { MpUIConfig } from './config';
+import type { AnyFunction } from './util';
 
 export interface WeConsoleScopeSingleMap {
     /** 数据监控控制器 */

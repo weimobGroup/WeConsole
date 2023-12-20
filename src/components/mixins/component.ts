@@ -1,9 +1,10 @@
-import { MkViewFormatSpec, MpViewType } from '@mpkit/types';
+import type { MkViewFormatSpec } from '@mpkit/types';
+import { MpViewType } from '@mpkit/types';
 import { isNativeFunc, isFunc, isPlainObject, merge, isEmptyObject, uuid } from '@mpkit/util';
 import { each, has, wcScope } from '../../modules/util';
-import { MpComponentSpec, MpViewContext } from '../../types/view';
+import type { MpComponentSpec, MpViewContext } from '../../types/view';
 import ToolMixin from './tool';
-import { AnyFunction } from '../../types/util';
+import type { AnyFunction } from '../../types/util';
 export const formatViewSpecList = (viewType: MpViewType, ...specList): MkViewFormatSpec => {
     const result: MkViewFormatSpec = {};
     const specialProps: any = {};

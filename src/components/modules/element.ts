@@ -1,5 +1,5 @@
-import { promiseifyApi, toHump, wcScopeSingle, isApp, getMpViewType } from '../../modules/util';
-import { MpAttrNode, MpElement } from '../../types/element';
+import { promiseifyApi, toHump, isApp, getMpViewType, getWcControlMpViewInstances } from '../../modules/util';
+import type { MpAttrNode, MpElement } from '../../types/element';
 import { uniq } from './util';
 
 const getGroup = (children: MpElement[]): MpElement[] => {
@@ -41,8 +41,6 @@ const getGroup = (children: MpElement[]): MpElement[] => {
     return res;
 };
 
-const getMpViewInstances = () => wcScopeSingle('MpViewInstances', () => []) as any[];
-
 export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[]> => {
     if (isApp(vw)) {
         const pages = getCurrentPages() as any[];
@@ -51,7 +49,7 @@ export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[
         }
         return Promise.all(pages.map((item) => getElement(item)));
     }
-    const MpViewInstances = getMpViewInstances();
+    const MpViewInstances = getWcControlMpViewInstances();
     const children = uniq(
         MpViewInstances.filter((item) => {
             if (group) {
@@ -110,7 +108,7 @@ export const getElement = (vw: any): Promise<MpElement> => {
 };
 
 export const hasChild = (vw: any): boolean => {
-    const MpViewInstances = getMpViewInstances();
+    const MpViewInstances = getWcControlMpViewInstances();
     return MpViewInstances.some((item) => item.selectOwnerComponent() === vw);
 };
 
@@ -163,5 +161,5 @@ export const findPageIns = (id: string): any => {
     return findComponentIns(id);
 };
 export const findComponentIns = (id: string): any => {
-    return getMpViewInstances().find((item) => item.__wxExparserNodeId__ === id);
+    return getWcControlMpViewInstances().find((item) => item.__wxExparserNodeId__ === id);
 };

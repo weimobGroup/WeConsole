@@ -1,6 +1,7 @@
-import { HookScope, MpNameValue } from '../../types/common';
-import { MpProductCategoryGetter, MpUIConfig } from '../../types/config';
-import { MpProduct } from '../../types/product';
+import type { MpNameValue } from '../../types/common';
+import { HookScope } from '../../types/common';
+import type { MpProductCategoryGetter, MpUIConfig } from '../../types/config';
+import type { MpProduct } from '../../types/product';
 
 export const MpApiCategoryMap = {
     request: 'xhr',

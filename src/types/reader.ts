@@ -1,6 +1,6 @@
-import { MpMaterialCategoryMap, MpNameValue, RequireId } from './common';
-import { MpMaterial, MpProduct } from './product';
-import { MpComponentLifeSpec, MpViewContext } from './view';
+import type { MpMaterialCategoryMap, MpNameValue, RequireId } from './common';
+import type { MpMaterial, MpProduct } from './product';
+import type { MpComponentLifeSpec, MpViewContext } from './view';
 
 export const enum MpDataReaderAction {
     /** 留存 */

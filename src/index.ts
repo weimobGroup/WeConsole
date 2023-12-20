@@ -1,17 +1,17 @@
 import { Hooker } from './modules/hooker';
 import { FormatApiMethodCallbackHook, FuncIDHook, MpProductHook, MpViewFactoryHook } from './modules/hooks';
 import { MpProductController } from './modules/controller';
-import { MkFuncHook } from '@mpkit/types';
+import type { MkFuncHook } from '@mpkit/types';
 import { wcScopeSingle, wcScope } from './modules/util';
-import { WeFuncHookState } from './types/hook';
+import type { WeFuncHookState } from './types/hook';
 import { HookScope } from './types/common';
-import { MpUIConfig } from './types/config';
+import type { MpUIConfig } from './types/config';
 import { emit } from './modules/ebus';
-import { WcCustomAction } from './types/other';
+import type { WcCustomAction } from './types/other';
 import { WeConsoleEvents } from './types/scope';
 export * from './modules/ebus';
 
-export { log } from './modules/util';
+export { log, getWcControlMpViewInstances } from './modules/util';
 
 export const ProductController = wcScopeSingle<MpProductController>(
     'ProductController',
@@ -93,7 +93,12 @@ const initHooker = (scope: HookScope) => {
 
 export const replace = (scope?: HookScope) => {
     if (!scope) {
-        return HookerList.forEach((item) => item.replace());
+        replace(HookScope.Console);
+        replace(HookScope.Api);
+        replace(HookScope.App);
+        replace(HookScope.Page);
+        replace(HookScope.Component);
+        return;
     }
     const item = HookerList.find((item) => item.scope === scope);
     if (item) {
@@ -111,9 +116,6 @@ export const restore = (scope?: HookScope) => {
         item.restore();
     }
 };
-
-/** 获取小程序内weconsole已经监控到的所有的App/Page/Component实例 */
-export const getWcControlMpViewInstances = (): any[] => wcScopeSingle('MpViewInstances', () => []) as any[];
 
 export const getUIConfig = (): Partial<MpUIConfig> => {
     const scope = wcScope();

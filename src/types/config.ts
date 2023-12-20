@@ -1,6 +1,6 @@
-import { MpNameValue } from './common';
-import { WcCustomAction } from './other';
-import { MpProduct } from './product';
+import type { MpNameValue } from './common';
+import type { WcCustomAction } from './other';
+import type { MpProduct } from './product';
 
 export type MpProductCategoryGetter = (product: Partial<MpProduct>) => string | string[];
 
