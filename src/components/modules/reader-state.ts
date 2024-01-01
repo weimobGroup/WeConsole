@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/member-ordering */
 import type { IMpProductController } from '../../types/hook';
 import { EventEmitter } from '../../modules/event-emitter';
-import { getMultiplePageSyncState } from '../../modules/util';
+import { checkMultiplePageStateEnabled } from '../../config';
 import { HookScope } from '../../types/common';
 import type { MpReaderState, ProductControllerGetter } from '../../types/reader-state';
 
@@ -88,7 +88,7 @@ export class ReaderStateController extends EventEmitter {
     }
 
     setState(key: string, val: any) {
-        if (!getMultiplePageSyncState().value && key !== 'showIcon') {
+        if (!checkMultiplePageStateEnabled() && key !== 'showIcon') {
             return;
         }
         this.state.state[key] = val;
@@ -100,7 +100,7 @@ export class ReaderStateController extends EventEmitter {
     }
 
     removeState(key: string) {
-        if (!getMultiplePageSyncState().value) {
+        if (!checkMultiplePageStateEnabled()) {
             return;
         }
         const val = this.state.state[key];

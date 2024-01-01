@@ -2,14 +2,13 @@ import { Hooker } from './modules/hooker';
 import { FormatApiMethodCallbackHook, FuncIDHook, MpProductHook, MpViewFactoryHook } from './modules/hooks';
 import { MpProductController } from './modules/controller';
 import type { MkFuncHook } from '@mpkit/types';
-import { wcScopeSingle, wcScope } from './modules/util';
 import type { WeFuncHookState } from './types/hook';
 import { HookScope } from './types/common';
-import type { MpUIConfig } from './types/config';
 import { emit } from './modules/ebus';
-import type { WcCustomAction } from './types/other';
 import { WeConsoleEvents } from './types/scope';
+import { wcScope, wcScopeSingle } from './config';
 export * from './modules/ebus';
+export { getUIConfig, setUIConfig } from './config';
 
 export { log, getWcControlMpViewInstances } from './modules/util';
 
@@ -117,58 +116,15 @@ export const restore = (scope?: HookScope) => {
     }
 };
 
-export const getUIConfig = (): Partial<MpUIConfig> => {
-    const scope = wcScope();
-    if (!scope.UIConfig) {
-        scope.UIConfig = {};
-    }
-    return scope.UIConfig;
-};
-
-export const setUIConfig = (config: Partial<MpUIConfig>) => {
-    const UIConfig = getUIConfig();
-    Object.assign(UIConfig, config);
-    emit(WeConsoleEvents.WcUIConfigChange, UIConfig);
-};
-
-export const addCustomAction = (action: WcCustomAction) => {
-    const scope = wcScope();
-    if (!scope.UIConfig) {
-        scope.UIConfig = {};
-    }
-    const config: MpUIConfig = scope.UIConfig;
-    if (!config.customActions) {
-        config.customActions = [];
-    }
-    const index = config.customActions.findIndex((item) => item.id === action.id);
-    if (index === -1) {
-        config.customActions.push(action);
-    } else {
-        config.customActions[index] = action;
-    }
-    emit(WeConsoleEvents.WcUIConfigChange, scope.UIConfig);
-};
-export const removeCustomAction = (actionId: string) => {
-    const scope = wcScope();
-    if (scope?.UIConfig && scope.UIConfig.customActions) {
-        const config: MpUIConfig = scope.UIConfig;
-        const index = config.customActions.findIndex((item) => item.id === actionId);
-        if (index !== -1) {
-            config.customActions.splice(index, 1);
-            emit(WeConsoleEvents.WcUIConfigChange, scope.UIConfig);
-        }
-    }
-};
-
 export const showWeConsole = () => {
     const scope = wcScope();
-    scope.visable = true;
-    emit(WeConsoleEvents.WcVisableChange, scope.visable);
+    scope.visible = true;
+    emit(WeConsoleEvents.WcVisibleChange, scope.visible);
 };
 export const hideWeConsole = () => {
     const scope = wcScope();
-    scope.visable = false;
-    emit(WeConsoleEvents.WcVisableChange, scope.visable);
+    scope.visible = false;
+    emit(WeConsoleEvents.WcVisibleChange, scope.visible);
 };
 
 // TODO: 暂时这样简陋下，后面做全端时重写

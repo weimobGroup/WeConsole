@@ -170,9 +170,9 @@ WeComponent(DataReaderMixin as any, EbusMixin as any, {
             }
         },
         tapGridCell(e) {
-            const { rowId } = e.detail;
-            if (rowId) {
-                this.setDetailMaterial(rowId, 'tapCell');
+            const { row } = e.detail;
+            if (row?.key) {
+                this.setDetailMaterial(row.key, 'tapCell');
             }
         },
         longpressGridRow(e) {

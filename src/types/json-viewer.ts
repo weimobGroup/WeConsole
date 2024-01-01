@@ -41,7 +41,7 @@ export interface MpJSONViewerComponentMethods<T> {
     openPath: (this: T, path?: JSONPropPath) => void;
     closePath: (this: T, path?: JSONPropPath) => void;
     buildPath: (this: T, open: boolean, path?: JSONPropPath) => any;
-    setPathVisable: (this: T, open: boolean, path?: JSONPropPath) => void;
+    setPathVisible: (this: T, open: boolean, path?: JSONPropPath) => void;
     setTarget: (this: T, target?: any, updateUI?: boolean) => void;
     initJSONViewer: (this: T, from?: string) => Promise<any>;
     setJSONString: (this: T, target?: any) => Promise<any>;

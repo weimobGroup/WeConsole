@@ -187,7 +187,7 @@ const Mixin: MpVirtualListComponentSpec = {
                 const oldEnd = this.$vlEndIndex;
                 const vlGetItemHeight = this.$vlGetItemHeight ? this.$vlGetItemHeight : (): any => {};
                 let firstIntersectIndex = -1;
-                let visableHeight = 0;
+                let visibleHeight = 0;
                 let lastIntersectIndex = -1;
                 let top = 0;
                 if (!this.$vlItemHeightMap) {
@@ -217,9 +217,9 @@ const Mixin: MpVirtualListComponentSpec = {
                             firstIntersectIndex = index;
                         }
                         if (firstIntersectIndex !== -1 && lastIntersectIndex === -1) {
-                            visableHeight += this.$vlItemHeightMap[item.id];
+                            visibleHeight += this.$vlItemHeightMap[item.id];
                         }
-                        if (visableHeight >= this.$vlContainerHeight && lastIntersectIndex === -1) {
+                        if (visibleHeight >= this.$vlContainerHeight && lastIntersectIndex === -1) {
                             lastIntersectIndex = index;
                         }
                         if (lastIntersectIndex !== -1 && firstIntersectIndex !== -1) {

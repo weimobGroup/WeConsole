@@ -11,6 +11,37 @@ export interface MpStackInfo {
     /** 执行方法归属名称，如：Object, obj  */
     ascription?: string;
 }
+export interface MpSystemInfo {
+    /** 屏幕宽度，单位px */
+    screenWidth: number;
+    /** 屏幕高度，单位px */
+    screenHeight: number;
+    /** 可使用窗口宽度，单位px */
+    windowWidth: number;
+    /** 可使用窗口高度，单位px */
+    windowHeight: number;
+    /** 状态栏的高度，单位px */
+    statusBarHeight: number;
+    brand: string;
+    /** 微信版本号 */
+    version: string;
+    /** 微信版本号 */
+    SDKVersion: string;
+    /** 操作系统及版本 */
+    system: string;
+    /** 设备型号。新机型刚推出一段时间会显示unknown，微信会尽快进行适配。 */
+    model: string;
+    safeArea: {
+        top: number;
+        right: number;
+        bottom: number;
+        left: number;
+        width: number;
+        height: number;
+    };
+    platform: string;
+    enableDebug?: boolean;
+}
 
 export const enum MethodExecStatus {
     Executed = 1,
@@ -72,10 +103,4 @@ export interface MpCookie {
     size?: number;
     httpOnly?: boolean;
     secure?: boolean;
-}
-
-export interface MpSystemInfo {
-    windowWidth: number;
-    windowHeight: number;
-    statusBarHeight?: number;
 }

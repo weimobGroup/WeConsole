@@ -20,7 +20,7 @@ const Spec: MpDataGridComponentSpec = {
             type: Number,
             value: 20,
             observer(val) {
-                this.updateData({
+                this.forceData({
                     $vlPageSize: val
                 });
                 this.$vlComputeShowList();
@@ -29,7 +29,7 @@ const Spec: MpDataGridComponentSpec = {
         vlItemHeight: {
             type: null,
             observer(val) {
-                this.updateData({
+                this.forceData({
                     $vlItemStaticHeight: val
                 });
                 this.$vlComputeShowList();

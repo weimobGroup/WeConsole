@@ -1,7 +1,17 @@
 import type { AnyFunction, WcListFilterHandler } from '../types/util';
-import type { MpStackInfo } from '../types/common';
-import type { WeConsoleScope } from '../types/scope';
+import type { MpStackInfo, MpSystemInfo } from '../types/common';
+import { wcScopeSingle } from '../config';
+import type { MpViewContext } from '../types/view';
 
+export const getSystemInfo = (() => {
+    let info: MpSystemInfo;
+    return (ignoreCache?: boolean): MpSystemInfo => {
+        if (!info || ignoreCache) {
+            info = wx.getSystemInfoSync();
+        }
+        return info;
+    };
+})();
 export const now = (() => {
     let p;
     return (): number => {
@@ -9,77 +19,6 @@ export const now = (() => {
             p = typeof performance !== 'undefined' && 'now' in performance ? performance : Date;
         }
         return p.now();
-    };
-})();
-
-export const getGlobal = (() => {
-    let res;
-    return (): any => {
-        if (res) {
-            return res;
-        }
-        if (typeof global === 'object' && global) {
-            res = global;
-        } else if (typeof globalThis === 'object' && globalThis) {
-            res = globalThis;
-            // eslint-disable-next-line @typescript-eslint/no-invalid-this
-        } else if (typeof this === 'object' && this) {
-            // eslint-disable-next-line @typescript-eslint/no-invalid-this, @typescript-eslint/no-this-alias
-            res = this;
-        } else if (typeof wx === 'object' && wx) {
-            (wx as any).__wcGlobal__ = wx.__wcGlobal__ || {};
-            res = wx.__wcGlobal__;
-        } else if (typeof getApp === 'function') {
-            const app = getApp({ allowDefault: true });
-            app.__wcGlobal__ = app.__wcGlobal__ || {};
-            res = app.__wcGlobal__;
-        } else {
-            res = {};
-        }
-        return res;
-    };
-})();
-
-export const wcScope = (): WeConsoleScope => {
-    const G = getGlobal();
-    if (!G.WeConsoleScope) {
-        Object.defineProperty(G, 'WeConsoleScope', {
-            configurable: false,
-            enumerable: true,
-            writable: false,
-            value: {}
-        });
-    }
-    return G.WeConsoleScope;
-};
-
-export const wcScopeSingle = (() => {
-    const G = wcScope();
-    if (!G.SingleMapPromise) {
-        G.SingleMapPromise = {};
-    }
-    return <T = any>(name: string, creater?: AnyFunction): undefined | T | Promise<T> => {
-        if (!G.SingleMap) {
-            G.SingleMap = {};
-        }
-
-        if (!(name in G.SingleMap) && creater) {
-            G.SingleMap[name] = creater();
-        }
-        if (name in G.SingleMap) {
-            if (G.SingleMapPromise[name]) {
-                G.SingleMapPromise[name].forEach((item) => item(G.SingleMap[name]));
-                delete G.SingleMapPromise[name];
-            }
-
-            return G.SingleMap[name];
-        }
-        return new Promise((resolve) => {
-            if (!G.SingleMapPromise[name]) {
-                G.SingleMapPromise[name] = [];
-            }
-            G.SingleMapPromise[name].push(resolve);
-        });
     };
 })();
 
@@ -273,6 +212,9 @@ export const promiseifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> 
 export const isApp = (() => {
     let app;
     return (target): boolean => {
+        if ('$wcViewType' in target) {
+            return target.$wcViewType === 'App';
+        }
         if (!app) {
             app = getApp();
         }
@@ -281,14 +223,17 @@ export const isApp = (() => {
 })();
 
 export const getMpViewType = (obj: any): 'App' | 'Page' | 'Component' | undefined => {
-    if (isApp(obj)) {
-        return 'App';
-    }
     if (!obj || typeof obj !== 'object') {
         return;
     }
+    if ('$wcViewType' in obj) {
+        return obj.$wcViewType;
+    }
     if (typeof obj.setData !== 'function') {
         return;
+    }
+    if ('properties' in obj) {
+        return 'Component';
     }
     return 'route' in obj ? 'Page' : 'Component';
 };
@@ -325,7 +270,20 @@ export const each = (obj: any, handler: AnyFunction) => {
     }
 };
 
-/** 获取小程序内weconsole已经监控到的所有的App/Page/Component实例 */
-export const getWcControlMpViewInstances = (): any[] => wcScopeSingle('MpViewInstances', () => []) as any[];
+export const pxToRpx = (pxVal: number): number => {
+    if (!pxVal) {
+        return pxVal;
+    }
+    return parseFloat(((750 / getSystemInfo().windowWidth) * pxVal).toFixed(2));
+};
 
-export const getMultiplePageSyncState = () => wcScopeSingle('MpViewInstances', () => ({})) as { value: boolean };
+export const rpxToPx = (rpxVal: number): number => {
+    if (!rpxVal) {
+        return rpxVal;
+    }
+    return parseFloat((rpxVal / (750 / getSystemInfo().windowWidth)).toFixed(2));
+};
+
+/** 获取小程序内weconsole已经监控到的所有的App/Page/Component实例 */
+export const getWcControlMpViewInstances = (): MpViewContext[] =>
+    wcScopeSingle('MpViewInstances', () => []) as MpViewContext[];

@@ -30,6 +30,7 @@ export interface MpScrollEventDetail {
 
 export interface MpViewContext<T = any> {
     data?: T;
+    __wxExparserNodeId__: string;
     setData: MpSetDataHandler;
     triggerEvent: (type: string, data?: any) => any;
     createSelectorQuery: () => any;

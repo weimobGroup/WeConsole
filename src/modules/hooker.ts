@@ -2,7 +2,8 @@ import { hookFunc, replaceFunc } from '@mpkit/func-helper';
 import type { MkFuncHook, MkReplaceFuncStore, MpViewFactory } from '@mpkit/types';
 import { HookScope } from '../types/common';
 import type { IHooker } from '../types/hook';
-import { wcScopeSingle, log } from './util';
+import { log } from './util';
+import { getUIConfig, wcScopeSingle } from '../config';
 import type { AnyFunction } from '../types/util';
 
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
@@ -87,14 +88,40 @@ export class Hooker implements IHooker {
                     target[prop] = val;
                     return;
                 }
-                Object.defineProperty(oldWx, prop, {
-                    value: val
-                });
+                try {
+                    Object.defineProperty(oldWx, prop, {
+                        value: val
+                    });
+                } catch (error) {}
             };
+            const config = getUIConfig();
+            const onlyHookApiNames: Record<string, 1> = {};
+            const ignoreHookApiNames: Record<string, 1> = {};
+            let isOnlyHook;
+            if (Array.isArray(config.onlyHookApiNames)) {
+                isOnlyHook = true;
+                config.onlyHookApiNames.forEach((k) => {
+                    onlyHookApiNames[k] = 1;
+                });
+            } else if (Array.isArray(config.ignoreHookApiNames)) {
+                config.ignoreHookApiNames.forEach((k) => {
+                    ignoreHookApiNames[k] = 1;
+                });
+            }
             const keys = Object.keys(oldWx);
             keys.forEach((prop) => {
+                if (isOnlyHook && !(prop in onlyHookApiNames)) {
+                    // 只有名单内的API调用会被监控
+                    setTarget(prop, oldWx[prop]);
+                    return;
+                }
+                if (prop in ignoreHookApiNames) {
+                    // 名单内的API调用不会被监控
+                    setTarget(prop, oldWx[prop]);
+                    return;
+                }
                 if (typeof oldWx[prop] === 'function') {
-                    const mehtod = oldWx[prop].bind(oldWx);
+                    const mehtod = oldWx[prop] || Reflect.get(oldWx, prop);
                     setTarget(
                         prop,
                         replaceFunc(
@@ -116,7 +143,7 @@ export class Hooker implements IHooker {
                     const newCloud = {};
                     for (const cloudProp in oldWx.cloud) {
                         if (typeof oldWx.cloud[cloudProp] === 'function') {
-                            const mehtod = oldWx.cloud[cloudProp].bind(oldWx.cloud);
+                            const mehtod = oldWx.cloud[cloudProp] || Reflect.get(oldWx.cloud, prop);
                             newCloud[cloudProp] = replaceFunc(
                                 mehtod,
                                 hookFunc(mehtod, false, this.hooks, {

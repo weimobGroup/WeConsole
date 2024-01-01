@@ -15,8 +15,8 @@
         "fix:es": "pnpm eslint 'src/**/*.ts' 'build/**/*.js' '*.js' --fix",
         "fix:style": "pnpm stylelint 'src/**/*.scss' --fix",
         "lint": "pnpm lint:es",
-        "build:npm": "pnpm tsc --outDir ./dist/npm && node ./build/npm.js",
-        "build:full": "pnpm tsc --outDir ./dist/full && node ./build/full.js",
+        "build:npm": "rimraf ./dist/npm && pnpm tsc --outDir ./dist/npm && node ./build/npm.js",
+        "build:full": "rimraf ./dist/full && pnpm tsc --outDir ./dist/full && node ./build/full.js",
         "build": "pnpm lint && pnpm build:npm && pnpm build:full",
         "dev": "pnpm tsc --outDir ./dist/full -w && node ./build/watch.js",
         "upgrade": "pnpm ncu -u"
@@ -43,7 +43,6 @@
     },
     "homepage": "https://github.com/weimob-tech/WeConsole#readme",
     "devDependencies": {
-        "npm-check-updates": "^16.11.1",
         "@mpkit/mpxml-parser": "^1.1.2",
         "@typescript-eslint/eslint-plugin": "^6.4.0",
         "@typescript-eslint/parser": "^6.4.0",
@@ -58,8 +57,10 @@
         "fse": "^4.0.1",
         "junk": "3.1.0",
         "node-sass": "^9.0.0",
+        "npm-check-updates": "^16.11.1",
         "postcss": "^8.4.27",
         "relative": "^3.0.2",
+        "rimraf": "^5.0.5",
         "stylelint": "^15.10.2",
         "stylelint-config-recess-order": "^4.3.0",
         "stylelint-config-standard": "^34.0.0",
@@ -69,9 +70,9 @@
         "watch": "^1.0.2"
     },
     "dependencies": {
-        "typescript": "^5.1.6",
         "@mpkit/func-helper": "^1.1.2",
         "@mpkit/types": "^1.1.2",
-        "@mpkit/util": "^1.1.2"
+        "@mpkit/util": "^1.1.2",
+        "typescript": "^5.1.6"
     }
 }

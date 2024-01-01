@@ -1,9 +1,10 @@
 import type { MkViewFormatSpec } from '@mpkit/types';
 import { MpViewType } from '@mpkit/types';
 import { isNativeFunc, isFunc, isPlainObject, merge, isEmptyObject, uuid } from '@mpkit/util';
-import { each, has, wcScope } from '../../modules/util';
+import { each, has } from '../../modules/util';
 import type { MpComponentSpec, MpViewContext } from '../../types/view';
 import ToolMixin from './tool';
+import { getUIConfig } from '../../config';
 import type { AnyFunction } from '../../types/util';
 export const formatViewSpecList = (viewType: MpViewType, ...specList): MkViewFormatSpec => {
     const result: MkViewFormatSpec = {};
@@ -158,21 +159,19 @@ const mergeSpecialProps = (prop, values, target, removeMap = null) => {
     }
 };
 
-const WcScope = wcScope();
-
 export const WeComponent = <T extends MpViewContext = MpViewContext>(...specList: MpComponentSpec<T>[]) => {
     const targetSpec: MpComponentSpec<T> = {};
     const precutLifes = {
         created() {
             this.$wcId = uuid();
-            Object.defineProperty(this, '$FullSpec', {
-                get() {
-                    return targetSpec;
-                }
-            });
+            // Object.defineProperty(this, '$FullSpec', {
+            //     get() {
+            //         return targetSpec;
+            //     }
+            // });
             Object.defineProperty(this, '$wcUIConfig', {
                 get() {
-                    return WcScope.UIConfig;
+                    return getUIConfig();
                 }
             });
         },

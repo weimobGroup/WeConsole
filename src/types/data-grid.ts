@@ -9,7 +9,7 @@ export interface DataGridCol {
     field: string;
     title: string;
     /** 是否显示 */
-    visable?: boolean;
+    visible?: boolean;
     /** 是否可换行 */
     wrap?: boolean;
     subTitle?: string;

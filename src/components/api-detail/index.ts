@@ -50,7 +50,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         stackHideHooks: true
     },
     methods: {
-        // toggleVisableStackHooks() {
+        // toggleVisibleStackHooks() {
         //     this.updateData({
         //         stackHideHooks: !this.data.stackHideHooks,
         //     });
@@ -101,7 +101,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 if (!this.$wcProductController) {
                     return (
                         showLoading &&
-                        this.updateData({
+                        this.forceData({
                             loading: false,
                             error: '未找到观察者，无法根据ID查询数据',
                             detail: null
@@ -149,7 +149,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                             value: 'cookies'
                         });
                     }
-                    this.updateData({
+                    this.forceData({
                         tabs,
                         hasCookies,
                         loading: false,
@@ -159,24 +159,27 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                     // this.setStackHooks();
                     return;
                 }
-                this.updateData({
+                this.forceData({
                     loading: false,
                     error: '',
                     detail: null
                 });
-            } else if (data) {
-                this.updateData({
+                return;
+            }
+            if (data) {
+                this.forceData({
                     loading: false,
                     error: '',
                     detail: data
                 });
-            } else {
-                this.updateData({
-                    loading: false,
-                    error: '请传递有效的数据',
-                    detail: null
-                });
+                return;
             }
+
+            this.forceData({
+                loading: false,
+                error: '请传递有效的数据',
+                detail: null
+            });
         },
         onWcProduct(type: string, data: MpProduct) {
             if (data.id === this.data.data) {

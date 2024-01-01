@@ -21,6 +21,7 @@ specifiers:
   npm-check-updates: ^16.11.1
   postcss: ^8.4.27
   relative: ^3.0.2
+  rimraf: ^5.0.5
   stylelint: ^15.10.2
   stylelint-config-recess-order: ^4.3.0
   stylelint-config-standard: ^34.0.0
@@ -54,6 +55,7 @@ devDependencies:
   npm-check-updates: 16.14.12
   postcss: 8.4.32
   relative: 3.0.2
+  rimraf: 5.0.5
   stylelint: 15.11.0_typescript@5.3.3
   stylelint-config-recess-order: 4.4.0_stylelint@15.11.0
   stylelint-config-standard: 34.0.0_stylelint@15.11.0

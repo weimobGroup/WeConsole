@@ -12,7 +12,7 @@ import { computeTime, rpxToPx } from '../modules/util';
 import type { MpDataReaderComponentData } from '../../types/reader';
 import { MpDataReaderAction } from '../../types/reader';
 import type { ReaderStateController } from '../modules/reader-state';
-import { wcScopeSingle } from '../../modules/util';
+import { wcScopeSingle } from '../../config';
 import { WeConsoleEvents } from '../../types/scope';
 import { includeString } from '../modules/json';
 

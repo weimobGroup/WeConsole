@@ -1,5 +1,5 @@
 import { WeConsoleEvents } from '../../types/scope';
-import { wcScope } from '../../modules/util';
+import { wcScope } from '../../config';
 import type { MpCanvasComponentSpec } from '../../types/canvas';
 const WcScope = wcScope();
 

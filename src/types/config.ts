@@ -28,4 +28,12 @@ export interface MpUIConfig {
     apiDefaultCategoryValue?: string;
     /** 默认的console分类值 */
     consoleDefaultCategoryValue?: string;
+    /** 不监控这些API，也就是说这些API调用后不会在【API】选项卡中显示 */
+    ignoreHookApiNames?: string[];
+    /** 只监控这些API，也就是除了这些API以外的其他调用都不会在【API】选项卡中显示 */
+    onlyHookApiNames?: string[];
+    /** 多页面状态同步是否开启？开启后，将同步更新多个页面的weconsole组件状态（显示隐藏等），会增加性能损耗！ */
+    multiplePageStateEnabled?: boolean;
+    /** 全局对象，如果你的小程序存在沙盒环境，请务必传递一个可供全局存储数据的单例对象 */
+    globalObject?: any;
 }

@@ -15,7 +15,7 @@ export const enum WeConsoleEvents {
     /** UIConfig对象发生变化时 */
     WcUIConfigChange = 'WcUIConfigChange',
     /** 入口图标显示性发生变化时 */
-    WcVisableChange = 'WcVisableChange',
+    WcVisibleChange = 'WcVisibleChange',
     /** CanvasContext准备好时，CanvasContext用于JSON树组件的界面文字宽度计算 */
     WcCanvasContextReady = 'WcCanvasContextReady',
     /** CanvasContext销毁时 */
@@ -25,7 +25,7 @@ export const enum WeConsoleEvents {
 }
 export interface WeConsoleScope {
     /** 是否显示WeConsole入口 */
-    visable?: boolean;
+    visible?: boolean;
     /** UI配置 */
     UIConfig?: MpUIConfig;
     SingleMapPromise?: {

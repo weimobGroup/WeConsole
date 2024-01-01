@@ -2,6 +2,7 @@ import type { MpStorageInfo } from '../../types/storage-reader';
 import type { MpStorageMaterial } from '../../types/product';
 import { promiseifyApi } from '../../modules/util';
 import type { AnyFunction } from '../../types/util';
+import { uuid } from '@mpkit/util';
 
 export const getStorageInfoAndList = (): Promise<[MpStorageInfo, MpStorageMaterial[]]> => {
     return promiseifyApi('getStorageInfo')
@@ -23,7 +24,7 @@ export const getStorage = (key: string, toString = true): Promise<MpStorageMater
         key
     }).then((res) => {
         return {
-            id: key,
+            id: uuid(),
             key,
             value: typeof res.data === 'string' ? res.data : toString ? JSON.stringify(res.data) : res.data
         };

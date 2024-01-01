@@ -12,7 +12,7 @@
             wx:for-item="col"
             wx:for-index="colIndex"
             wx:key="field"
-            class="fc-datagrid-col {{col.visable===false?'fc-hide':''}} fc-i{{colIndex}} {{colIndex===cols.length-1?'fc-last':''}} {{col.wrap===false?'fc-nowrap':''}}"
+            class="fc-datagrid-col {{col.visible===false?'fc-hide':''}} fc-i{{colIndex}} {{colIndex===cols.length-1?'fc-last':''}} {{col.wrap===false?'fc-nowrap':''}}"
             style="width:{{columnWidthMap[col.field]}}%;height:{{vlItemHeight?(vlItemHeight+'px'):''}};"
             bindtap="tapCell"
             data-col="{{colIndex}}"

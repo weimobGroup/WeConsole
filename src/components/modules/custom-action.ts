@@ -1,8 +1,7 @@
-import { promiseifyApi, wcScope } from '../../modules/util';
+import { promiseifyApi } from '../../modules/util';
+import { getUIConfig } from '../../config';
 import type { WcCustomAction } from '../../types/other';
 import { WcCustomActionShowMode } from '../../types/other';
-
-const WcScope = wcScope();
 
 export const SystemInfoCustomAction: WcCustomAction = {
     id: 'NativeInfo',
@@ -124,7 +123,7 @@ const demoActions = [
 ];
 export const getCustomActions = (): WcCustomAction[] => {
     const res: WcCustomAction[] = [SystemInfoCustomAction, ...demoActions];
-    const config = WcScope.UIConfig;
+    const config = getUIConfig();
     if (config?.customActions && config.customActions.length) {
         return res.concat(config.customActions);
     }

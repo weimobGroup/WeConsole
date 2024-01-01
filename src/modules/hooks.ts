@@ -84,6 +84,7 @@ const hookSpecMethod = (
     scope: HookScope,
     factoryState: WeFuncHookState,
     otherState?: Partial<WeFuncHookState>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isProperties?: boolean
 ) => {
     const fireHook = (name, method) => {
@@ -121,11 +122,12 @@ const hookSpecMethod = (
         return hooker.target;
     };
     for (const prop in spec) {
-        if (isProperties) {
-            if (typeof spec[prop] === 'object' && typeof spec[prop].observer === 'function') {
-                spec[prop].observer = fireHook(prop, spec[prop].observer);
-            }
-        } else if (typeof spec[prop] === 'function' && needHookMethods.includes(prop)) {
+        // if (isProperties) {
+        //     if (typeof spec[prop] === 'object' && typeof spec[prop].observer === 'function') {
+        //         spec[prop].observer = fireHook(prop, spec[prop].observer);
+        //     }
+        // } else
+        if (typeof spec[prop] === 'function' && needHookMethods.includes(prop)) {
             spec[prop] = fireHook(prop, spec[prop]);
         }
     }
@@ -187,6 +189,7 @@ export const MpViewFactoryHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
         const { scope } = state.state;
         const spec = state.args[0];
+        spec.$wcViewType = scope;
         if (!spec.$wcDisabled) {
             // 执行App/Page/Component方法时将methods重写
             if (scope === HookScope.App) {
@@ -197,7 +200,7 @@ export const MpViewFactoryHook: MkFuncHook<WeFuncHookState> = {
                 if (!spec.onLoad) {
                     spec.onLoad = function WcOnLoadPlaceholder() {};
                 }
-                if (!spec.onLoad) {
+                if (!spec.onUnload) {
                     spec.onUnload = function WcOnUnloadPlaceholder() {};
                 }
                 hookSpecMethod(spec, HookScope.PageMethod, state.state);

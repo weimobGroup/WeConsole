@@ -80,10 +80,10 @@ const Spec: MpJSONViewerComponentSpec = {
             this.onInitedHandlers.push(func);
         },
         openPath(path?: JSONPropPath) {
-            this.setPathVisable(true, path);
+            this.setPathVisible(true, path);
         },
         closePath(path?: JSONPropPath) {
-            this.setPathVisable(false, path);
+            this.setPathVisible(false, path);
         },
         buildPath(open: boolean, path?: JSONPropPath): any {
             if (!this.JSONViewer) {
@@ -137,7 +137,7 @@ const Spec: MpJSONViewerComponentSpec = {
             mpData[mpPath.substr(0, mpPath.length - 5) + '.open'] = open;
             return mpData;
         },
-        setPathVisable(open: boolean, path?: JSONPropPath) {
+        setPathVisible(open: boolean, path?: JSONPropPath) {
             this.lastOpen = open;
             this.lastPath = path;
             this.updateData(this.buildPath(open, path));
@@ -148,7 +148,7 @@ const Spec: MpJSONViewerComponentSpec = {
                 this.buildComputeObject(path);
                 return;
             }
-            this.setPathVisable(open, path);
+            this.setPathVisible(open, path);
             this.triggerEvent('toggle', e.detail);
         },
         buildComputeObject(path: JSONPropPath) {

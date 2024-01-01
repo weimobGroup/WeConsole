@@ -100,10 +100,21 @@ export const getPathValue = <T = any>(obj: any, path: JSONPropPath, throwError =
     return obj;
 };
 
+const NativeClass = [Promise, Date, RegExp];
+
 export const getClassName = (obj: any): string => {
     if (!obj || (!isFunc(obj) && !isObject(obj))) {
         return '';
     }
+    try {
+        const cls = NativeClass.find((item) => obj instanceof item);
+        if (cls) {
+            return cls.name;
+        }
+    } catch (error) {
+        return '';
+    }
+
     const viewType = getMpViewType(obj);
     if (viewType === 'App') {
         return 'App';

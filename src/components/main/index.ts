@@ -1,4 +1,4 @@
-import { promiseifyApi, wcScope } from '../../modules/util';
+import { promiseifyApi } from '../../modules/util';
 import { WeComponent } from '../mixins/component';
 import EbusMixin from '../mixins/ebus';
 import { getSystemInfo } from '../modules/util';
@@ -6,6 +6,7 @@ import type { MpNameValue } from '../../types/common';
 import { getCustomActions } from '../modules/custom-action';
 import { MainStateController } from './init';
 import { WeConsoleEvents } from '../../types/scope';
+import { wcScope } from '../../config';
 
 const WcScope = wcScope();
 
@@ -37,13 +38,13 @@ WeComponent(EbusMixin, {
         }
     },
     data: {
-        showIcon: MainStateController.getState('showIcon') ? true : WcScope.visable || false,
+        showIcon: MainStateController.getState('showIcon') ? true : WcScope.visible || false,
         inited: !!MainStateController.getState('handX'),
         handX: MainStateController.getState('handX') || '',
         handY: MainStateController.getState('handY') || '',
-        visable: MainStateController.getState('visable') || false,
+        visible: MainStateController.getState('visible') || false,
         mounted: MainStateController.getState('mounted') || false,
-        pageVisable: true,
+        pageVisible: true,
         fullScreen: MainStateController.getState('fullScreen') || false,
         activeTabIndex: MainStateController.getState('activeTabIndex') || 0,
         isFullScreenPhone: MainStateController.getState('isFullScreenPhone') || false,
@@ -84,10 +85,10 @@ WeComponent(EbusMixin, {
                 inited: MainStateController.getState('inited') ? true : this.data.inited,
                 handX: MainStateController.getState('handX') || this.data.handX,
                 handY: MainStateController.getState('handY') || this.data.handY,
-                visable:
-                    typeof MainStateController.getState('visable') !== 'undefined'
-                        ? MainStateController.getState('visable')
-                        : this.data.visable,
+                visible:
+                    typeof MainStateController.getState('visible') !== 'undefined'
+                        ? MainStateController.getState('visible')
+                        : this.data.visible,
                 mounted:
                     typeof MainStateController.getState('mounted') !== 'undefined'
                         ? MainStateController.getState('mounted')
@@ -146,12 +147,12 @@ WeComponent(EbusMixin, {
                 handY: state.y + 'px'
             });
         },
-        toggleVisable() {
+        toggleVisible() {
             this.updateData({
-                visable: !this.data.visable,
+                visible: !this.data.visible,
                 mounted: true
             });
-            MainStateController.setState('visable', this.data.visable);
+            MainStateController.setState('visible', this.data.visible);
             MainStateController.setState('mounted', this.data.mounted);
         },
         toggleZoom() {
@@ -163,9 +164,9 @@ WeComponent(EbusMixin, {
         },
         close() {
             this.forceData({
-                visable: false
+                visible: false
             });
-            MainStateController.setState('visable', this.data.visable);
+            MainStateController.setState('visible', this.data.visible);
         },
         setTab(e) {
             const activeTabIndex = parseInt(e.detail);
@@ -216,10 +217,10 @@ WeComponent(EbusMixin, {
                         winHeight: res.windowHeight - 20
                     });
                     // 默认情况下，如果是打开调试时，才显示icon
-                    if (!('visable' in WcScope)) {
+                    if (!('visible' in WcScope)) {
                         MainStateController.setState('showIcon', !!(res as any).enableDebug);
                     } else {
-                        MainStateController.setState('showIcon', WcScope.visable);
+                        MainStateController.setState('showIcon', WcScope.visible);
                     }
                     MainStateController.setState('winHeight', this.data.winHeight);
                     MainStateController.setState('winWidth', this.data.winWidth);
@@ -256,7 +257,7 @@ WeComponent(EbusMixin, {
         }
     },
     attached() {
-        this.$wcOn(WeConsoleEvents.WcVisableChange, (type, data) => {
+        this.$wcOn(WeConsoleEvents.WcVisibleChange, (type, data) => {
             MainStateController.setState('showIcon', !!data);
             this.updateData({
                 showIcon: !!data
@@ -279,12 +280,12 @@ WeComponent(EbusMixin, {
         show() {
             this.syncState();
             this.updateData({
-                pageVisable: true
+                pageVisible: true
             });
         },
         hide() {
             this.updateData({
-                pageVisable: false
+                pageVisible: false
             });
         }
     }

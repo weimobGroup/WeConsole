@@ -95,7 +95,7 @@
         <collapse>
             <view class="fc-detail-title" slot="head">
                 Call stack
-                <view class="btn-link collapse-action" catchtap="toggleVisableStackHooks">
+                <view class="btn-link collapse-action" catchtap="toggleVisibleStackHooks">
                     {{stackHideHooks?'Show':'Hide'}}hooks
                 </view>
             </view>
