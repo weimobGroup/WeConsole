@@ -21,6 +21,12 @@
             <block wx:if="{{row[col.field].json===1}}">
                 <json-viewer mode="{{2}}" init="{{false}}" from="GridCol_{{row[col.field].key}}"></json-viewer>
             </block>
+            <block wx:if="{{row[col.field].multiLine}}">
+                <block wx:for="{{row[col.field].lines}}" wx:for-item="line" wx:for-index="lineIndex" wx:key="key">
+                    <json-viewer wx:if="{{line.type==='json'}}" mode="{{2}}" init="{{false}}" from="GridColLine_{{row[col.field].key}}_{{line.key}}"></json-viewer>
+                    <view wx:elif="{{line.type==='text'}}" class="fc-datagrid-col-content">{{line.content}}</view>
+                </block>
+            </block>
             <block wx:else>
                 <view class="fc-datagrid-col-content">{{row[col.field]}}</view>
                 <view wx:if="{{row[col.field+'Desc']}}" class="fc-datagrid-col-desc">{{row[col.field+'Desc']}}</view>

@@ -136,6 +136,12 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
                 if (!this.caseResultState) {
                     this.caseResultState = {};
                 }
+                if (caseItem.showMode === WcCustomActionShowMode.grid) {
+                    res = {
+                        ...res
+                    };
+                    res.data = this.convertCaseGridData(res.data || []);
+                }
                 this.caseResultState[caseItem.id] = {
                     res,
                     err
@@ -222,9 +228,34 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
             });
             return res;
         },
-        appendDataToGrid(caseId: string, data: any) {
+        convertCaseGridData(list: any[]) {
+            return list.map((data, i) =>
+                Object.keys(data).reduce(
+                    (sum, key) => {
+                        const val = data[key];
+                        if (typeof val === 'string' && val.includes('\n')) {
+                            sum[key] = {
+                                multiLine: true,
+                                lines: val.split('\n').map((v, i) => {
+                                    return {
+                                        key: String(i),
+                                        content: v,
+                                        type: 'text'
+                                    };
+                                })
+                            };
+                            return sum;
+                        }
+                        sum[key] = val;
+                        return sum;
+                    },
+                    { id: data.id || String(i) }
+                )
+            );
+        },
+        appendDataToGrid(caseId: string, list: any[]) {
             if (this.caseGrid?.[caseId]) {
-                return (this.caseGrid[caseId] as MpDataGridComponentExports).replaceAllList(data);
+                return (this.caseGrid[caseId] as MpDataGridComponentExports).replaceAllList(list);
             }
         },
         tapGridCell(e) {
