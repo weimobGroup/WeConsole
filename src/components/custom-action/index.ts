@@ -247,13 +247,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
                 const { from, viewer } = data;
                 if (from?.startsWith('GridCol_CustomAction')) {
                     const [, , caseId, itemId, field] = from.split('_');
-                    const list =
-                        this?.caseResultState &&
-                        this.caseResultState[caseId] &&
-                        this.caseResultState[caseId]?.res &&
-                        this.caseResultState[caseId]?.res?.data
-                            ? this.caseResultState[caseId].res.data
-                            : [];
+                    const list = this.caseResultState?.[caseId]?.res?.data || [];
                     if (!this.caseResultState[caseId].JSONViewerMap) {
                         this.caseResultState[caseId].JSONViewerMap = {};
                     }
@@ -270,12 +264,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
                     }
                 }
             });
-            if (
-                this?.caseResultState &&
-                this.caseResultState[caseId] &&
-                this.caseResultState[caseId]?.res &&
-                this.caseResultState[caseId]?.res?.data
-            ) {
+            if (this.caseResultState?.[caseId]?.res?.data) {
                 const list: any[] = this.caseResultState[caseId].res.data;
                 e.detail.replaceAllList(list);
                 // if (

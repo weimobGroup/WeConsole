@@ -84,17 +84,18 @@ const Spec: MpDataGridComponentSpec = {
                 const notReadyIndexs: number[] = [];
                 const readyIndexs: number[] = [];
                 cols.forEach((item, index) => {
-                    const widType = typeof item.width;
+                    const width = typeof item.width === 'string' ? parseFloat(item.width) : item.width;
+                    const widType = typeof width;
                     if (widType === 'number') {
-                        if (isNaN(item.width as number) || item.width <= 0 || item.width > 100) {
+                        if (isNaN(width) || width <= 0 || width > 100) {
                             notReadyIndexs.push(index);
                             widthList.push(0);
-                        } else if (readyWidth + item.width > 100) {
+                        } else if (readyWidth + width > 100) {
                             notReadyIndexs.push(index);
                             widthList.push(0);
                         } else {
-                            readyWidth += item.width;
-                            widthList.push(item.width);
+                            readyWidth += width;
+                            widthList.push(width);
                             readyIndexs.push(index);
                         }
                     } else {

@@ -8,7 +8,7 @@ import { emit } from './modules/ebus';
 import { WeConsoleEvents } from './types/scope';
 import { wcScope, wcScopeSingle } from './config';
 export * from './modules/ebus';
-export { getUIConfig, setUIConfig } from './config';
+export { getUIConfig, setUIConfig, addCustomAction, removeCustomAction } from './config';
 
 export { log, getWcControlMpViewInstances } from './modules/util';
 
