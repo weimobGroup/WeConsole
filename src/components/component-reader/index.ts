@@ -105,8 +105,8 @@ WeComponent(EbusMixin, {
         toggle(e) {
             const { path, open, id } = e.detail;
             this.buildPath(open, path).then((res) => {
-                this.updateData(res);
-                this.updateData({
+                this.$updateData(res);
+                this.$updateData({
                     selectId: id
                 });
             });
@@ -135,7 +135,7 @@ WeComponent(EbusMixin, {
                 };
             }
             const fire = () => {
-                this.updateData(mpData);
+                this.$updateData(mpData);
                 this.detailTarget = target;
                 if (this.detailJSONViewer) {
                     this.detailJSONViewer.setTarget(target);
@@ -151,7 +151,7 @@ WeComponent(EbusMixin, {
         clearDetail(cb) {
             delete this.detailTarget;
             delete this.detailJSONViewer;
-            this.updateData(
+            this.$updateData(
                 {
                     detailId: null,
                     detailAlive: null,
@@ -182,7 +182,7 @@ WeComponent(EbusMixin, {
     },
     attached() {
         getElement(getApp()).then((res) => {
-            this.updateData({
+            this.$updateData({
                 root: res
             });
         });

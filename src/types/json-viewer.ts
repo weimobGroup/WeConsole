@@ -2,7 +2,7 @@ import type { MpCanvasComponent, MpCanvasComponentMethods } from './canvas';
 import type { MpNameValue } from './common';
 import type { IJSONViewer, JSONChunk, JSONNode, JSONPropPath } from './json';
 import type { AnyFunction } from './util';
-import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpWcViewContext } from './view';
 
 export const enum MpJSONViewerComponentMode {
     full = 1,
@@ -49,7 +49,7 @@ export interface MpJSONViewerComponentMethods<T> {
 }
 
 export interface MpJSONViewerComponent
-    extends MpViewContext<MpJSONViewerComponentData & MpJSONViewerComponentProps>,
+    extends MpWcViewContext<MpJSONViewerComponentData & MpJSONViewerComponentProps>,
         MpJSONViewerComponentMethods<MpJSONViewerComponent>,
         MpCanvasComponent,
         MpCanvasComponentMethods<MpJSONViewerComponent> {

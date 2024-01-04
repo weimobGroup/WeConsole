@@ -2,7 +2,7 @@ import type { MkViewFormatSpec } from '@mpkit/types';
 import { MpViewType } from '@mpkit/types';
 import { isNativeFunc, isFunc, isPlainObject, merge, isEmptyObject, uuid } from '@mpkit/util';
 import { each, has } from '../../modules/util';
-import type { MpComponentSpec, MpViewContext } from '../../types/view';
+import type { MpComponentSpec, MpViewContext, MpWcViewContext } from '../../types/view';
 import ToolMixin from './tool';
 import { getUIConfig } from '../../config';
 import type { AnyFunction } from '../../types/util';
@@ -159,7 +159,7 @@ const mergeSpecialProps = (prop, values, target, removeMap = null) => {
     }
 };
 
-export const WeComponent = <T extends MpViewContext = MpViewContext>(...specList: MpComponentSpec<T>[]) => {
+export const WeComponent = <T extends MpViewContext = MpWcViewContext>(...specList: MpComponentSpec<T>[]) => {
     const targetSpec: MpComponentSpec<T> = {};
     const precutLifes = {
         created() {
@@ -176,7 +176,7 @@ export const WeComponent = <T extends MpViewContext = MpViewContext>(...specList
             });
         },
         detached() {
-            this.$wcComponentIsDeatoryed = true;
+            this.$wcComponentIsDestroyed = true;
         }
     };
     const fullSpec = formatViewSpecList(

@@ -14,11 +14,11 @@ const Spec: MpItemsComponentSpec = {
             this.computeSelectMapTimer = setTimeout(() => {
                 const selected = (this.$getProp('selected', []) || this.data.selected) as undefined | string | string[];
                 if (!selected || (Array.isArray(selected) && !selected.length)) {
-                    this.updateData({
+                    this.$updateData({
                         selectedMap: {}
                     });
                 } else {
-                    this.updateData({
+                    this.$updateData({
                         selectedMap: (Array.isArray(selected) ? selected : [selected]).reduce((sum, item) => {
                             sum[item] = 1;
                             return sum;
@@ -65,7 +65,7 @@ const Spec: MpItemsComponentSpec = {
                         }
                     });
                 }
-                this.updateData(
+                this.$updateData(
                     {
                         affixList,
                         scrollMarginTop
@@ -80,7 +80,7 @@ const Spec: MpItemsComponentSpec = {
                                             scrollMarginTop += this.affixItemHeightMap[item.id];
                                         }
                                     });
-                                    this.updateData({
+                                    this.$updateData({
                                         scrollMarginTop
                                     });
                                 }

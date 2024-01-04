@@ -2,7 +2,7 @@ import type { RequireId } from './common';
 import type { MpItemsComponent, MpItemsComponentExports, MpItemsComponentMethods } from './items';
 import type { MpJSONViewerComponentEbusDetail } from './json-viewer';
 import type { AnyFunction } from './util';
-import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext, MpWcViewContext } from './view';
 import type { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
 
 export interface DataGridCol {
@@ -52,7 +52,8 @@ export interface MpDataGridComponentMethods<C extends MpDataGridComponent = MpDa
 
 export type MpDataGridComponentExports<T extends RequireId = RequireId> = MpItemsComponentExports<T>;
 
-export type MpDataGridComponentContext<T extends RequireId = RequireId> = MpDataGridComponent<T> &
+export type MpDataGridComponentContext<T extends RequireId = RequireId> = MpWcViewContext &
+    MpDataGridComponent<T> &
     MpDataGridComponentMethods<MpDataGridComponentContext<T>> &
     MpItemsComponent<T> &
     MpItemsComponentMethods<MpDataGridComponentContext<T>> &

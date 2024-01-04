@@ -34,25 +34,28 @@ export interface MpViewContext<T = any> {
     setData: MpSetDataHandler;
     triggerEvent: (type: string, data?: any) => any;
     createSelectorQuery: () => any;
+    $wcComponentIsDestroyed?: boolean;
+    $wcId: string;
+    is: string;
+    selectComponent: (str: string) => MpViewContext;
+    selectOwnerComponent: () => MpViewContext;
+}
+
+export interface MpWcViewContext<T = any> extends MpViewContext<T> {
     $getProp: <T = any>(prop: string, val?: T) => T;
     $getBoundingClientRect: (selector: string) => Promise<MpClientRect>;
     $showToast: (title: any) => any;
     $showActionSheet: (options: any) => Promise<number>;
     $wcProductController?: IMpProductController;
-    $wcProductControllerHnalder?: EventHandler<MpProduct>;
+    $wcProductControllerHandler?: EventHandler<MpProduct>;
     $wcUIConfig?: MpUIConfig;
     onWcProduct?: EventHandler<MpProduct>;
-    $wcComponentIsDeatoryed?: boolean;
-    $wcId: string;
-    is: string;
     $wcOn?: (name: string, handler: EventHandler) => any;
     $wcOnce?: (name: string, handler: EventHandler) => any;
     $wcEmit?: (name: string, data?: any) => any;
     $wcOff?: (name: string, handler?: EventHandler) => any;
-    selectComponent: (str: string) => MpViewContext;
-    selectOwnerComponent: () => MpViewContext;
-    updateData: (data: any, cb?: () => void) => void;
-    forceData: (data: any, cb?: () => void) => void;
+    $updateData: (data: any, cb?: () => void) => void;
+    $forceData: (data: any, cb?: () => void) => void;
 }
 
 export interface MpViewContextAny {

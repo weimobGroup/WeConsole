@@ -1,13 +1,13 @@
 import type { MkFuncHook } from '@mpkit/types';
 import { uuid } from '@mpkit/util';
 import type { WeFuncHookState } from '../types/hook';
-import { HookScope, MethodExecStatus, MpComponentMethodSeat } from '../types/common';
+import { HookScope, MethodExecStatus } from '../types/common';
 import { $$getStack, getWcControlMpViewInstances, hookApiMethodCallback, isMpViewEvent, log, now } from './util';
 import { Hooker } from './hooker';
 export const FuncIDHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
         if (!state.state.id) {
-            state.state.id = uuid();
+            state.state.id = `${state.state.scope}_${uuid()}`;
         }
     }
 };
@@ -83,11 +83,9 @@ const hookSpecMethod = (
     spec,
     scope: HookScope,
     factoryState: WeFuncHookState,
-    otherState?: Partial<WeFuncHookState>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isProperties?: boolean
+    otherState?: Partial<WeFuncHookState>
 ) => {
-    const fireHook = (name, method) => {
+    const wrapMethod = (name: string, method: (...args: any[]) => any) => {
         const hooks: MkFuncHook<WeFuncHookState>[] = [
             {
                 before(state) {
@@ -121,16 +119,11 @@ const hookSpecMethod = (
         factoryState?.hookers && factoryState.hookers.push(hooker);
         return hooker.target;
     };
-    for (const prop in spec) {
-        // if (isProperties) {
-        //     if (typeof spec[prop] === 'object' && typeof spec[prop].observer === 'function') {
-        //         spec[prop].observer = fireHook(prop, spec[prop].observer);
-        //     }
-        // } else
+    Object.keys(spec).forEach((prop) => {
         if (typeof spec[prop] === 'function' && needHookMethods.includes(prop)) {
-            spec[prop] = fireHook(prop, spec[prop]);
+            spec[prop] = wrapMethod(prop, spec[prop]);
         }
-    }
+    });
 };
 
 export const MpViewInsCacheSaveHook: MkFuncHook<WeFuncHookState> = {
@@ -154,35 +147,46 @@ export const MpViewInsDestoryMarkHook: MkFuncHook<WeFuncHookState> = {
 };
 
 export const MpViewInitLifeHook: MkFuncHook<WeFuncHookState> = {
-    before(state) {
-        // 重写setData和 triggerEvent
-        if (state.ctx.setData || state.ctx.triggerEvent) {
-            const { viewFactoryId, hookers, controller, scope } = state.state;
-            ['setData', 'triggerEvent'].forEach((name) => {
-                const method = state.ctx[name];
-                const hooks: MkFuncHook<WeFuncHookState>[] = [
-                    {
-                        before(state) {
-                            state.state.viewFactoryId = viewFactoryId;
-                            state.state.hookers = hookers;
-                            state.state.controller = controller;
-                        }
-                    },
-                    FuncIDHook,
-                    MpProductHook
-                ];
-                if (name === 'triggerEvent') {
-                    hooks.push(MpViewEventTriggerHook);
-                }
-                const hooker = Hooker.for(scope, hooks, method, name);
-                Object.defineProperty(state.ctx, name, {
-                    writable: true,
-                    value: hooker.target
-                });
-                hookers.push(hooker);
-            });
-        }
+    before() {
+        // 界面上暂时没有用到setData的地方，先注释重写setData和 triggerEvent的逻辑
+        // if (state.ctx.setData || state.ctx.triggerEvent) {
+        //     const { viewFactoryId, hookers, controller, scope } = state.state;
+        //     ['setData', 'triggerEvent'].forEach((name) => {
+        //         const method = state.ctx[name];
+        //         const hooks: MkFuncHook<WeFuncHookState>[] = [
+        //             {
+        //                 before(state) {
+        //                     state.state.viewFactoryId = viewFactoryId;
+        //                     state.state.hookers = hookers;
+        //                     state.state.controller = controller;
+        //                 }
+        //             },
+        //             FuncIDHook,
+        //             MpProductHook
+        //         ];
+        //         if (name === 'triggerEvent') {
+        //             hooks.push(MpViewEventTriggerHook);
+        //         }
+        //         const hooker = Hooker.for(scope, hooks, method, name);
+        //         Object.defineProperty(state.ctx, name, {
+        //             writable: true,
+        //             value: hooker.target
+        //         });
+        //         hookers.push(hooker);
+        //     });
+        // }
     }
+};
+
+const fillDefaultComponentLife = (spec: any) => {
+    const hasLifetimes = typeof spec.lifetimes === 'object' && spec.lifetimes;
+    ['created', 'detached'].forEach((life) => {
+        if (!hasLifetimes) {
+            spec[life] = spec[life] || function WcComponentLifePlaceholder() {};
+            return;
+        }
+        spec.lifetimes[life] = spec.lifetimes[life] || function WcComponentLifePlaceholder() {};
+    });
 };
 
 export const MpViewFactoryHook: MkFuncHook<WeFuncHookState> = {
@@ -190,72 +194,43 @@ export const MpViewFactoryHook: MkFuncHook<WeFuncHookState> = {
         const { scope } = state.state;
         const spec = state.args[0];
         spec.$wcViewType = scope;
-        if (!spec.$wcDisabled) {
-            // 执行App/Page/Component方法时将methods重写
-            if (scope === HookScope.App) {
-                hookSpecMethod(spec, HookScope.AppMethod, state.state);
-                return;
+        if (spec.$wcDisabled) {
+            return;
+        }
+        // 执行App/Page/Component方法时将methods重写
+        if (scope === HookScope.App) {
+            hookSpecMethod(spec, HookScope.AppMethod, state.state);
+            return;
+        }
+        if (scope === HookScope.Page) {
+            if (!spec.onLoad) {
+                spec.onLoad = function WcOnLoadPlaceholder() {};
             }
-            if (scope === HookScope.Page) {
-                if (!spec.onLoad) {
-                    spec.onLoad = function WcOnLoadPlaceholder() {};
-                }
-                if (!spec.onUnload) {
-                    spec.onUnload = function WcOnUnloadPlaceholder() {};
-                }
-                hookSpecMethod(spec, HookScope.PageMethod, state.state);
-                return;
+            if (!spec.onUnload) {
+                spec.onUnload = function WcOnUnloadPlaceholder() {};
             }
-            if (scope === HookScope.Component) {
-                if (!spec.created && (!spec.lifetimes || !spec.lifetimes.created)) {
-                    spec.lifetimes = spec.lifetimes || {};
-                    spec.lifetimes.created = function WcCreatedPlaceholder() {};
-                }
-                if (!spec.detached && (!spec.lifetimes || !spec.lifetimes.detached)) {
-                    spec.lifetimes = spec.lifetimes || {};
-                    spec.lifetimes.detached = function WcDetachedPlaceholder() {};
-                }
-                const lifetimes = Object.keys(spec).filter(
-                    (key) => typeof spec[key] === 'function' && (!spec.lifetimes || !spec.lifetimes[key])
-                );
-                const lifetimesMap = {};
-                lifetimes.forEach((name) => {
-                    lifetimesMap[name] = spec[name];
-                });
-                hookSpecMethod(lifetimesMap, HookScope.ComponentMethod, state.state, {
-                    componentMethodSeat: MpComponentMethodSeat.lifetimes
-                });
-                lifetimes.forEach((name) => {
-                    spec[name] = lifetimesMap[name];
-                    delete lifetimesMap[name];
-                });
-                spec.methods &&
-                    hookSpecMethod(spec.methods, HookScope.ComponentMethod, state.state, {
-                        componentMethodSeat: MpComponentMethodSeat.methods
-                    });
-                spec.pageLifetimes &&
-                    hookSpecMethod(spec.pageLifetimes, HookScope.ComponentMethod, state.state, {
-                        componentMethodSeat: MpComponentMethodSeat.pageLifetimes
-                    });
-                spec.lifetimes &&
-                    hookSpecMethod(spec.lifetimes, HookScope.ComponentMethod, state.state, {
-                        componentMethodSeat: MpComponentMethodSeat.lifetimes
-                    });
-                spec.properties &&
-                    hookSpecMethod(
-                        spec.properties,
-                        HookScope.ComponentMethod,
-                        state.state,
-                        {
-                            componentMethodSeat: MpComponentMethodSeat.propObserver
-                        },
-                        true
-                    );
-                spec.observers &&
-                    hookSpecMethod(spec.observers, HookScope.ComponentMethod, state.state, {
-                        componentMethodSeat: MpComponentMethodSeat.observers
-                    });
-            }
+            hookSpecMethod(spec, HookScope.PageMethod, state.state);
+            return;
+        }
+        if (scope === HookScope.Component) {
+            fillDefaultComponentLife(spec);
+            hookSpecMethod(spec, HookScope.ComponentMethod, state.state);
+            spec.lifetimes && hookSpecMethod(spec.lifetimes, HookScope.ComponentMethod, state.state);
+            spec.methods && hookSpecMethod(spec.methods, HookScope.ComponentMethod, state.state);
+            // spec.pageLifetimes &&
+            //     hookSpecMethod(spec.pageLifetimes, HookScope.ComponentMethod, state.state);
+
+            // spec.properties &&
+            //     hookSpecMethod(
+            //         spec.properties,
+            //         HookScope.ComponentMethod,
+            //         state.state,
+            //         {
+            //         },
+            //         true
+            //     );
+            // spec.observers &&
+            //     hookSpecMethod(spec.observers, HookScope.ComponentMethod, state.state);
         }
     }
 };
@@ -277,7 +252,7 @@ export const MpViewEventTriggerHook: MkFuncHook<WeFuncHookState> = {
 
 export const MpViewEventHandleHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
-        const { controller, id } = state.state;
+        const { controller, id, scope } = state.state;
         const args = state.args;
         if (isMpViewEvent(args[0])) {
             const wrapDetail = args[0].detail;
@@ -285,10 +260,12 @@ export const MpViewEventHandleHook: MkFuncHook<WeFuncHookState> = {
                 args[0].detail = wrapDetail.orgDetail;
                 controller.change({
                     id,
+                    type: scope,
                     eventTriggerPid: wrapDetail.id
                 });
 
                 controller.change({
+                    type: scope,
                     id: wrapDetail.id,
                     eventHandlePid: id
                 });

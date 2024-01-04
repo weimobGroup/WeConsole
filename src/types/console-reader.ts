@@ -2,7 +2,7 @@ import type { ReaderStateController } from '../components/modules/reader-state';
 import type { MpJSONViewerComponent } from './json-viewer';
 import type { MpConsoleMaterial, MpProduct } from './product';
 import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
-import type { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpEvent, MpViewContext, MpWcViewContext } from './view';
 import type { MpVirtualListComponent, MpVirtualListComponentData, MpVirtualListComponentMethods } from './virtual-list';
 export interface MpConsoleReaderComponentData {
     itemMinHeightMap?: {
@@ -42,7 +42,8 @@ export interface MpConsoleReaderComponentMethods<T extends MpConsoleReaderCompon
     localVlScroll: (this: T, e: MpEvent) => any;
 }
 
-export type MpConsoleReaderComponentContext = MpConsoleReaderComponent &
+export type MpConsoleReaderComponentContext = MpWcViewContext &
+    MpConsoleReaderComponent &
     MpConsoleReaderComponentMethods<MpConsoleReaderComponentContext> &
     MpDataReaderComponent<MpConsoleMaterial> &
     MpDataReaderComponentMethods<MpConsoleMaterial, MpConsoleReaderComponentContext> &

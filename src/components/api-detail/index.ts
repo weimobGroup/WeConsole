@@ -5,7 +5,7 @@ import ProductControllerMixin from '../mixins/product-controller';
 import type { MpViewContext, MpViewContextAny } from '../../types/view';
 import type { MpProduct } from '../../types/product';
 import type { MpJSONViewerComponent, MpJSONViewerComponentEbusDetail } from '../../types/json-viewer';
-import { FILTER_BREAK } from '../../modules/util';
+
 WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin, {
     properties: {
         data: {
@@ -18,7 +18,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         tab: {
             type: Number,
             observer(val) {
-                this.updateData({
+                this.$updateData({
                     activeTabIndex: val
                 });
             }
@@ -51,7 +51,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
     },
     methods: {
         // toggleVisibleStackHooks() {
-        //     this.updateData({
+        //     this.$updateData({
         //         stackHideHooks: !this.data.stackHideHooks,
         //     });
         //     this.setStackHooks();
@@ -79,7 +79,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         //                 stack.splice(0, index + 2);
         //             }
         //         }
-        //         this.updateData({
+        //         this.$updateData({
         //             "detail.stack": stack,
         //         });
         //     }
@@ -92,7 +92,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
         },
         setDetailData(showLoading = true) {
             showLoading &&
-                this.updateData({
+                this.$updateData({
                     loading: true,
                     detail: null
                 });
@@ -101,25 +101,20 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 if (!this.$wcProductController) {
                     return (
                         showLoading &&
-                        this.forceData({
+                        this.$forceData({
                             loading: false,
                             error: '未找到观察者，无法根据ID查询数据',
                             detail: null
                         })
                     );
                 }
-                const res = this.$wcProductController.getList((item) => {
-                    if (item.id === data) {
-                        return FILTER_BREAK;
-                    }
-                    return false;
-                });
-                if (this.$wcComponentIsDeatoryed) {
+                const res = this.$wcProductController.findById(data);
+                if (this.$wcComponentIsDestroyed) {
                     return;
                 }
                 if (res?.length) {
                     const apiProduct = res[0];
-                    this.updateData({
+                    this.$updateData({
                         stack: apiProduct.stack
                     });
                     this.orgDetail = apiProduct;
@@ -149,7 +144,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                             value: 'cookies'
                         });
                     }
-                    this.forceData({
+                    this.$forceData({
                         tabs,
                         hasCookies,
                         loading: false,
@@ -159,7 +154,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                     // this.setStackHooks();
                     return;
                 }
-                this.forceData({
+                this.$forceData({
                     loading: false,
                     error: '',
                     detail: null
@@ -167,7 +162,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 return;
             }
             if (data) {
-                this.forceData({
+                this.$forceData({
                     loading: false,
                     error: '',
                     detail: data
@@ -175,7 +170,7 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                 return;
             }
 
-            this.forceData({
+            this.$forceData({
                 loading: false,
                 error: '请传递有效的数据',
                 detail: null

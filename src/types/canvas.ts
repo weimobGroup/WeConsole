@@ -1,5 +1,5 @@
 import type { AnyFunction, AnyObject } from './util';
-import type { MpComponentLifeSpec, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpViewContext, MpWcViewContext } from './view';
 export interface MpCanvasComponent {
     $wcCanvasContext: AnyObject;
     $wcCanvasContextResolves?: AnyFunction[];
@@ -9,7 +9,8 @@ export interface MpCanvasComponentMethods<C extends MpCanvasComponent = MpCanvas
     $getCanvasContext: (this: C) => Promise<any>;
 }
 
-export type MpCanvasComponentContext = MpCanvasComponent &
+export type MpCanvasComponentContext = MpWcViewContext &
+    MpCanvasComponent &
     MpCanvasComponentMethods<MpCanvasComponentContext> &
     MpViewContext;
 

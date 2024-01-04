@@ -6,7 +6,7 @@ import type { WeFuncHookState } from './types/hook';
 import { HookScope } from './types/common';
 import { emit } from './modules/ebus';
 import { WeConsoleEvents } from './types/scope';
-import { wcScope, wcScopeSingle } from './config';
+import { getUIConfig, wcScope, wcScopeSingle } from './config';
 export * from './modules/ebus';
 export { getUIConfig, setUIConfig } from './config';
 
@@ -16,6 +16,8 @@ export const ProductController = wcScopeSingle<MpProductController>(
     'ProductController',
     () => new MpProductController()
 ) as MpProductController;
+
+getUIConfig().globalObject.ProductController = ProductController;
 
 export const HookerList = wcScopeSingle<Hooker[]>('HookerList', () => []) as Hooker[];
 

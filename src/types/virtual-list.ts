@@ -1,6 +1,6 @@
 import type { RequireId } from './common';
 import type { AnyFunction } from './util';
-import type { MpEvent, MpScrollEventDetail, MpViewContext } from './view';
+import type { MpEvent, MpScrollEventDetail, MpViewContext, MpWcViewContext } from './view';
 
 export interface MpVirtualListComponentData<T extends RequireId = RequireId> {
     $vlScrollTop: number;
@@ -93,7 +93,8 @@ export interface MpVirtualListComponentMethods<
     $vlLockScrollTo: (this: C, top: number) => any;
 }
 
-export type MpVirtualListComponentContext<T extends RequireId = RequireId> = MpVirtualListComponent<T> &
+export type MpVirtualListComponentContext<T extends RequireId = RequireId> = MpWcViewContext &
+    MpVirtualListComponent<T> &
     MpVirtualListComponentMethods<T, MpVirtualListComponentContext<T>> &
     MpViewContext<MpVirtualListComponentData<T>>;
 export interface MpVirtualListComponentSpec<T extends RequireId = RequireId> {

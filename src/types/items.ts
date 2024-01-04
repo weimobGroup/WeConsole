@@ -1,6 +1,6 @@
 import type { RequireId } from './common';
 import type { AnyFunction } from './util';
-import type { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpEvent, MpViewContext, MpWcViewContext } from './view';
 import type { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
 
 export interface MpItemsComponentData<T extends RequireId = RequireId> {
@@ -37,7 +37,8 @@ export interface MpItemsComponentMethods<C extends MpItemsComponent = MpItemsCom
     longpressRow: (this: C, e: MpEvent) => any;
 }
 
-export type MpItemsComponentContext<T extends RequireId = RequireId> = MpItemsComponent<T> &
+export type MpItemsComponentContext<T extends RequireId = RequireId> = MpWcViewContext &
+    MpItemsComponent<T> &
     MpItemsComponentMethods<MpItemsComponentContext<T>> &
     MpVirtualListComponent<T> &
     MpVirtualListComponentMethods<T, MpItemsComponentContext<T>> &

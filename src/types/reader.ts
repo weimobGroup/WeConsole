@@ -1,6 +1,6 @@
 import type { MpMaterialCategoryMap, MpNameValue, RequireId } from './common';
 import type { MpMaterial, MpProduct } from './product';
-import type { MpComponentLifeSpec, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpViewContext, MpWcViewContext } from './view';
 
 export const enum MpDataReaderAction {
     /** 留存 */
@@ -89,7 +89,8 @@ export interface MpDataReaderComponentMethods<
     showMaterialAction: (this: C, rowId: string) => Promise<[MpDataReaderAction, any?]>;
 }
 
-export type MpDataReaderComponentContext<T extends MpMaterial = MpMaterial> = MpDataReaderComponent<T> &
+export type MpDataReaderComponentContext<T extends MpMaterial = MpMaterial> = MpWcViewContext &
+    MpDataReaderComponent<T> &
     MpDataReaderComponentMethods<T, MpDataReaderComponentContext<T>> &
     MpViewContext<MpDataReaderComponentData>;
 

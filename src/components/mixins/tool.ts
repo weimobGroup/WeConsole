@@ -23,45 +23,53 @@ const promiseifyMpApi = <T = any>(apiName: string, options?: any) => {
     });
 };
 
+const fireSetData = (vm: any) => {
+    const d = vm.waitingData;
+    if (!d) {
+        return;
+    }
+    const cbs = vm.waitingDataCallbacks || [];
+    delete vm.waitingDataCallbacks;
+    delete vm.waitingData;
+    vm.setData(d, () => {
+        cbs.forEach((item) => {
+            try {
+                item();
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    });
+};
+
 export default {
     methods: {
         noop() {},
-        forceData(data: any, cb?: () => void) {
+        $forceData(data: any, cb?: () => void) {
             if (!isValidObject(data) || isEmptyObject(data)) {
                 cb?.();
                 return;
             }
             if (!this.waitingData) {
                 this.waitingData = {};
-                this.waitingDataCallbacks = [];
             }
+            this.waitingDataCallbacks = this.waitingDataCallbacks || [];
+
             Object.assign(this.waitingData, data);
             if (isFunc(cb)) {
                 this.waitingDataCallbacks.push(cb);
             }
-            const d = this.waitingData;
-            const cbs = this.waitingDataCallbacks;
-            delete this.waitingDataCallbacks;
-            delete this.waitingData;
-            this.setData(d, () => {
-                cbs.forEach((item) => {
-                    try {
-                        item();
-                    } catch (error) {
-                        console.error(error);
-                    }
-                });
-            });
+            fireSetData(this);
         },
-        updateData(data: any, cb?: () => void) {
+        $updateData(data: any, cb?: () => void) {
             if (!isValidObject(data) || isEmptyObject(data)) {
                 cb?.();
                 return;
             }
             if (!this.waitingData) {
                 this.waitingData = {};
-                this.waitingDataCallbacks = [];
             }
+            this.waitingDataCallbacks = this.waitingDataCallbacks || [];
             Object.assign(this.waitingData, data);
             Object.assign(this.data, data);
             if (isFunc(cb)) {
@@ -71,19 +79,7 @@ export default {
                 clearTimeout(this.updateDataTimer);
             }
             this.updateDataTimer = setTimeout(() => {
-                const d = this.waitingData;
-                const cbs = this.waitingDataCallbacks;
-                delete this.waitingDataCallbacks;
-                delete this.waitingData;
-                this.setData(d, () => {
-                    cbs.forEach((item) => {
-                        try {
-                            item();
-                        } catch (error) {
-                            console.error(error);
-                        }
-                    });
-                });
+                fireSetData(this);
             }, 150);
         },
         $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<MpClientRect> {
@@ -97,9 +93,9 @@ export default {
                                 resolve(res[0] as MpClientRect);
                             } else {
                                 retryCount--;
-                                if (retryCount <= 0 || this.$wcComponentIsDeatoryed) {
+                                if (retryCount <= 0 || this.$wcComponentIsDestroyed) {
                                     const err = new Error(
-                                        this.$wcComponentIsDeatoryed
+                                        this.$wcComponentIsDestroyed
                                             ? `组件已被销毁，无法获取元素${selector}的boundingClientRect`
                                             : `无法找到元素${selector}进而获取其boundingClientRect`
                                     );

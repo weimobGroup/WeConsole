@@ -14,7 +14,7 @@ WeComponent({
         active: {
             type: Number,
             observer(val) {
-                this.forceData({
+                this.$forceData({
                     toView: `tabTitle_${val}`
                 });
             }
@@ -46,7 +46,7 @@ WeComponent({
             this.triggerEvent('change', index);
             setTimeout(() => {
                 if (index === parseInt(this.data.active)) {
-                    this.forceData({
+                    this.$forceData({
                         toView: `tabTitle_${index}`
                     });
                 }

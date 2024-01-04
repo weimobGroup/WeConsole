@@ -3,7 +3,7 @@ import type { DataGridCol } from './data-grid';
 import type { MpItemsComponentExports } from './items';
 import type { MpApiMaterial, MpProduct } from './product';
 import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
-import type { MpComponentLifeSpec, MpEvent, MpViewContext } from './view';
+import type { MpComponentLifeSpec, MpEvent, MpViewContext, MpWcViewContext } from './view';
 export interface MpApiReaderComponentData {
     detailMaterialId: string;
     detailFrom: string;
@@ -41,7 +41,8 @@ export interface MpApiReaderComponentMethods<T extends MpApiReaderComponent = Mp
     copyMaterial: (this: T, m: MpApiMaterial) => any;
 }
 
-export type MpApiReaderComponentContext = MpApiReaderComponent &
+export type MpApiReaderComponentContext = MpWcViewContext &
+    MpApiReaderComponent &
     MpApiReaderComponentMethods<MpApiReaderComponentContext> &
     MpDataReaderComponent<MpApiMaterial> &
     MpDataReaderComponentMethods<MpApiMaterial, MpApiReaderComponentContext> &

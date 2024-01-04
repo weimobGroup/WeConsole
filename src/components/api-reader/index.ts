@@ -15,6 +15,7 @@ import type { ReaderStateController } from '../modules/reader-state';
 import { wcScopeSingle } from '../../config';
 import { WeConsoleEvents } from '../../types/scope';
 import { includeString } from '../modules/json';
+import type { MpWcViewContext } from 'src/types/view';
 
 const Spec: MpApiReaderComponentSpec = {
     data: {
@@ -77,7 +78,7 @@ const Spec: MpApiReaderComponentSpec = {
         },
         refreshCategory(categoryVals?: string[]) {
             if (!categoryVals || !categoryVals.length) {
-                this.updateData({
+                this.$updateData({
                     categoryList: getApiCategoryList(this.$wcUIConfig)
                 });
                 this.ApiStateController.setState('categorys', JSON.parse(JSON.stringify(this.data.categoryList)));
@@ -91,7 +92,7 @@ const Spec: MpApiReaderComponentSpec = {
                         });
                     }
                 });
-                this.updateData({
+                this.$updateData({
                     categoryList: list
                 });
                 this.ApiStateController.setState('categorys', JSON.parse(JSON.stringify(this.data.categoryList)));
@@ -125,7 +126,7 @@ const Spec: MpApiReaderComponentSpec = {
             this.ApiStateController.removeState('selectedId');
         },
         setDetailMaterial(id?: string, tab?: number, from?: string) {
-            this.updateData({
+            this.$updateData({
                 detailMaterialId: id || '',
                 detailTab: tab || 0,
                 detailFrom: from || ''
@@ -186,13 +187,13 @@ const Spec: MpApiReaderComponentSpec = {
             }
         },
         syncAffixList() {
-            this.updateData({
+            this.$updateData({
                 affixIds: clone(this.topMaterials || [])
             });
             this.$DataGridMain.reloadAffixList(this.NormalMaterialCategoryMap.all);
         },
         changeDetailTab(e) {
-            this.updateData({
+            this.$updateData({
                 detailTab: e.detail
             });
         },
@@ -275,11 +276,11 @@ const Spec: MpApiReaderComponentSpec = {
             });
         },
         syncGridPageSize() {
-            const grid = this.selectComponent('.fc-reader-body');
+            const grid = this.selectComponent('.fc-reader-body') as MpWcViewContext;
             if (grid) {
                 Promise.all([rpxToPx(40), grid.$getBoundingClientRect('.fc-datagrid-scroll')]).then(
                     ([itemHeight, { height }]) => {
-                        this.updateData({
+                        this.$updateData({
                             gridPageSize: Math.ceil(height / itemHeight)
                         });
                     }
@@ -328,11 +329,13 @@ const Spec: MpApiReaderComponentSpec = {
                 return sum;
             }, {});
             if (!isEmptyObject(reanderData)) {
-                this.updateData({
+                this.$updateData({
                     reanderData
                 });
             }
-            const products = this.$wcProductController.getList((item) => idList.some((id) => id === item.id));
+            const products = this.$wcProductController.getList(HookScope.Api, (item) =>
+                idList.some((id) => id === item.id)
+            );
             products.forEach((item) => {
                 this.addMaterial(item);
             });

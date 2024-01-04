@@ -114,9 +114,9 @@ WeComponent(EbusMixin, {
                         : this.data.activeSysTab,
                 sysTabMountState: MainStateController.getState('sysTabMountState') || this.data.sysTabMountState
             };
-            this.updateData(data);
+            this.$updateData(data);
             this.getCanvasCtx().then((ctx) => {
-                if (this.$wcComponentIsDeatoryed) {
+                if (this.$wcComponentIsDestroyed) {
                     return;
                 }
                 WcScope.CanvasContext = ctx;
@@ -124,7 +124,7 @@ WeComponent(EbusMixin, {
             });
         },
         changeSysTab(e) {
-            this.forceData({
+            this.$forceData({
                 activeSysTab: e.detail,
                 [`sysTabMountState.s${e.detail}`]: 1
             });
@@ -142,13 +142,13 @@ WeComponent(EbusMixin, {
             });
             MainStateController.setState('handX', state.x + 'px');
             MainStateController.setState('handY', state.y + 'px');
-            this.updateData({
+            this.$updateData({
                 handX: state.x + 'px',
                 handY: state.y + 'px'
             });
         },
         toggleVisible() {
-            this.updateData({
+            this.$updateData({
                 visible: !this.data.visible,
                 mounted: true
             });
@@ -156,21 +156,21 @@ WeComponent(EbusMixin, {
             MainStateController.setState('mounted', this.data.mounted);
         },
         toggleZoom() {
-            this.forceData({
+            this.$forceData({
                 fullScreen: !this.data.fullScreen
             });
             MainStateController.setState('fullScreen', this.data.fullScreen);
             this.$wcEmit(WeConsoleEvents.WcMainComponentSizeChange);
         },
         close() {
-            this.forceData({
+            this.$forceData({
                 visible: false
             });
             MainStateController.setState('visible', this.data.visible);
         },
         setTab(e) {
             const activeTabIndex = parseInt(e.detail);
-            this.forceData({
+            this.$forceData({
                 activeTabIndex,
                 [`tabMountState.s${activeTabIndex}`]: 1
             });
@@ -195,7 +195,7 @@ WeComponent(EbusMixin, {
                                 resolve(this.canvasCtx);
                             } else {
                                 retryCount++;
-                                if (retryCount > 3 || this.$wcComponentIsDeatoryed) {
+                                if (retryCount > 3 || this.$wcComponentIsDestroyed) {
                                     return reject(new Error('无法获得canvas context'));
                                 }
                                 setTimeout(() => {
@@ -211,7 +211,7 @@ WeComponent(EbusMixin, {
             let winPromise = Promise.resolve();
             if (!MainStateController.getState('winHeight')) {
                 winPromise = getSystemInfo().then((res) => {
-                    this.updateData({
+                    this.$updateData({
                         isFullScreenPhone: res.statusBarHeight && res.statusBarHeight > 20,
                         winWidth: res.windowWidth - 20,
                         winHeight: res.windowHeight - 20
@@ -235,7 +235,7 @@ WeComponent(EbusMixin, {
                     .catch(() => Promise.resolve())
                     .then((res) => {
                         if (res?.data) {
-                            this.updateData({
+                            this.$updateData({
                                 inited: true,
                                 handX: res.data.x + 'px',
                                 handY: res.data.y + 'px'
@@ -245,7 +245,7 @@ WeComponent(EbusMixin, {
                             MainStateController.setState('inited', this.data.inited);
                             return;
                         }
-                        this.updateData({
+                        this.$updateData({
                             inited: true
                         });
                         MainStateController.setState('inited', this.data.inited);
@@ -259,13 +259,13 @@ WeComponent(EbusMixin, {
     attached() {
         this.$wcOn(WeConsoleEvents.WcVisibleChange, (type, data) => {
             MainStateController.setState('showIcon', !!data);
-            this.updateData({
+            this.$updateData({
                 showIcon: !!data
             });
         });
         this.$wcOn(WeConsoleEvents.WcUIConfigChange, () => {
             // 刷新其他选项卡中的数据
-            this.updateData({
+            this.$updateData({
                 sysTabs: getSysTabs()
             });
         });
@@ -279,12 +279,12 @@ WeComponent(EbusMixin, {
     pageLifetimes: {
         show() {
             this.syncState();
-            this.updateData({
+            this.$updateData({
                 pageVisible: true
             });
         },
         hide() {
-            this.updateData({
+            this.$updateData({
                 pageVisible: false
             });
         }

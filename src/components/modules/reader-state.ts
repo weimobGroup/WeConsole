@@ -43,15 +43,12 @@ export class ReaderStateController extends EventEmitter {
                 productIdList.push(id);
             }
         };
-        const list = productController.getList();
-        list.forEach((item) => {
-            if (
-                (item.type === HookScope.Api && name === 'Api') ||
-                (item.type === HookScope.Console && name === 'Console')
-            ) {
+        productController
+            .getList(HookScope.Api)
+            .concat(productController.getList(HookScope.Console))
+            .forEach((item) => {
                 addMaterial(item.id);
-            }
-        });
+            });
         const handler = (type, data) => {
             if (!this.recording) {
                 return;

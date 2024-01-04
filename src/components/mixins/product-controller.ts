@@ -1,9 +1,9 @@
 import { wcScopeSingle } from '../../config';
-import type { MpComponentSpec } from '../../types/view';
+import type { MpComponentSpec, MpWcViewContext } from '../../types/view';
 function OnProduct(type, data) {
     this && this.onWcProduct && this.onWcProduct(type, data);
 }
-const spec: MpComponentSpec = {
+const spec: MpComponentSpec<MpWcViewContext> = {
     created() {
         Object.defineProperty(this, '$wcProductController', {
             get() {
@@ -11,15 +11,15 @@ const spec: MpComponentSpec = {
             }
         });
         if (this.$wcProductController) {
-            this.$wcProductControllerHnalder = OnProduct.bind(this);
-            this.$wcProductController.on('create', this.$wcProductControllerHnalder);
-            this.$wcProductController.on('change', this.$wcProductControllerHnalder);
+            this.$wcProductControllerHandler = OnProduct.bind(this);
+            this.$wcProductController.on('create', this.$wcProductControllerHandler);
+            this.$wcProductController.on('change', this.$wcProductControllerHandler);
         }
     },
     detached() {
-        if (this.$wcProductController && this.$wcProductControllerHnalder) {
-            this.$wcProductController.off('create', this.$wcProductControllerHnalder);
-            this.$wcProductController.off('change', this.$wcProductControllerHnalder);
+        if (this.$wcProductController && this.$wcProductControllerHandler) {
+            this.$wcProductController.off('create', this.$wcProductControllerHandler);
+            this.$wcProductController.off('change', this.$wcProductControllerHandler);
         }
     }
 };

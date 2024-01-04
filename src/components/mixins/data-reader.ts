@@ -1,5 +1,4 @@
 import { isEmptyObject } from '@mpkit/util';
-import { FILTER_BREAK } from '../../modules/util';
 import type { MpMaterial, MpProduct } from '../../types/product';
 import type { MpDataReaderComponentContext, MpDataReaderComponentSpec } from '../../types/reader';
 import { MpDataReaderAction } from '../../types/reader';
@@ -236,7 +235,7 @@ const Mixin: MpDataReaderComponentSpec = {
         changeCategory(activeCategory) {
             this.initMaterialCategoryMap();
             if (this.data.activeCategory !== activeCategory) {
-                this.updateData({
+                this.$updateData({
                     activeCategory
                 });
             }
@@ -317,15 +316,7 @@ const Mixin: MpDataReaderComponentSpec = {
             }
         },
         getProduct(id: string): MpProduct | undefined {
-            const res = this.$wcProductController.getList((item) => {
-                if (item.id === id) {
-                    return FILTER_BREAK;
-                }
-                return false;
-            });
-            if (res?.length) {
-                return res[0];
-            }
+            return this.$wcProductController.findById(id);
         }
     }
 };

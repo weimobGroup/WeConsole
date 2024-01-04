@@ -1,14 +1,17 @@
 import type { MkFuncHook } from '@mpkit/types';
-import type { HookScope, MpComponentMethodSeat, RequireId } from './common';
+import type { HookScope } from './common';
 import type { MpProduct } from './product';
 import type { AnyFunction, IEventEmitter, WcListFilterHandler } from './util';
 
 export type MpProductFilter = WcListFilterHandler<MpProduct>;
 
 export interface IMpProductController extends IEventEmitter<MpProduct> {
-    getList: (filter?: MpProductFilter) => MpProduct[] | undefined;
-    create: (data: Partial<MpProduct> & RequireId) => MpProduct;
-    change: (data: Partial<MpProduct> & RequireId) => MpProduct;
+    findById: (id: string) => MpProduct | undefined;
+    remove: (id: string) => void;
+    clear: (type: HookScope, keepSaveIdList?: string[]) => void;
+    getList: (type: HookScope, filter?: MpProductFilter) => MpProduct[] | undefined;
+    create: (data: Partial<MpProduct> & Required<Pick<MpProduct, 'id' | 'type'>>) => MpProduct;
+    change: (data: Partial<MpProduct> & Required<Pick<MpProduct, 'id' | 'type'>>) => MpProduct;
 }
 
 export interface IHooker {
@@ -27,6 +30,5 @@ export interface WeFuncHookState {
     controller?: IMpProductController;
     hookers?: IHooker[];
     viewFactoryId?: string;
-    componentMethodSeat?: MpComponentMethodSeat;
     hookApiCallback?: boolean;
 }

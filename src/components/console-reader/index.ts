@@ -100,19 +100,19 @@ const Spec: MpConsoleReaderComponentSpec = {
             const affixList = (this.topMaterials || []).map((id) => {
                 return convertConsoleMaterial(this.getProduct(id));
             });
-            this.updateData(
+            this.$updateData(
                 {
                     affixList
                 },
                 () => {
                     if (!this.data.affixList.length) {
-                        this.updateData({
+                        this.$updateData({
                             scrollMarginTop: '0px'
                         });
                         return;
                     }
                     this.$getBoundingClientRect('.console-affixs').then((res) => {
-                        this.updateData({
+                        this.$updateData({
                             scrollMarginTop: res.height + 'px'
                         });
                     });
@@ -152,12 +152,12 @@ const Spec: MpConsoleReaderComponentSpec = {
                 this.ConsoleStateController.removeState('selectedId');
             }
             if (!id) {
-                return this.updateData({
+                return this.$updateData({
                     selectRowId: null,
                     selectRowFrom: null
                 });
             }
-            return this.updateData({
+            return this.$updateData({
                 selectRowId: id,
                 selectRowFrom: from || ''
             });
@@ -313,18 +313,20 @@ const Spec: MpConsoleReaderComponentSpec = {
                 return sum;
             }, {});
             if (!isEmptyObject(reanderData)) {
-                this.updateData({
+                this.$updateData({
                     reanderData
                 });
             }
-            const products = this.$wcProductController.getList((item) => idList.some((id) => id === item.id));
+            const products = this.$wcProductController.getList(HookScope.Console, (item) =>
+                idList.some((id) => id === item.id)
+            );
             products.forEach((item) => {
                 this.addMaterial(item);
             });
 
             if (this.localVlScrollTop) {
                 // 还原上一次的滚动位置
-                this.updateData({
+                this.$updateData({
                     $vlScrollTop: this.localVlScrollTop
                 });
                 delete this.localVlScrollTop;
