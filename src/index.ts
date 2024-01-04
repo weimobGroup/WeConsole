@@ -91,4 +91,4 @@ export const hideWeConsole = () => {
 };
 
 // TODO: 暂时这样简陋下，后面做全端时重写
-console.log('欢迎使用WeConsole v1.0.8，让小程序调试更高效！');
+console.log('欢迎使用WeConsole v1.1.0，让小程序调试更高效！');
