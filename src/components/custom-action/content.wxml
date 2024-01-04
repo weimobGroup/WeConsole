@@ -16,7 +16,7 @@
                 {{buttonText||caseButton.name}}
             </button>
         </view>
-        <data-grid cols="{{caseState[caseButton.value].cols}}" bind:ready="gridReady" data-case="{{caseButton.value}}" class="ca-grid" bind:tapCell="tapGridCell" selected="{{gridSelected[caseButton.value]}}"></data-grid>
+        <data-grid cols="{{caseState[caseButton.value].cols}}" bind:ready="gridReady" data-case="{{caseButton.value}}" class="ca-grid" bind:tapCell="tapGridCell" bind:longpressCell="longpressGridCell" selected="{{gridSelected[caseButton.value]}}"></data-grid>
     </view>
     <view wx:if="{{caseState[caseButton.value].mode==='component'}}" class="ca-container">
         <view class="ca-section">

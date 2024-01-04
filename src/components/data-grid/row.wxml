@@ -15,6 +15,7 @@
             class="fc-datagrid-col {{col.visible===false?'fc-hide':''}} fc-i{{colIndex}} {{colIndex===cols.length-1?'fc-last':''}} {{col.wrap===false?'fc-nowrap':''}}"
             style="width:{{columnWidthMap[col.field]}}%;height:{{vlItemHeight?(vlItemHeight+'px'):''}};"
             bindtap="tapCell"
+            bindlongpress="longpressCell"
             data-col="{{colIndex}}"
             data-rowid="{{row.id}}"
         >

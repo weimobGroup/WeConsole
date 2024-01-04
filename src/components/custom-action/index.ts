@@ -1,6 +1,6 @@
 import type { WcCustomAction, WcCustomActionCase, WcCustomActionGrid } from '../../types/other';
 import { WcCustomActionShowMode } from '../../types/other';
-import type { MpEvent, MpViewContext, MpViewContextAny } from '../../types/view';
+import type { MpEvent, MpViewContextAny, MpWcViewContext } from '../../types/view';
 import { WeComponent } from '../mixins/component';
 import { getCustomActions } from '../modules/custom-action';
 import EbusMixin from '../mixins/ebus';
@@ -9,7 +9,7 @@ import type { DataGridCol, MpDataGridComponentExports } from '../../types/data-g
 import type { MpNameValue } from '../../types/common';
 import { each } from '../../modules/util';
 const NoUICaseId = '$$$NO_UI$$$';
-WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
+WeComponent<MpWcViewContext & MpViewContextAny>(EbusMixin, {
     properties: {
         action: {
             type: String,
@@ -262,6 +262,39 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, {
             const caseId = e.currentTarget.dataset.case;
             this.$updateData({
                 [`gridSelected.${caseId}`]: e.detail.rowId || ''
+            });
+        },
+        longpressGridCell(e) {
+            const caseId = e.currentTarget.dataset.case;
+            const detail = e.detail;
+            this.$updateData({
+                [`gridSelected.${caseId}`]: e.detail.rowId || ''
+            });
+            this.$showActionSheet(['复制单元格内容', '复制整行内容', '复制整个表格内容']).then((res) => {
+                if (res === 0) {
+                    let row = detail.row;
+                    if (row.id) {
+                        row = this.caseResultState[caseId].res.data.find((item) => item.id === row.id) || row;
+                    }
+                    wx.setClipboardData({
+                        data: JSON.stringify(row[detail.col.field])
+                    });
+                    return;
+                }
+
+                if (res === 1) {
+                    let row = detail.row;
+                    if (row.id) {
+                        row = this.caseResultState[caseId].res.data.find((item) => item.id === row.id) || row;
+                    }
+                    wx.setClipboardData({
+                        data: JSON.stringify(row)
+                    });
+                    return;
+                }
+                wx.setClipboardData({
+                    data: JSON.stringify(this.caseResultState[caseId].res.data)
+                });
             });
         },
         gridReady(e: MpEvent<MpDataGridComponentExports>) {

@@ -138,6 +138,9 @@ const Spec: MpItemsComponentSpec = {
         },
         longpressRow(e: MpEvent) {
             this.fireCellEvent('longpressRow', e);
+        },
+        longpressCell(e: MpEvent) {
+            this.fireCellEvent('longpressCell', e);
         }
     },
     detached() {

@@ -35,6 +35,7 @@ export interface MpItemsComponentMethods<C extends MpItemsComponent = MpItemsCom
     fireCellEvent: (this: C, name: string, e: MpEvent) => any;
     tapRow: (this: C, e: MpEvent) => any;
     longpressRow: (this: C, e: MpEvent) => any;
+    longpressCell: (this: C, e: MpEvent) => any;
 }
 
 export type MpItemsComponentContext<T extends RequireId = RequireId> = MpWcViewContext &
