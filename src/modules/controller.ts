@@ -43,11 +43,14 @@ export class MpProductController extends EventEmitter implements IMpProductContr
     }
 
     findById(id: string): MpProduct | undefined {
-        const type = id.split('_')[0];
+        const type = id.split('-')[0];
         return this.typeMap[type]?.[id];
     }
 
     getList(type: HookScope, filter?: MpProductFilter): MpProduct[] {
+        if (!type) {
+            return [];
+        }
         if (!filter) {
             return [].concat(this.typeList[type]);
         }

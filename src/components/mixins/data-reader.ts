@@ -209,6 +209,12 @@ const Mixin: MpDataReaderComponentSpec = {
             // 把标记清空
             this.cancelMarkMaterial();
 
+            // 删除缓存中的数据
+            this.$wcProductController.clear(
+                this.$wcProductController.findById(this.readerShowList?.[0].id)?.type,
+                Object.keys(this.keepSaveMaterials)
+            );
+
             // 将留存的id记录找出
             const keepSaveList =
                 !this.keepSaveMaterials || isEmptyObject(this.keepSaveMaterials)

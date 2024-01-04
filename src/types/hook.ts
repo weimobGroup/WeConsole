@@ -28,7 +28,5 @@ export interface WeFuncHookState {
     scope: HookScope;
     product?: MpProduct;
     controller?: IMpProductController;
-    hookers?: IHooker[];
-    viewFactoryId?: string;
     hookApiCallback?: boolean;
 }

@@ -7,7 +7,7 @@ import { Hooker } from './hooker';
 export const FuncIDHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
         if (!state.state.id) {
-            state.state.id = `${state.state.scope}_${uuid()}`;
+            state.state.id = `${state.state.scope}-${uuid()}`;
         }
     }
 };
@@ -89,14 +89,11 @@ const hookSpecMethod = (
         const hooks: MkFuncHook<WeFuncHookState>[] = [
             {
                 before(state) {
-                    state.state.viewFactoryId = factoryState.id;
-                    state.state.hookers = factoryState.hookers;
                     state.state.controller = factoryState.controller;
                 }
-            },
-            FuncIDHook,
-            MpProductHook,
-            MpViewEventHandleHook
+            }
+            // FuncIDHook,
+            // MpProductHook
         ];
         if (scope === HookScope.PageMethod || scope === HookScope.ComponentMethod) {
             hooks.push(MpViewEventHandleHook);
@@ -116,7 +113,6 @@ const hookSpecMethod = (
             hooks.push(MpViewInsDestoryMarkHook);
         }
         const hooker = Hooker.for(scope, hooks, method, name, otherState);
-        factoryState?.hookers && factoryState.hookers.push(hooker);
         return hooker.target;
     };
     Object.keys(spec).forEach((prop) => {
@@ -150,14 +146,12 @@ export const MpViewInitLifeHook: MkFuncHook<WeFuncHookState> = {
     before() {
         // 界面上暂时没有用到setData的地方，先注释重写setData和 triggerEvent的逻辑
         // if (state.ctx.setData || state.ctx.triggerEvent) {
-        //     const { viewFactoryId, hookers, controller, scope } = state.state;
+        //     const { controller, scope } = state.state;
         //     ['setData', 'triggerEvent'].forEach((name) => {
         //         const method = state.ctx[name];
         //         const hooks: MkFuncHook<WeFuncHookState>[] = [
         //             {
         //                 before(state) {
-        //                     state.state.viewFactoryId = viewFactoryId;
-        //                     state.state.hookers = hookers;
         //                     state.state.controller = controller;
         //                 }
         //             },
@@ -172,7 +166,6 @@ export const MpViewInitLifeHook: MkFuncHook<WeFuncHookState> = {
         //             writable: true,
         //             value: hooker.target
         //         });
-        //         hookers.push(hooker);
         //     });
         // }
     }

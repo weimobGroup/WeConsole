@@ -108,12 +108,11 @@ WeComponent<MpViewContext & MpViewContextAny>(EbusMixin, ProductControllerMixin,
                         })
                     );
                 }
-                const res = this.$wcProductController.findById(data);
+                const apiProduct = this.$wcProductController.findById(data) as MpProduct | undefined;
                 if (this.$wcComponentIsDestroyed) {
                     return;
                 }
-                if (res?.length) {
-                    const apiProduct = res[0];
+                if (apiProduct) {
                     this.$updateData({
                         stack: apiProduct.stack
                     });

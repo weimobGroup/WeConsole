@@ -7,7 +7,7 @@ import { getUIConfig, wcScopeSingle } from '../config';
 import type { AnyFunction } from '../types/util';
 
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
-const SigleScopes = [HookScope.Api, HookScope.App, HookScope.Component, HookScope.Page, HookScope.Console];
+const SingleScopes = [HookScope.Api, HookScope.App, HookScope.Component, HookScope.Page, HookScope.Console];
 export class Hooker implements IHooker {
     readonly target?: AnyFunction;
     readonly scope: HookScope;
@@ -218,7 +218,7 @@ export class Hooker implements IHooker {
         originalName?: string,
         otherState?: any
     ): Hooker {
-        if (SigleScopes.indexOf(scope) !== -1) {
+        if (SingleScopes.indexOf(scope) !== -1) {
             return wcScopeSingle(
                 `HookerOf${scope}`,
                 () => new Hooker(scope, hooks, original, originalName, otherState)

@@ -6,7 +6,7 @@ import type { WeFuncHookState } from './types/hook';
 import { HookScope } from './types/common';
 import { emit } from './modules/ebus';
 import { WeConsoleEvents } from './types/scope';
-import { getUIConfig, wcScope, wcScopeSingle } from './config';
+import { wcScope, wcScopeSingle } from './config';
 export * from './modules/ebus';
 export { getUIConfig, setUIConfig } from './config';
 
@@ -16,8 +16,6 @@ export const ProductController = wcScopeSingle<MpProductController>(
     'ProductController',
     () => new MpProductController()
 ) as MpProductController;
-
-getUIConfig().globalObject.ProductController = ProductController;
 
 export const HookerList = wcScopeSingle<Hooker[]>('HookerList', () => []) as Hooker[];
 
@@ -30,65 +28,28 @@ const ProductControllerHook: MkFuncHook<WeFuncHookState> = {
         state.state.controller = ProductController;
     }
 };
-const HookerListHook: MkFuncHook<WeFuncHookState> = {
-    before(state) {
-        state.state.hookers = HookerList;
-    }
-};
 
 const initHooker = (scope: HookScope) => {
     if (scope === HookScope.Api) {
         HookerList.push(
-            Hooker.for(HookScope.Api, [
-                HookerListHook,
-                ProductControllerHook,
-                FuncIDHook,
-                FormatApiMethodCallbackHook,
-                MpProductHook
-            ])
+            Hooker.for(HookScope.Api, [ProductControllerHook, FuncIDHook, FormatApiMethodCallbackHook, MpProductHook])
         );
         return;
     }
     if (scope === HookScope.Console) {
-        HookerList.push(
-            Hooker.for(HookScope.Console, [HookerListHook, ProductControllerHook, FuncIDHook, MpProductHook])
-        );
+        HookerList.push(Hooker.for(HookScope.Console, [ProductControllerHook, FuncIDHook, MpProductHook]));
         return;
     }
     if (scope === HookScope.Component) {
-        HookerList.push(
-            Hooker.for(HookScope.Component, [
-                HookerListHook,
-                ProductControllerHook,
-                FuncIDHook,
-                MpProductHook,
-                MpViewFactoryHook
-            ])
-        );
+        HookerList.push(Hooker.for(HookScope.Component, [ProductControllerHook, MpViewFactoryHook]));
         return;
     }
     if (scope === HookScope.Page) {
-        HookerList.push(
-            Hooker.for(HookScope.Page, [
-                HookerListHook,
-                ProductControllerHook,
-                FuncIDHook,
-                MpProductHook,
-                MpViewFactoryHook
-            ])
-        );
+        HookerList.push(Hooker.for(HookScope.Page, [ProductControllerHook, MpViewFactoryHook]));
         return;
     }
     if (scope === HookScope.App) {
-        HookerList.push(
-            Hooker.for(HookScope.App, [
-                HookerListHook,
-                ProductControllerHook,
-                FuncIDHook,
-                MpProductHook,
-                MpViewFactoryHook
-            ])
-        );
+        HookerList.push(Hooker.for(HookScope.App, [ProductControllerHook, MpViewFactoryHook]));
     }
 };
 
