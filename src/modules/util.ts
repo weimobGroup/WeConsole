@@ -125,6 +125,9 @@ export const log = (type = 'log', ...args) => {
 export const FILTER_BREAK = Symbol('break');
 
 export const filter = <T = any>(list: T[], filter: WcListFilterHandler<T>): T[] => {
+    if (!list) {
+        return [];
+    }
     const res: T[] = [];
     for (let len = list.length, i = 0; i < len; i++) {
         const temp = filter(list[i], i, list);

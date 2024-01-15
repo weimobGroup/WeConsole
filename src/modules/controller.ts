@@ -20,6 +20,9 @@ export class MpProductController extends EventEmitter implements IMpProductContr
             return;
         }
         const type = item.type;
+        if (!(type in this.typeList)) {
+            return;
+        }
         const index = this.typeList[type].indexOf(this.typeMap[type][id]);
         if (index !== -1) {
             this.typeList[type].splice(index, 1);
@@ -52,7 +55,7 @@ export class MpProductController extends EventEmitter implements IMpProductContr
             return [];
         }
         if (!filter) {
-            return [].concat(this.typeList[type]);
+            return [].concat(this.typeList[type] || []);
         }
         return filterList(this.typeList[type], filter);
     }
