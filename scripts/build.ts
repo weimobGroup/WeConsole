@@ -100,7 +100,7 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
         },
         () => {
             return Promise.all([
-                copyPromise(ROOT_DIR + '/src/subpackage/mpxs', ROOT_DIR + '/dist/' + mode + '/subpackage/mpxs'),
+                copyPromise(ROOT_DIR + '/src/subpackage/mpxs/**/*.*', ROOT_DIR + '/dist/' + mode + '/subpackage/mpxs'),
                 copyPromise(
                     ROOT_DIR + '/src/subpackage/components/**/*.wxml',
                     ROOT_DIR + '/dist/' + mode + '/subpackage/components'
