@@ -1,5 +1,5 @@
-import type { Hooker } from '../modules/hooker';
-import type { MpProductController } from '../modules/controller';
+import type { Hooker } from '@/main/modules/hooker';
+import type { MpProductController } from '@/main/modules/controller';
 import type { MpUIConfig } from './config';
 import type { AnyFunction } from './util';
 

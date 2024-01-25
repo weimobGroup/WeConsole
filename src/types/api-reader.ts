@@ -1,12 +1,12 @@
-import type { ReaderStateController } from '../components/modules/reader-state';
+import type { ReaderStateController } from '../weconsole-main/modules/reader-state';
 import type { DataGridCol } from './data-grid';
 import type { MpItemsComponentExports } from './items';
 import type { MpApiMaterial, MpProduct } from './product';
 import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
 import type { MpComponentLifeSpec, MpEvent, MpViewContext, MpWcViewContext } from './view';
 export interface MpApiReaderComponentData {
-    detailMaterialId: string;
-    detailFrom: string;
+    detailMaterialId?: string;
+    detailFrom?: string;
     detailTab: number;
     readerCols: DataGridCol[];
     affixIds: string[];

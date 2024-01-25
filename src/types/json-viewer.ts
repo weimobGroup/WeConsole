@@ -11,7 +11,7 @@ export const enum MpJSONViewerComponentMode {
 }
 
 export interface MpJSONViewerComponentData {
-    root: JSONNode | JSONChunk;
+    root: JSONNode | JSONChunk | null;
     JSONString?: string;
     activeTab?: 0 | 1;
     tabs: MpNameValue<MpJSONViewerComponentMode, string>[];
@@ -24,6 +24,8 @@ export interface MpJSONViewerComponentProps {
     mode: MpJSONViewerComponentMode;
     fontSize: number;
     smallFontSize: number;
+    outerClass: string;
+    title?: string;
 }
 export interface MpJSONViewerComponentEventDetail {
     path: string[];
@@ -60,11 +62,6 @@ export interface MpJSONViewerComponent
     onInitedHandlers?: AnyFunction[];
     lastPath?: JSONPropPath;
     lastOpen?: boolean;
-}
-
-export interface MpJSONViewerComponentEbusDetail {
-    from: string;
-    viewer: MpJSONViewerComponent;
 }
 
 export interface MpJSONViewerComponentSpec extends MpComponentLifeSpec<MpJSONViewerComponent> {

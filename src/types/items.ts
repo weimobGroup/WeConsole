@@ -8,6 +8,9 @@ export interface MpItemsComponentData<T extends RequireId = RequireId> {
     scrollMarginTop?: number;
     selectedMap: { [prop: string]: 1 };
     affixIds?: string[];
+    selected?: string | string[];
+    from?: string;
+    $vlShowList?: T[];
 }
 export interface MpItemsComponent<T extends RequireId = RequireId> {
     computeSelectMapTimer?: any;
@@ -24,9 +27,9 @@ export interface MpItemsComponentExports<T extends RequireId = RequireId> {
     addItem: (item: T) => any;
     replaceAllList: (list: T[]) => any;
     reloadAffixList: (allList?: T[]) => any;
-    scrollTo?: (top: number) => any;
-    onScroll?: (handler: AnyFunction) => any;
-    onJSONReady?: (handler: AnyFunction) => any;
+    scrollTo: (top: number) => any;
+    onScroll: (handler: AnyFunction) => any;
+    onJSONReady: (handler: AnyFunction) => any;
 }
 export interface MpItemsComponentMethods<C extends MpItemsComponent = MpItemsComponent> {
     triggerReady: (this: C, fireInit: boolean, exports?: Partial<MpItemsComponentExports>) => any;

@@ -1,6 +1,6 @@
 import type { RequireId } from './common';
 import type { MpItemsComponent, MpItemsComponentExports, MpItemsComponentMethods } from './items';
-import type { MpJSONViewerComponentEbusDetail } from './json-viewer';
+import type { MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
 import type { AnyFunction } from './util';
 import type { MpComponentLifeSpec, MpComponentProperties, MpEvent, MpViewContext, MpWcViewContext } from './view';
 import type { MpVirtualListComponent, MpVirtualListComponentMethods } from './virtual-list';
@@ -25,6 +25,7 @@ export interface MpDataGridComponentData {
 }
 
 export interface MpDataGridComponentProps<T extends RequireId = RequireId> {
+    from: string;
     outerClass: string;
     rowClass: string;
     selected: string | string[];

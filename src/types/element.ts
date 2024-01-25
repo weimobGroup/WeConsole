@@ -12,4 +12,5 @@ export interface MpElement extends MpNode {
     content?: string;
     alive?: boolean;
     group?: boolean;
+    path?: string[];
 }

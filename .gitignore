@@ -106,4 +106,4 @@ dist
 
 .DS_Store
 
-.npmrc
+scripts-dist

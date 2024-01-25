@@ -1,4 +1,4 @@
-import type { ReaderStateController } from '../components/modules/reader-state';
+import type { ReaderStateController } from '../weconsole-main/modules/reader-state';
 import type { MpJSONViewerComponent } from './json-viewer';
 import type { MpConsoleMaterial, MpProduct } from './product';
 import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';
@@ -9,8 +9,8 @@ export interface MpConsoleReaderComponentData {
         [prop: string]: number;
     };
     affixList?: MpConsoleMaterial[];
-    selectRowId: string;
-    selectRowFrom: string;
+    selectRowId?: string;
+    selectRowFrom?: string;
 }
 
 export interface MpConsoleReaderComponent {

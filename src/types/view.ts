@@ -11,6 +11,10 @@ export interface MpClientRect {
     left: number;
 }
 
+export interface MpShowActionSheetOptions {
+    itemList: string[];
+}
+
 export interface MpEventTarget {
     dataset: {
         [prop: string]: any;
@@ -94,7 +98,6 @@ export interface MpComponentSpec<T extends MpViewContext = MpViewContext> extend
     data?: any;
     properties?: MpComponentProperties<T>;
     methods?: MpComponentMethods<T> & AnyObject;
-    $mixinEnd?: AnyFunction;
     externalClasses?: string[];
     pageLifetimes?: {
         show?: AnyFunction;

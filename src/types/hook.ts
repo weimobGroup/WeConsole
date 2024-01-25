@@ -9,7 +9,7 @@ export interface IMpProductController extends IEventEmitter<MpProduct> {
     findById: (id: string) => MpProduct | undefined;
     remove: (id: string) => void;
     clear: (type: HookScope, keepSaveIdList?: string[]) => void;
-    getList: (type: HookScope, filter?: MpProductFilter) => MpProduct[] | undefined;
+    getList: (type: HookScope, filter?: MpProductFilter) => MpProduct[];
     create: (data: Partial<MpProduct> & Required<Pick<MpProduct, 'id' | 'type'>>) => MpProduct;
     change: (data: Partial<MpProduct> & Required<Pick<MpProduct, 'id' | 'type'>>) => MpProduct;
 }
@@ -26,7 +26,7 @@ export interface WeFuncHookState {
     id: string;
     funcName: string;
     scope: HookScope;
-    product?: MpProduct;
-    controller?: IMpProductController;
+    product: MpProduct;
+    controller: IMpProductController;
     hookApiCallback?: boolean;
 }

@@ -1,0 +1,48 @@
+<wxs module="movable" src="../../mpxs/movable.wxs"></wxs>
+<view wx:if="{{showIcon && inited}}"
+    class="fc-hand {{customHand?'':'fc-hand-prefect'}} {{isFullScreenPhone?'fc-adap':''}} {{visible?'is-hide':''}}"
+    bind:touchstart="{{movable.touchStart}}" bind:touchmove="{{movable.touchMove}}"
+    bind:touchend="{{movable.touchEnd}}" bind:touchcancel="{{movable.touchEnd}}" data-movid="wc_hand"
+    data-movmaxx="{{winWidth}}" data-movmaxy="{{winHeight}}" data-movend="handMovableEnd"
+    style="z-index:{{zIndex}};{{handStyle||''}};left:{{handX}};top:{{handY}};">
+    <view class="fc-hand-toggle" bindtap="toggleVisible">
+        <slot wx:if="{{customHand}}" name="hand"></slot>
+        <image wx:else class="fc-hand-icon {{iconStyle||''}}" src="{{icon}}"></image>
+    </view>
+</view>
+<view wx:if="{{showIcon && inited && pageVisible && (visible || mounted)}}"
+    class="fc-modal {{isFullScreenPhone?'fc-adap-scroll':''}} {{visible?'is-show':''}} {{fullScreen?'is-full':''}}"
+    style="{{fullScreen&&(isFullScreenPhone?adapFullTop:fullTop)?('top:'+(isFullScreenPhone?adapFullTop:fullTop)+';'):''}}z-index:{{zIndex}};">
+    <view class="fc-modal-body">
+        <tabs tabs="{{tabs}}" active="{{activeTabIndex}}" bind:change="setTab">
+            <view slot="headBefore" class="fc-tabs-action" bindtap="toggleZoom">
+                <view class="fc-tabs-zoom wic-{{fullScreen?'compress':'expand'}}">
+                    <view class="wic-arrow-1"></view>
+                    <view class="wic-arrow-2"></view>
+                </view>
+            </view>
+            <view slot="headAfter" class="fc-tabs-action fc-tabs-action-right" bindtap="close">
+                <view class="fc-tabs-close wic-close"></view>
+            </view>
+            <console-reader wx:if="{{activeTabIndex===0 || tabMountState.s0}}" slot="panel-console"
+                class="fc-tab-panel-reader"></console-reader>
+            <api-reader wx:if="{{activeTabIndex===1 || tabMountState.s1}}" slot="panel-api"
+                class="fc-tab-panel-reader"></api-reader>
+            <component-reader wx:if="{{activeTabIndex===2 || tabMountState.s2}}" slot="panel-component"
+                class="fc-tab-panel-reader"></component-reader>
+            <storage-reader wx:if="{{activeTabIndex===3 || tabMountState.s3}}" slot="panel-storage"></storage-reader>
+            <view wx:if="{{activeTabIndex===4 || tabMountState.s4}}" class="fc-tab-panel-reader" slot="panel-other">
+                <tabs tabs="{{sysTabs}}" active="{{activeSysTab}}" size="small" bind:change="changeSysTab">
+                    <block wx:for="{{sysTabs}}" wx:for-item="sysTab" wx:for-index="sysTabIndex" wx:key="name">
+                        <custom-action wx:if="{{activeSysTab===sysTabIndex || sysTabMountState['s'+sysTabIndex]}}"
+                            slot="panel-{{sysTab.value}}" action="{{sysTab.value}}"></custom-action>
+                    </block>
+                </tabs>
+            </view>
+        </tabs>
+    </view>
+    <view wx:if="{{isFullScreenPhone}}" class="fc-modal-adap">
+        <view class="fc-ad">weconsole</view>
+    </view>
+</view>
+<canvas id="canvas" type="2d" style="display:none;"></canvas>

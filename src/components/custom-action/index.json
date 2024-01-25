@@ -1,8 +1,0 @@
-{
-    "component": true,
-    "usingComponents": {
-        "data-grid": "../data-grid/index",
-        "tabs": "../tabs/index",
-        "json-viewer": "../json-viewer/index"
-    }
-}

@@ -1,9 +1,0 @@
-{
-    "component": true,
-    "usingComponents": {
-        "collapse": "../collapse/index",
-        "filter-bar": "../filter-bar/index",
-        "json-viewer": "../json-viewer/index",
-        "wc-element": "./element"
-    }
-}

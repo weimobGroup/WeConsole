@@ -1,0 +1,7 @@
+{
+    "component": true,
+    "usingComponents": {
+        "filter-bar": "../filter-bar/index",
+        "json-viewer": "@/sub/components/json-viewer/index"
+    }
+}

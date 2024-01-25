@@ -1,13 +1,21 @@
 {
     "$schema": "http://json.schemastore.org/tsconfig",
     "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        "moduleResolution": "Node",
         "allowJs": false,
         "strictNullChecks": true,
-        "moduleResolution": "Node",
         "downlevelIteration": true,
-        "module": "ESNext",
+        "skipLibCheck": true,
+        "module": "CommonJS",
         "target": "es2022",
         "types": [],
-        "typeRoots": []
+        "typeRoots": [],
+        "paths": {
+            "@/types/*": ["src/types/*"],
+            "@/main/*": ["src/weconsole-main/*"],
+            "@/sub/*": ["src/weconsole-subpackage/*"]
+        }
     }
 }

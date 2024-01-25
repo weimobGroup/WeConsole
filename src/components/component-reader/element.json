@@ -1,7 +1,0 @@
-{
-    "component": true,
-    "usingComponents": {
-        "json-viewer": "../json-viewer/index",
-        "wc-element": "./element"
-    }
-}
