@@ -3,7 +3,7 @@ import { VirtualListMixin } from '@/sub/mixins/virtual-list';
 import { DataReaderMixin } from '@/sub/mixins/data-reader';
 
 import { clone, isEmptyObject } from '@mpkit/util';
-import { getApiCategoryList } from '@/main/modules/category';
+import { getApiCategoryList } from '@/sub/modules/category';
 import { convertApiMaterial, productToString } from '@/sub/modules/reader';
 import type { MpApiReaderComponentData } from '@/types/api-reader';
 import type { MpApiMaterial, MpProduct } from '@/types/product';

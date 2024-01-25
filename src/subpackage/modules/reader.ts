@@ -4,7 +4,7 @@ import type { RequireId } from '@/types/common';
 import { MethodExecStatus } from '@/types/common';
 import type { MpUIConfig } from '@/types/config';
 import type { MpApiMaterial, MpConsoleMaterial, MpConsoleMaterialItem, MpProduct } from '@/types/product';
-import { getCategoryValue } from '@/main/modules/category';
+import { getCategoryValue } from '@/sub/modules/category';
 import { computeTime, convertStockToInitiatorDesc, convertStockToInitiatorName, getStatusText } from './util';
 
 export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; desc: string } | undefined => {

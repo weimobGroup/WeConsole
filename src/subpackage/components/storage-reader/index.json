@@ -1,7 +1,7 @@
 {
     "component": true,
     "usingComponents": {
-        "json-viewer": "@/sub/components/json-viewer/index",
+        "json-viewer": "../json-viewer/index",
         "filter-bar": "../filter-bar/index",
         "data-grid": "../data-grid/index"
     }

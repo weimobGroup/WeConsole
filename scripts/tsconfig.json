@@ -1,0 +1,18 @@
+{
+    "extends": "../tsconfig-base.json",
+    "compilerOptions": {
+        "baseUrl": ".",
+        "rootDir": ".",
+        "lib": ["ESNext"],
+        "module": "CommonJS",
+        "target": "ES6",
+        "skipLibCheck": true,
+        "outDir": "../scripts-dist",
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "types": ["node"],
+        "typeRoots": ["../node_modules/@types", "../node_modules"]
+    },
+    "include": ["./*.ts", "./**/*.ts"],
+    "exclude": ["node_modules", "dist"]
+}

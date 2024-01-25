@@ -14,8 +14,8 @@
         "typeRoots": [],
         "paths": {
             "@/types/*": ["src/types/*"],
-            "@/main/*": ["src/weconsole-main/*"],
-            "@/sub/*": ["src/weconsole-subpackage/*"]
+            "@/main/*": ["src/main/*"],
+            "@/sub/*": ["src/subpackage/*"]
         }
     }
 }

@@ -1,4 +1,4 @@
-import type { ReaderStateController } from '../weconsole-main/modules/reader-state';
+import type { ReaderStateController } from '@/main//modules/reader-state';
 import type { DataGridCol } from './data-grid';
 import type { MpItemsComponentExports } from './items';
 import type { MpApiMaterial, MpProduct } from './product';

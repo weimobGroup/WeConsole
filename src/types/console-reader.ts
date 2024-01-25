@@ -1,4 +1,4 @@
-import type { ReaderStateController } from '../weconsole-main/modules/reader-state';
+import type { ReaderStateController } from '@/main//modules/reader-state';
 import type { MpJSONViewerComponent } from './json-viewer';
 import type { MpConsoleMaterial, MpProduct } from './product';
 import type { MpDataReaderComponent, MpDataReaderComponentData, MpDataReaderComponentMethods } from './reader';

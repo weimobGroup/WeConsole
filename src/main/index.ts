@@ -12,12 +12,12 @@ export { getUIConfig, setUIConfig, addCustomAction, removeCustomAction } from '.
 
 export { log, getWcControlMpViewInstances } from '@/main/modules/util';
 
-export const ProductController = wcScopeSingle<MpProductController>(
+const ProductController = wcScopeSingle<MpProductController>(
     'ProductController',
     () => new MpProductController()
 ) as MpProductController;
 
-export const HookerList = wcScopeSingle<Hooker[]>('HookerList', () => []) as Hooker[];
+const HookerList = wcScopeSingle<Hooker[]>('HookerList', () => []) as Hooker[];
 
 // ProductController.on("all", (type, data) => {
 //     ((console as any).org || console).log(type, data);
@@ -91,4 +91,4 @@ export const hideWeConsole = () => {
 };
 
 // TODO: 暂时这样简陋下，后面做全端时重写
-console.log('欢迎使用WeConsole v1.1.4，让小程序调试更高效！');
+// console.log('欢迎使用WeConsole v1.1.4，让小程序调试更高效！');
