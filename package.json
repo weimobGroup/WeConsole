@@ -1,14 +1,13 @@
 {
     "name": "weconsole",
-    "version": "1.1.4",
+    "version": "1.2.0",
     "description": "功能全面、界面与体验对标 Chrome devtools 的可定制化的小程序开发调试面板",
-    "main": "dist/npm/index.js",
-    "types": "dist/npm/index.d.ts",
+    "main": "dist/npm/main/index.js",
     "miniprogram": "dist/npm",
     "files": [
         "dist",
-        "docs",
-        "LICENSE"
+        "LICENSE",
+        "README.md"
     ],
     "scripts": {
         "lint:style": "pnpm stylelint 'src/**/*.scss'",
@@ -19,6 +18,8 @@
         "build:scripts": "rimraf ./scripts-dist && tsc -p ./scripts/tsconfig.json",
         "build": "pnpm lint && pnpm build:scripts && rimraf ./dist && node ./scripts-dist/cli.js",
         "dev": "pnpm tsc --outDir ./dist/full -w && node ./build/watch.js",
+        "beta": "npm publish --tag=beta",
+        "pub": "npm publish --tag=latest",
         "upgrade": "pnpm ncu -u"
     },
     "repository": {
@@ -87,6 +88,6 @@
         "@mpkit/types": "^1.1.2",
         "@mpkit/util": "^1.1.2",
         "typescript": "^5.1.6",
-        "typescript-mp-component": "0.0.2"
+        "typescript-mp-component": "0.0.4"
     }
 }

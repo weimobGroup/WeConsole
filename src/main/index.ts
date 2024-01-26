@@ -90,5 +90,5 @@ export const hideWeConsole = () => {
     emit(WeConsoleEvents.WcVisibleChange, scope.visible);
 };
 
-// TODO: 暂时这样简陋下，后面做全端时重写
-// console.log('欢迎使用WeConsole v1.1.4，让小程序调试更高效！');
+const version = 'VERSION';
+console.log(`欢迎使用WeConsole v${version}，让小程序调试更高效！`);

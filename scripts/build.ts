@@ -23,7 +23,7 @@ const getPlugins = () => [
     RollupReplace({
         delimiters: ['', ''],
         values: {
-            '@VERSION@': VERSION,
+            VERSION: VERSION,
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         },
         preventAssignment: true

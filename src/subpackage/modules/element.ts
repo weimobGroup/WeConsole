@@ -163,5 +163,5 @@ export const findPageIns = (id: string): any => {
     return findComponentIns(id);
 };
 export const findComponentIns = (id: string): any => {
-    return getWcControlMpViewInstances().find((item) => item.__wxExparserNodeId__ === id);
+    return getWcControlMpViewInstances().find((item) => (item as any).__wxExparserNodeId__ === id);
 };

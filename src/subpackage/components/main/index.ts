@@ -113,7 +113,6 @@ class MainComponent extends MpComponent {
             pageVisible: false
         });
     }
-    noop() {}
     syncState() {
         const data = {
             showIcon: MainStateController.getState('showIcon') ? true : this.data.showIcon,

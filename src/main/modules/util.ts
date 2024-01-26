@@ -1,7 +1,7 @@
 import type { AnyFunction, WcListFilterHandler } from '@/types/util';
 import type { MpStackInfo, MpSystemInfo } from '@/types/common';
 import { wcScopeSingle } from '../config';
-import type { MpViewContext } from '@/types/view';
+import type { MpViewInstance } from 'typescript-mp-component';
 
 export const getSystemInfo = (() => {
     let info: MpSystemInfo;
@@ -288,5 +288,5 @@ export const rpxToPx = (rpxVal: number): number => {
 };
 
 /** 获取小程序内weconsole已经监控到的所有的App/Page/Component实例 */
-export const getWcControlMpViewInstances = (): MpViewContext[] =>
-    wcScopeSingle('MpViewInstances', () => []) as MpViewContext[];
+export const getWcControlMpViewInstances = (): MpViewInstance[] =>
+    wcScopeSingle('MpViewInstances', () => []) as MpViewInstance[];
