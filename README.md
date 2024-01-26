@@ -63,13 +63,13 @@ WeConsole 分为`核心`和`组件`两部分，使用时需要全部引用后方
 
 ```javascript
 // NPM方式引用
-import 'weconsole/init';
+import 'weconsole/main/init';
 
 // 普通方式引用
-import 'xxx/weconsole/init';
+import 'xxx/weconsole/main/init';
 ```
 
-引入`weconsole/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
+引入`weconsole/main/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
 
 ```javascript
 import { replace, restore, showWeConsole, hideWeConsole } from 'weconsole'; // scope可选值：App/Page/Component/Console/Api
@@ -88,12 +88,12 @@ showWeConsole();
 ```javascript
 // NPM方式引用
 "usingComponents": {
-    "weconsole": "weconsole/components/main/index"
+    "weconsole": "weconsole/subpackage/components/main/index"
 }
 
 // 普通方式引用
 "usingComponents": {
-    "weconsole": "xxx/weconsole/components/main/index"
+    "weconsole": "xxx/weconsole/subpackage/components/main/index"
 }
 ```
 
@@ -124,6 +124,9 @@ properties: {
 ### 4、建议
 
 如果不想将 weconsole 放置在主包中，建议将组件放在分包内使用，利用小程序的 [分包异步化](https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages/async.html) 的特性，减少主包大小；
+
+-   主包文件：`dist/{full|npm}/main/*`
+-   分包文件：`dist/{full|npm}/subpackage/*`
 
 > 目前 weconsole 没有提供便捷的主包/分包文件分割功能，后续会提供
 
@@ -241,7 +244,7 @@ properties: {
 -   几个简单的定制案例如下，效果如图 11：
 
 ```javascript
-import { setUIRunConfig } from 'xxx/weconsole/index.js';
+import { setUIRunConfig } from 'xxx/weconsole/main/index.js';
 
 setUIRunConfig({
     customActions: [
