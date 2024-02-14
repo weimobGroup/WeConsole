@@ -1,0 +1,7 @@
+<view class="action-list">
+    <view class="action" bind:tap="callWxMethod" data-method="showToast">wx.showToast</view>
+    <view class="action" bind:tap="callWxMethod" data-method="setStorageSync">wx.setStorageSync</view>
+    <view class="action" bind:tap="callWxMethod" data-method="getStorage">wx.getStorage</view>
+    <view class="action" bind:tap="callWxMethod" data-method="removeStorage">wx.removeStorage</view>
+    <view class="action {{requesting?'lock':''}}" bind:tap="callWxMethod" data-method="request">wx.request{{requesting?'(发送中...)':''}}</view>
+</view>

@@ -1,0 +1,26 @@
+/* stylelint-disable-next-line selector-type-no-unknown */
+page {
+    box-sizing: border-box;
+    padding: 10rpx 30rpx;
+    font-size: 28rpx;
+}
+
+.alert-warn {
+    padding: 30rpx;
+    margin-top: 40rpx;
+    font-size: 24rpx;
+    color: #8a6d3b;
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.alert-warn view {
+    margin-bottom: 30rpx;
+}
+
+.alert-warn text {
+    color: blue;
+    text-decoration: underline;
+}

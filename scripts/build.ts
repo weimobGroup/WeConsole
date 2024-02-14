@@ -129,7 +129,11 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                     }
                     return sum;
                 }, [])
-            ]);
+            ]).then(() => {
+                if (mode === 'full') {
+                    return copyPromise(ROOT_DIR + '/dist/' + mode + '/**/*', ROOT_DIR + '/examples/weconsole');
+                }
+            });
         }
     ];
 };

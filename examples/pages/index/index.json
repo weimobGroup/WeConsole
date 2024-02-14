@@ -1,0 +1,7 @@
+{
+    "navigationBarTitleText": "示例首页",
+    "usingComponents": {
+        "demo": "../../demo/index",
+        "weconsole": "../../weconsole/subpackage/components/main/index"
+    }
+}
