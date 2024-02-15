@@ -1,5 +1,4 @@
 import { registerComponent } from '@/sub/mixins/component';
-import { VirtualListMixin } from '@/sub/mixins/virtual-list';
 import { DataReaderMixin } from '@/sub/mixins/data-reader';
 
 import { clone, isEmptyObject } from '@mpkit/util';
@@ -28,8 +27,7 @@ class ApiReaderComponent extends MpComponent {
     dataGridWaitMaterials?: MpApiMaterial[];
     $mx = {
         Tool: new ToolMixin(),
-        Dr: new DataReaderMixin<MpApiMaterial>(),
-        Vl: new VirtualListMixin<MpApiMaterial>()
+        Dr: new DataReaderMixin<MpApiMaterial>()
     };
     initData: Data = {
         categoryList: getApiCategoryList(),
