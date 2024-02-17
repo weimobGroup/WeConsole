@@ -1,9 +1,8 @@
 import type { MpConsoleMaterial } from './product';
 export interface MpConsoleReaderComponentData {
-    itemMinHeightMap?: {
-        [prop: string]: number;
-    };
-    affixList?: MpConsoleMaterial[];
-    selectRowId?: string;
-    selectRowFrom?: string;
+    selfHash: string;
+    itemMinSize: number;
+    affixList: MpConsoleMaterial[];
+    selectRowId: string;
+    scrollMarginTop: string;
 }

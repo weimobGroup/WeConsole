@@ -6,9 +6,9 @@ export interface MpReaderProductIdMap {
 
 export interface MpReaderState {
     productIdList: string[];
-    productIdMap: MpReaderProductIdMap;
-    keepSaveMap: MpReaderProductIdMap;
-    markMap: MpReaderProductIdMap;
+    productIdMap: Record<string, 1>;
+    keepSaveMap: Record<string, 1>;
+    markMap: Record<string, 1>;
     topList: string[];
     state: any;
 }

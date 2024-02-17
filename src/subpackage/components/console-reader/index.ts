@@ -1,30 +1,30 @@
 import { registerComponent } from '@/sub/mixins/component';
-import { VirtualListMixin } from '@/sub/mixins/virtual-list';
-import { DataReaderMixin } from '@/sub/mixins/data-reader';
+import { VlMixin } from '@/sub/mixins/vl';
 import type { MpConsoleReaderComponentData } from '@/types/console-reader';
 import type { MpConsoleMaterial, MpProduct } from '@/types/product';
 import type { MpEvent } from '@/types/view';
 import { HookScope } from '@/types/common';
 import { convertConsoleMaterial } from '@/sub/modules/reader';
 import { include } from '@/sub/modules/json';
-import { log } from '@/main/modules/util';
+import { log, rpxToPx } from '@/main/modules/util';
 import { wcScopeSingle } from '@/main/config';
 import type { ReaderStateController } from '@/main/modules/reader-state';
-import { isEmptyObject } from '@mpkit/util';
+import { isEmptyObject, uuid } from '@mpkit/util';
 import type { MpDataReaderComponentData } from '@/types/reader';
 import { MpDataReaderAction } from '@/types/reader';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
 import type { MpVirtualListComponentData } from '@/types/virtual-list';
+import type { MpJSONViewerComponentEventDetail } from '@/types/json-viewer';
+import { DrMixin } from '@/sub/mixins/dr';
 
 type Data = MpConsoleReaderComponentData &
     MpDataReaderComponentData &
     Partial<MpVirtualListComponentData<MpConsoleMaterial>>;
 
-class ConsoleReaderComponent extends MpComponent {
+class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     ConsoleStateController: ReaderStateController;
-    localVlScrollTop?: number;
     JSONViewerMap?: Record<
         string,
         {
@@ -32,24 +32,26 @@ class ConsoleReaderComponent extends MpComponent {
             viewer: JsonViewer;
         }
     >;
+    $drActions: Array<MpDataReaderAction> = [
+        MpDataReaderAction.copy,
+        MpDataReaderAction.top,
+        MpDataReaderAction.keepSave,
+        MpDataReaderAction.cancelAllKeepSave,
+        MpDataReaderAction.mark,
+        MpDataReaderAction.cancelAllMark
+    ];
     $mx = {
-        Tool: new ToolMixin(),
-        Dr: new DataReaderMixin<MpConsoleMaterial>(),
-        Vl: new VirtualListMixin<MpConsoleMaterial>()
+        Tool: new ToolMixin<Data>(),
+        Dr: new DrMixin<MpConsoleMaterial>(HookScope.Console),
+        Vl: new VlMixin<MpConsoleMaterial>()
     };
     initData: Data = {
-        $vlPageSize: 50,
-        $vlItemPrecutHeight: 40,
+        selfHash: uuid(),
+        itemMinSize: rpxToPx(44),
+        affixList: [],
+        selectRowId: '',
+        scrollMarginTop: '',
         activeCategory: 'all',
-        itemMinHeightMap: {},
-        materialActions: [
-            MpDataReaderAction.copy,
-            MpDataReaderAction.top,
-            MpDataReaderAction.keepSave,
-            MpDataReaderAction.cancelAllKeepSave,
-            MpDataReaderAction.mark,
-            MpDataReaderAction.cancelAllMark
-        ],
         categoryList: [
             {
                 name: 'All',
@@ -79,12 +81,8 @@ class ConsoleReaderComponent extends MpComponent {
     };
     created() {
         this.ConsoleStateController = wcScopeSingle('ConsoleStateController') as ReaderStateController;
-        this.localVlScrollTop = this.ConsoleStateController.getState('scrollTop');
         this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
-            if (
-                !data.from.startsWith('Console') ||
-                !(data.viewer.selectOwnerComponent && data.viewer.selectOwnerComponent() === this)
-            ) {
+            if (!data.from.startsWith('Console') || !data.from.includes(`_${this.data.selfHash}`)) {
                 return;
             }
             const arr = data.from.split('_');
@@ -117,15 +115,16 @@ class ConsoleReaderComponent extends MpComponent {
                     // debugger;
                     log('log', 'path update');
                 }
+                setTimeout(() => {
+                    this.$mx.Vl.$vlItemSizeChange(id);
+                }, 120);
             }
             vw.setTarget(target, false);
             vw.init();
         });
-        this.$mx.Vl.$vlInit();
     }
     attached() {
         if (this.$mx.Tool.$wcProductController) {
-            const idList = this.ConsoleStateController.getProductIdList();
             const activeCategory = this.ConsoleStateController.getState('activeCategory');
             const filterKeyWord = this.ConsoleStateController.getState('filterKeyWord');
             const selectedId = this.ConsoleStateController.getState('selectedId');
@@ -133,55 +132,78 @@ class ConsoleReaderComponent extends MpComponent {
                 this.$mx.Dr.$drFilterKeyword = filterKeyWord;
             }
 
-            const reanderData: any = {};
+            const renderData: Partial<Data> = {};
             if (activeCategory) {
-                reanderData.activeCategory = activeCategory;
+                renderData.activeCategory = activeCategory;
             }
             if (selectedId) {
-                reanderData.detailMaterialId = selectedId;
+                renderData.selectRowId = selectedId;
             }
-            this.$mx.Dr.$drKeepSaveMaterials = this.ConsoleStateController.keepSave().reduce((sum, item) => {
+            this.$mx.Dr.$drKeepSaveMaterialId = this.ConsoleStateController.keepSave().reduce((sum, item) => {
                 sum[item] = 1;
                 return sum;
             }, {});
-            this.$mx.Dr.$drTopMaterials = this.ConsoleStateController.top().concat([]);
-            this.$mx.Dr.$drMarkMaterials = this.ConsoleStateController.mark().reduce((sum, item) => {
+            this.$mx.Dr.$drTopMaterialId = this.ConsoleStateController.top().concat([]);
+            this.$mx.Dr.$drMarkMaterialId = this.ConsoleStateController.mark().reduce((sum, item) => {
                 sum[item] = 1;
                 return sum;
             }, {});
-            if (!isEmptyObject(reanderData)) {
-                this.$mx.Tool.$updateData({
-                    reanderData
-                });
+            if (!isEmptyObject(renderData)) {
+                this.$mx.Tool.$forceData(renderData);
             }
-            const products = this.$mx.Tool.$wcProductController.getList(HookScope.Console, (item) =>
-                idList.some((id) => id === item.id)
-            );
-            products.forEach((item) => {
-                this.addMaterial(item);
+            const materials = this.$mx.Tool.$wcProductController.getList(HookScope.Console).map((item) => {
+                return convertConsoleMaterial(item);
             });
-
-            if (this.localVlScrollTop) {
-                // 还原上一次的滚动位置
-                this.$mx.Tool.$updateData({
-                    $vlScrollTop: this.localVlScrollTop
-                });
-                delete this.localVlScrollTop;
-            }
+            materials.forEach((mat) => {
+                this.$mx.Dr.$drAddMaterialToActiveList(mat, false, false);
+            });
+            this.onSetActiveMaterialList();
         }
     }
-    rowJSONViewerToggle(e) {
-        const itemId = e.currentTarget.dataset.id as string;
-        const index = parseInt(e.currentTarget.dataset.index as string);
+    onSetActiveMaterialList() {
+        this.$mx.Vl.$vlSetList(this.$mx.Dr.$drActiveMaterialList);
+    }
+    onAddActiveMaterial(material: MpConsoleMaterial) {
+        this.$mx.Vl.$vlAppendItem(material);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onReplaceActiveMaterial(material: MpConsoleMaterial) {
+        // this.$mx.Vl.$vlAppendItem(material);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRemoveActiveMaterial(material: MpConsoleMaterial) {}
+    onItemInteractEvent(e: Required<MpEvent<{ type: string; id: string; detail?: any }>>) {
+        if (e.detail.type === 'rowJSONViewerToggle') {
+            this.rowJSONViewerToggle(e.detail.id, e.detail.detail.index as number, e.detail.detail);
+            return;
+        }
+        if (e.detail.type === 'tapRow') {
+            this.selectRow(e.detail.id);
+            return;
+        }
+        if (e.detail.type === 'longpressRow') {
+            this.longpressRow(e.detail.id);
+            return;
+        }
+    }
+    rowJSONViewerToggle(
+        productId: string,
+        consoleInnerItemIndex: number,
+        jsonDetail: MpJSONViewerComponentEventDetail
+    ) {
+        const itemId = productId;
+        const index = consoleInnerItemIndex;
         const vw = this.JSONViewerMap?.[`Console_${itemId}_${index}`]?.viewer;
-        const path = e.detail.path || [];
+        const path = jsonDetail.path || [];
         this.$mx.Vl.$vlSaveItemState(itemId, {
             [`json${index}`]: {
-                open: e.detail.open,
+                open: jsonDetail.open,
                 path: vw ? (vw.JSONViewer ? vw.JSONViewer.restoreJSONPropPath(path || []) : path) : path
             }
         });
-        this.$mx.Vl.$vlComputeItemHeight(itemId);
+        wx.nextTick(() => {
+            this.$mx.Vl.$vlItemSizeChange(itemId);
+        });
     }
     copyMaterial(m) {
         const product = this.$mx.Dr.$drGetProduct(m.id);
@@ -204,20 +226,15 @@ class ConsoleReaderComponent extends MpComponent {
         });
     }
     syncAffixList() {
-        const affixList = (this.$mx.Dr.$drTopMaterials || []).map((id) => {
-            return convertConsoleMaterial(this.$mx.Dr.$drGetProduct(id) as MpProduct);
+        const affixList = (this.$mx.Dr.$drTopMaterialId || []).map((id) => {
+            return this.$mx.Dr.$drExistMaterial[id];
         });
         this.$mx.Tool.$updateData(
             {
-                affixList
+                affixList,
+                scrollMarginTop: affixList.length ? this.data.scrollMarginTop : '0'
             },
             () => {
-                if (!this.data.affixList.length) {
-                    this.$mx.Tool.$updateData({
-                        scrollMarginTop: '0px'
-                    });
-                    return;
-                }
                 this.$mx.Tool.$getBoundingClientRect('.console-affixs').then((res) => {
                     this.$mx.Tool.$updateData({
                         scrollMarginTop: res.height + 'px'
@@ -226,9 +243,9 @@ class ConsoleReaderComponent extends MpComponent {
             }
         );
     }
-    longpressRow(e) {
-        const rowId = e.currentTarget.dataset.id;
-        this.selectRow(rowId, 'longpressRow');
+    longpressRow(productId: string) {
+        const rowId = productId;
+        this.selectRow(rowId);
         this.$mx.Dr.$drShowMaterialAction(rowId).then(([action, oldSituation]) => {
             if (action === MpDataReaderAction.top) {
                 this.ConsoleStateController.top(rowId, !oldSituation);
@@ -236,11 +253,11 @@ class ConsoleReaderComponent extends MpComponent {
             }
             if (action === MpDataReaderAction.mark) {
                 this.ConsoleStateController.mark(rowId, !oldSituation);
-                return this.syncMarkList();
+                return;
             }
             if (action === MpDataReaderAction.cancelAllMark) {
                 this.ConsoleStateController.mark(undefined, false);
-                return this.syncMarkList();
+                return;
             }
             if (action === MpDataReaderAction.keepSave) {
                 this.ConsoleStateController.keepSave(rowId, !oldSituation);
@@ -251,8 +268,11 @@ class ConsoleReaderComponent extends MpComponent {
             }
         });
     }
-    selectRow(rowId, from?: string) {
-        const id = typeof rowId === 'string' ? rowId : rowId?.currentTarget ? rowId.currentTarget.dataset.id : '';
+    selectRow(rowId?: string | MpEvent) {
+        let id;
+        if (rowId) {
+            id = typeof rowId === 'string' ? rowId : rowId.currentTarget.dataset.id;
+        }
         if (id) {
             this.ConsoleStateController.setState('selectedId', id);
         } else {
@@ -260,13 +280,11 @@ class ConsoleReaderComponent extends MpComponent {
         }
         if (!id) {
             return this.$mx.Tool.$updateData({
-                selectRowId: null,
-                selectRowFrom: null
+                selectRowId: ''
             });
         }
         return this.$mx.Tool.$updateData({
-            selectRowId: id,
-            selectRowFrom: from || ''
+            selectRowId: id
         });
     }
     materialFilterPolicy(k, item): boolean {
@@ -289,61 +307,23 @@ class ConsoleReaderComponent extends MpComponent {
             this.ConsoleStateController.removeState('filterKeyWord');
         }
         this.$mx.Dr.$drFilterMaterial(kd);
-        this.reloadVlList(this.$mx.Dr.$drReaderShowList || []);
     }
     clear() {
         this.$mx.Dr.$drClearMaterial();
-        this.reloadVlList(this.$mx.Dr.$drReaderShowList || []);
         this.ConsoleStateController.clearProducts();
         this.ConsoleStateController.removeState('selectedId');
     }
-    addMaterial(data: MpProduct) {
-        const material = convertConsoleMaterial(data);
-        this.$mx.Dr.$drAddMaterialToCategory(material);
-        if (this.$mx.Dr.$drReaderShowList?.indexOf(material) !== -1) {
-            this.$mx.Vl.$vlAddItem(material);
-        }
-    }
-    onCategoryChange(activeCategory: string | MpEvent) {
-        const category: string =
-            typeof activeCategory === 'object' && activeCategory && activeCategory.currentTarget
-                ? activeCategory.detail
-                : activeCategory;
-        this.$mx.Dr.$drChangeCategory(category);
-        this.reloadVlList(this.$mx.Dr.$drReaderShowList || []);
+    onCategoryChange(e: Required<MpEvent<string>>) {
+        this.$mx.Dr.$drChangeCategory(e.detail);
     }
     onWcProduct(type: string, data: MpProduct) {
-        if (data.type === HookScope.Console || this.$mx.Dr.$drMaterialExist?.[data.id]) {
-            if (!this.$mx.Dr.$drMaterialExist) {
-                this.$mx.Dr.$drMaterialExist = {};
-            }
-            if (data.category) {
-                this.$mx.Dr.$drMaterialExist[data.id] = data.category;
-            } else if (!this.$mx.Dr.$drMaterialExist[data.id]) {
-                this.$mx.Dr.$drMaterialExist[data.id] = 'other';
-            }
-            this.addMaterial(data);
-        }
-    }
-    syncMarkList() {
-        if (this.data.activeCategory === 'mark') {
-            this.reloadVlList(this.$mx.Dr.$drReaderShowList || []);
+        if (data.type === HookScope.Console) {
+            const material = convertConsoleMaterial(data);
+            this.$mx.Dr.$drAddMaterialToActiveList(material);
         }
     }
     reloadVlList(allList: MpConsoleMaterial[]) {
-        wx.showLoading();
-        this.$mx.Vl.$vlClear().then(() => {
-            this.$mx.Vl.$vlAllList = [...allList];
-            this.$mx.Vl.$vlListChange();
-            this.$mx.Vl.$vlReload();
-            wx.nextTick(() => {
-                wx.hideLoading();
-            });
-        });
-    }
-    localVlScroll(e) {
-        this.$mx.Vl.$vlOnScroll(e);
-        this.ConsoleStateController.setState('scrollTop', this.$mx.Vl.$vlScrollTop);
+        this.$mx.Vl.$vlSetList(allList);
     }
 }
 

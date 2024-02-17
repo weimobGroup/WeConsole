@@ -1,4 +1,5 @@
 <view class="action-list">
+    <view class="action" bind:tap="callWxMethod" data-method="console">随机console</view>
     <view class="action" bind:tap="callWxMethod" data-method="showToast">wx.showToast</view>
     <view class="action" bind:tap="callWxMethod" data-method="setStorageSync">wx.setStorageSync</view>
     <view class="action" bind:tap="callWxMethod" data-method="getStorage">wx.getStorage</view>

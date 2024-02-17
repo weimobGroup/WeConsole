@@ -164,7 +164,7 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
         }
         this.updateDataTimer = setTimeout(() => {
             fireSetData(this);
-        }, 150);
+        }, 100);
     }
     $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<MpClientRect> {
         return new Promise((resolve, reject) => {

@@ -24,3 +24,9 @@ page {
     color: blue;
     text-decoration: underline;
 }
+
+.box {
+    height: 30rpx;
+    padding: 5rpx 15rpx 5rpx 50rpx;
+    background-color: red;
+}

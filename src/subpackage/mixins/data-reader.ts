@@ -15,32 +15,27 @@ const filterPass = <T extends MpMaterial = MpMaterial>(item: T, keyword: string,
     return filterFields.some((item) => item === keyword || item.indexOf(keyword) !== -1);
 };
 
-export class DataReaderMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin<MpDataReaderComponentData> {
+export class DataReaderMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin<
+    MpDataReaderComponentData,
+    NonNullable<unknown>
+> {
     $wcProductController: IMpProductController;
-    $showActionSheet: (options: MpShowActionSheetOptions) => Promise<number>;
+    $showActionSheet: (options: MpShowActionSheetOptions | string[]) => Promise<number>;
     $showToast: (txt: string) => void;
     $updateData: (data: any, cb?: () => void) => void;
     $forceData: (data: any, cb?: () => void) => void;
     $drFilterKeyword?: string;
-    $drMaterialExist?: {
-        [prop: string]: string;
-    };
-    $drNormalMaterialCategoryMap?: MpMaterialCategoryMap<T>;
-    $drFilterMaterialCategoryMap?: MpMaterialCategoryMap<T>;
+    $drMaterialExist?: Record<string, string>;
+    $drNormalMaterialCategoryMap?: Record<string, T[]>;
+    $drFilterMaterialCategoryMap?: Record<string, T[]>;
     /** 留存记录 */
-    $drKeepSaveMaterials?: {
-        [prop: string]: 1;
-    };
+    $drKeepSaveMaterials?: Record<string, 1>;
     /** 标记记录 */
-    $drMarkMaterials?: {
-        [prop: string]: 1;
-    };
+    $drMarkMaterials?: Record<string, 1>;
     /** 置顶记录ID */
     $drTopMaterials?: string[];
     /** 记录分类 */
-    $drMaterialClassifyMap?: {
-        [prop: string]: string[];
-    };
+    $drMaterialClassifyMap?: Record<string, string[]>;
     $drReaderShowList?: T[];
     $drShowMaterialAction(rowId: string): Promise<[MpDataReaderAction, any?]> {
         if (!this.data.materialActions || !this.data.materialActions.length) {
@@ -55,12 +50,8 @@ export class DataReaderMixin<T extends MpMaterial = MpMaterial> extends MpCompon
         const isKeppSave = this?.$drKeepSaveMaterials && this.$drKeepSaveMaterials[rowId];
         const actions: MpDataReaderAction[] = [];
         const textList = this.data.materialActions.map((item) => {
-            const action = typeof item === 'object' ? item.action : item;
-            const text = typeof item === 'object' ? item.text : undefined;
+            const action = item;
             actions.push(action);
-            if (text) {
-                return typeof text === 'function' ? text(action, rowId, row, this.$drGetProduct(rowId)) : text;
-            }
             if (action === MpDataReaderAction.top) {
                 return `${isTop ? '取消' : ''}置顶显示`;
             }
@@ -82,7 +73,7 @@ export class DataReaderMixin<T extends MpMaterial = MpMaterial> extends MpCompon
             if (action === MpDataReaderAction.copy) {
                 return '复制';
             }
-            return action;
+            return '';
         });
         return this.$showActionSheet(textList).then((res) => {
             const action = actions[res];

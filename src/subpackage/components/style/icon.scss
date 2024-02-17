@@ -13,7 +13,7 @@
     }
 }
 
-@mixin ic-close($color:$grey2, $width:4rpx) {
+@mixin ic-close($color: $grey2, $width: 4rpx) {
     &.wic-close::before,
     &.wic-close::after {
         top: 50%;
@@ -32,7 +32,7 @@
     }
 }
 
-@mixin ic-refresh($color:$grey2, $border:4rpx) {
+@mixin ic-refresh($color: $grey2, $border: 4rpx) {
     &.wic-refresh {
         box-sizing: border-box;
         border-style: solid;
@@ -44,11 +44,11 @@
     &.wic-refresh::before {
         position: absolute;
         bottom: 0;
-        left: -($border*4) + 2rpx;
+        left: -($border * 4) + 2rpx;
         width: 0;
         height: 0;
         border-style: solid;
-        border-width: $border*3;
+        border-width: $border * 3;
         border-right-color: transparent;
         border-bottom-color: transparent;
         border-left-color: transparent;
@@ -57,7 +57,7 @@
     }
 }
 
-@mixin ic-error($color:#fff, $width:4rpx) {
+@mixin ic-error($color: #fff, $width: 4rpx) {
     &.wic-error::before,
     &.wic-error::after {
         top: 50%;
@@ -76,7 +76,24 @@
     }
 }
 
-@mixin ic-warn($color:$cr-warn, $color2:#fff) {
+@mixin ic-info($color: $cr-info, $color2: #fff) {
+    &.wic-info::before {
+        top: 0;
+        left: 0;
+        color: $color;
+        content: '●';
+    }
+
+    &.wic-info::after {
+        top: 50%;
+        left: 50%;
+        color: $color2;
+        content: 'i';
+        transform: translateX(-50%) translateY(-50%) scale(0.5);
+    }
+}
+
+@mixin ic-warn($color: $cr-warn, $color2: #fff) {
     &.wic-warn::before {
         top: 0;
         left: 0;
@@ -93,7 +110,7 @@
     }
 }
 
-@mixin ic-clear($color:$grey2, $width:4rpx) {
+@mixin ic-clear($color: $grey2, $width: 4rpx) {
     &.wic-clear::before {
         width: 100%;
         height: 100%;
@@ -111,7 +128,7 @@
     }
 }
 
-@mixin ic-expand-compress($color:$grey2, $width:4rpx) {
+@mixin ic-expand-compress($color: $grey2, $width: 4rpx) {
     &.wic-compress::before,
     &.wic-compress::after,
     &.wic-compress .wic-arrow-1,

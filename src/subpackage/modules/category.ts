@@ -36,8 +36,8 @@ export const getCategoryValue = (product: Partial<MpProduct>, runConfig?: MpUICo
 /**
  * 获取小程序Api数据原料的分类信息列表
  */
-export const getApiCategoryList = (runConfig?: MpUIConfig): MpNameValue<string>[] => {
-    const res: MpNameValue<string>[] = [
+export const getApiCategoryList = (runConfig?: MpUIConfig) => {
+    const res: Required<MpNameValue<string>>[] = [
         {
             name: 'All',
             value: 'all'
@@ -58,7 +58,7 @@ export const getApiCategoryList = (runConfig?: MpUIConfig): MpNameValue<string>[
                 }
             } else if (item && (item as MpNameValue<string>).value) {
                 if (!res.some((it) => it.value === (item as MpNameValue<string>).value)) {
-                    res.push(item as MpNameValue<string>);
+                    res.push(item as Required<MpNameValue<string>>);
                 }
             }
         });

@@ -11,7 +11,6 @@ export class VirtualListMixin<T extends RequireId = RequireId> extends MpCompone
     $getBoundingClientRect: (selector: string, retryCount?: number, delay?: number) => Promise<MpClientRect>;
     $vlGetPageSize?: () => number;
     $vlGetItemHeight?: (index?: number) => number;
-    $vlItemRestorePolicy?: (itemId: string, state: any) => any;
     $vlContainerHeight?: number;
     $vlContainerHeightComputeing?: boolean;
     $vlContainerHeightComputeQueue?: AnyFunction[];
@@ -155,7 +154,7 @@ export class VirtualListMixin<T extends RequireId = RequireId> extends MpCompone
             );
         });
     }
-    $vlComputeItemHeight(id: string) {
+    $vlItemSizeChange(id: string) {
         if (!this.$vlItemHeightComputeMap) {
             this.$vlItemHeightComputeMap = {};
         }
@@ -397,7 +396,7 @@ export class VirtualListMixin<T extends RequireId = RequireId> extends MpCompone
                 if (!this.$vlItemClientRectQueryMap?.[item.id]) {
                     this.$vlItemClientRectQueryMap = this.$vlItemClientRectQueryMap || {};
                     this.$vlItemClientRectQueryMap[item.id] = () => {
-                        return this.$vlComputeItemHeight(item.id).catch(() => Promise.resolve());
+                        return this.$vlItemSizeChange(item.id).catch(() => Promise.resolve());
                     };
                     renderCallbacks.push(this.$vlItemClientRectQueryMap[item.id]);
                 }
@@ -423,9 +422,6 @@ export class VirtualListMixin<T extends RequireId = RequireId> extends MpCompone
                     this.$vlUnLock();
                 });
             }
-            mergeList.forEach((item) => {
-                this.$vlRestoreItemState(item.id);
-            });
         }
 
         // log(
@@ -451,12 +447,6 @@ export class VirtualListMixin<T extends RequireId = RequireId> extends MpCompone
                 ...this.$vlItemState[itemId],
                 ...state
             };
-        }
-    }
-    $vlRestoreItemState(itemId: string) {
-        if (this?.$vlItemState && this.$vlItemState[itemId] && this.$vlItemRestorePolicy) {
-            this.$vlItemRestorePolicy(itemId, this.$vlItemState[itemId]);
-            // delete this.$vlItemState[itemId];
         }
     }
 }

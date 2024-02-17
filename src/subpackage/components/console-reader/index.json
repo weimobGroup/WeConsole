@@ -2,6 +2,8 @@
     "component": true,
     "usingComponents": {
         "filter-bar": "../filter-bar/index",
-        "json-viewer": "../json-viewer/index"
+        "json-viewer": "../json-viewer/index",
+        "console-item": "../console-reader-item/index",
+        "dynamic-virtual-list": "@cross-virtual-list/mp-wx/components/dynamic/index"
     }
 }

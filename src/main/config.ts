@@ -10,6 +10,7 @@ import type { MpProduct } from '@/types/product';
 import { MpApiCategoryMap, reportCategoryMapToList } from '@/main/modules/category';
 
 const FinalConfig: Partial<MpUIConfig> = {
+    ignoreHookApiNames: ['nextTick'],
     apiCategoryGetter(product: MpProduct): string {
         if ((product.category || '').startsWith('cloud')) {
             return 'cloud';

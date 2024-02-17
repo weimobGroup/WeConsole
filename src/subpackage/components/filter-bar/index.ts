@@ -51,6 +51,9 @@ class FilterBar extends MpComponent {
         this.triggerEvent('refresh');
     }
     tapCategory(e: MpComponentEvent) {
+        if (this.data.activeCategory === e.currentTarget.dataset.val) {
+            return;
+        }
         this.triggerEvent('category', e.currentTarget.dataset.val);
     }
 }

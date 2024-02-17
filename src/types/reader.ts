@@ -25,12 +25,8 @@ export type MpDataReaderActionTextGetter<T extends MpMaterial = MpMaterial> = (
     product?: MpProduct
 ) => string;
 
-export interface MpDataReaderActionInfo {
-    action: MpDataReaderAction;
-    text?: string | MpDataReaderActionTextGetter;
-}
 export interface MpDataReaderComponentData {
-    categoryList?: MpNameValue<string>[];
-    activeCategory?: string;
-    materialActions?: Array<MpDataReaderActionInfo | MpDataReaderAction>;
+    categoryList: Required<MpNameValue<string>>[];
+    activeCategory: string;
+    materialActions?: MpDataReaderAction[];
 }

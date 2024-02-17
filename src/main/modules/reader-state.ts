@@ -39,16 +39,14 @@ export class ReaderStateController extends EventEmitter {
         const name = this.name;
         const addMaterial = (id: string) => {
             const { productIdList, productIdMap } = this.state;
-            if (!productIdMap[id]) {
+            if (!(id in productIdMap)) {
+                productIdMap[id] = 1;
                 productIdList.push(id);
             }
         };
-        productController
-            .getList(HookScope.Api)
-            .concat(productController.getList(HookScope.Console))
-            .forEach((item) => {
-                addMaterial(item.id);
-            });
+        productController.getList(name === 'Api' ? HookScope.Api : HookScope.Console).forEach((item) => {
+            addMaterial(item.id);
+        });
         const handler = (type, data) => {
             if (!this.recording) {
                 return;
@@ -162,7 +160,7 @@ export class ReaderStateController extends EventEmitter {
             }
             (map as any[]).unshift(id);
             if (map.length > 3) {
-                map.pop();
+                map.length = 3;
             }
             this.emit(type, {
                 id,

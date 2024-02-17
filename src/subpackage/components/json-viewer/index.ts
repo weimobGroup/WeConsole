@@ -90,7 +90,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
     }
     attached() {
         if (this.data.json) {
-            this.$mx.Tool.$updateData({
+            this.$mx.Tool.$forceData({
                 root: this.data.json
             });
         }
@@ -182,7 +182,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
     setPathVisible(open: boolean, path?: JSONPropPath) {
         this.lastOpen = open;
         this.lastPath = path;
-        this.$mx.Tool.$updateData(this.buildPath(open, path));
+        this.$mx.Tool.$forceData(this.buildPath(open, path));
     }
     toggle(e: MpEvent<MpJSONViewerComponentEventDetail>) {
         const { open, path, fromCompute } = e.detail as MpJSONViewerComponentEventDetail;
@@ -241,7 +241,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         node.path = this.JSONViewer.replaceJSONPropPath(jsonPath);
         mpPath += '.value';
         mpData[mpPath] = node;
-        this.$mx.Tool.$updateData(mpData);
+        this.$mx.Tool.$forceData(mpData);
     }
     rpxToPx(rpx: number): number {
         return (this.windowWidth / 750) * rpx;
@@ -281,7 +281,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
                     if (this.lastPath) {
                         Object.assign(mpData, this.buildPath(!!this.lastOpen, this.lastPath));
                     }
-                    this.$mx.Tool.$updateData(mpData, () => {
+                    this.$mx.Tool.$forceData(mpData, () => {
                         this.triggerEvent('first', this.data.root);
                         resolve();
                     });
@@ -332,7 +332,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         }
     }
     changeTab(e) {
-        this.$mx.Tool.$updateData({
+        this.$mx.Tool.$forceData({
             activeTab: parseInt(e.detail)
         });
         if (parseInt(e.detail) === 1) {

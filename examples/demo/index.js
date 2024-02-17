@@ -1,3 +1,9 @@
+const consoleType = {
+    0: 'log',
+    1: 'info',
+    2: 'warn',
+    3: 'error'
+};
 Component({
     data: {
         requesting: false,
@@ -6,10 +12,20 @@ Component({
     created() {
         this.storageIndex = 0;
         this.requestType = 0;
+        this.consoleType = 0;
     },
     methods: {
         callWxMethod(e) {
             const method = e.currentTarget.dataset.method;
+            if (method === 'console') {
+                console[consoleType[this.consoleType]](
+                    this.consoleType === 3 ? new Error(Date.now()) : Date.now(),
+                    global
+                );
+                this.consoleType++;
+                this.consoleType = this.consoleType > 3 ? 0 : this.consoleType;
+                return;
+            }
             if (method === 'showToast') {
                 wx.showToast({
                     title: `当前时间：${new Date().toLocaleString()}`,
