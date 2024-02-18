@@ -114,40 +114,28 @@ class MainComponent extends MpComponent {
         });
     }
     syncState() {
-        const data = {
-            showIcon: MainStateController.getState('showIcon') ? true : this.data.showIcon,
-            inited: MainStateController.getState('inited') ? true : this.data.inited,
-            handX: MainStateController.getState('handX') || this.data.handX,
-            handY: MainStateController.getState('handY') || this.data.handY,
-            visible:
-                typeof MainStateController.getState('visible') !== 'undefined'
-                    ? MainStateController.getState('visible')
-                    : this.data.visible,
-            mounted:
-                typeof MainStateController.getState('mounted') !== 'undefined'
-                    ? MainStateController.getState('mounted')
-                    : this.data.mounted,
-            fullScreen:
-                typeof MainStateController.getState('fullScreen') !== 'undefined'
-                    ? MainStateController.getState('fullScreen')
-                    : this.data.fullScreen,
-            activeTabIndex:
-                typeof MainStateController.getState('activeTabIndex') !== 'undefined'
-                    ? MainStateController.getState('activeTabIndex')
-                    : this.data.activeTabIndex,
-            isFullScreenPhone:
-                typeof MainStateController.getState('isFullScreenPhone') !== 'undefined'
-                    ? MainStateController.getState('isFullScreenPhone')
-                    : this.data.isFullScreenPhone,
-            winWidth: MainStateController.getState('winWidth') || this.data.winWidth,
-            winHeight: MainStateController.getState('winHeight') || this.data.winHeight,
-            tabMountState: MainStateController.getState('tabMountState') || this.data.tabMountState,
-            activeSysTab:
-                typeof MainStateController.getState('activeSysTab') !== 'undefined'
-                    ? MainStateController.getState('activeSysTab')
-                    : this.data.activeSysTab,
-            sysTabMountState: MainStateController.getState('sysTabMountState') || this.data.sysTabMountState
-        };
+        const data = {};
+        [
+            'showIcon',
+            'inited',
+            'handX',
+            'handY',
+            'visible',
+            'mounted',
+            'fullScreen',
+            'activeTabIndex',
+            'isFullScreenPhone',
+            'winWidth',
+            'winHeight',
+            'tabMountState',
+            'activeSysTab',
+            'sysTabMountState'
+        ].forEach((prop) => {
+            data[prop] =
+                typeof MainStateController.getState(prop) !== 'undefined'
+                    ? MainStateController.getState(prop)
+                    : this.data[prop];
+        });
         this.$mx.Tool.$updateData(data);
         this.getCanvasCtx().then((ctx) => {
             if (this.$mx.Tool.$wcComponentIsDestroyed) {

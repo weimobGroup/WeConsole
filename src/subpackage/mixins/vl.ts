@@ -5,18 +5,59 @@ import type {
     MpVirtualListComponentExports
 } from '@cross-virtual-list/types';
 import type { MpEvent } from '@/types/view';
+import type { EventHandler } from '@mpkit/types';
+import { WeConsoleEvents } from '@/types/scope';
+import { uuid } from '@mpkit/util';
 
 type AdapterExportsMethodCallQueue<T = any> = {
     [K in keyof MpVirtualListComponentExports<T>]: Array<Parameters<MpVirtualListComponentExports<T>[K]>>;
 };
 
+interface Data {
+    $vlMainSizeHash: string;
+}
+
 export class VlMixin<
     T extends RequireId = RequireId,
     E extends MpVirtualListComponentExports<T> = MpVirtualListComponentExports<T>
-> extends MpComponentMixin {
+> extends MpComponentMixin<Data, NonNullable<unknown>> {
+    $wcOn: (name: string, handler: EventHandler) => void;
     $vlAdapterExports?: E;
     $vlAdapterExportsMethodCallQueue?: AdapterExportsMethodCallQueue;
     $vlItemState?: Record<string, any>;
+    $vlIsAttached: boolean;
+    $vlPageIsHide: boolean;
+    $vlMainSizeHash: string;
+
+    created() {
+        this.$wcOn(WeConsoleEvents.WcMainComponentSizeChange, () => {
+            this.$vlMainSizeHash = uuid();
+            if (this.$vlIsAttached && !this.$vlPageIsHide) {
+                this.setData({
+                    $vlMainSizeHash: this.$vlMainSizeHash
+                });
+            }
+        });
+    }
+    attached() {
+        this.$vlIsAttached = true;
+        if (this.$vlMainSizeHash) {
+            this.setData({
+                $vlMainSizeHash: this.$vlMainSizeHash
+            });
+        }
+    }
+    onPageLifeShow() {
+        this.$vlPageIsHide = false;
+        if (this.$vlMainSizeHash) {
+            this.setData({
+                $vlMainSizeHash: this.$vlMainSizeHash
+            });
+        }
+    }
+    onPageLifeHide() {
+        this.$vlPageIsHide = true;
+    }
 
     $vlOnVirtualListComponentReady(e: Required<MpEvent<E>>) {
         this.$vlAdapterExports = e.detail;

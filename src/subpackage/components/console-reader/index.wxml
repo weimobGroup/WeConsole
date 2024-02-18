@@ -14,7 +14,7 @@
     <!-- 正常的数据 -->
     <view class="fc-reader-body has-bar" style="margin-top:{{44*affixList.length}}rpx">
         <dynamic-virtual-list scroll-y itemMinSize="{{itemMinSize}}" generic:item="console-item" itemKeyField="id"
-            containerSizeHash="{{affixList.length}}" bind:ready="$vlOnVirtualListComponentReady"
+            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" bind:ready="$vlOnVirtualListComponentReady"
             bind:interact="onItemInteractEvent"
             state="{{ {from:selfHash,selectRowId:selectRowId} }}"></dynamic-virtual-list>
     </view>

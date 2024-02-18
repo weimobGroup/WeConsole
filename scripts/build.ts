@@ -6,7 +6,7 @@ import NodeResolve from '@rollup/plugin-node-resolve';
 import { ROOT_DIR, VERSION } from './vars';
 import * as fs from 'fs';
 // import swc from 'unplugin-swc';
-import { getFiles, copyPromise } from './fs';
+import { getFiles, copyPromise, readFile, writeFile } from './fs';
 // import alias from '@rollup/plugin-alias';
 import typescript from '@rollup/plugin-typescript';
 import { compileFile } from './sass';
@@ -137,6 +137,32 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                 .then(() => {
                     if (mode === 'full') {
                         return Promise.all([
+                            new Promise<void>((resolve) => {
+                                getFiles(ROOT_DIR + '/dist/full/subpackage/components', true).forEach((jsonFile) => {
+                                    if (!jsonFile.endsWith('.json')) {
+                                        return;
+                                    }
+                                    const json = JSON.parse(readFile(jsonFile).trim());
+                                    let needChange;
+                                    if (json.usingComponents) {
+                                        Object.keys(json.usingComponents).forEach((k) => {
+                                            const val = json.usingComponents[k];
+                                            if (val === '@cross-virtual-list/mp-wx/components/dynamic/index') {
+                                                needChange = true;
+                                                json.usingComponents[k] = '../dynamic/index';
+                                                return;
+                                            }
+                                            if (val === '@cross-virtual-list/mp-wx/components/regular/index') {
+                                                needChange = true;
+                                                json.usingComponents[k] = '../regular/index';
+                                                return;
+                                            }
+                                        });
+                                    }
+                                    needChange && writeFile(jsonFile, JSON.stringify(json, null, 4));
+                                });
+                                resolve();
+                            }),
                             copyPromise(
                                 ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.wxml',
                                 ROOT_DIR + '/dist/' + mode + '/subpackage/components'
