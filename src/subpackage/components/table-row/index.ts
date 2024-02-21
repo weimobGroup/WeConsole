@@ -48,13 +48,13 @@ class TableRowComponent<T extends RequireId = RequireId> extends MpComponent<
             id,
             detail: {
                 type: e.currentTarget.dataset.type,
-                colIndex: parseInt(String(e.currentTarget.dataset.col))
+                colIndex: e.currentTarget.dataset.col ? parseInt(String(e.currentTarget.dataset.col)) : -1
             }
         });
     }
 
     tapRow(e: MpEvent) {
-        this.emitInteractEvent('tapCell', e);
+        this.emitInteractEvent('tapRow', e);
     }
     longpressRow(e: MpEvent) {
         this.emitInteractEvent('longpressRow', e);

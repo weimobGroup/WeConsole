@@ -21,15 +21,6 @@
         color: $cr-datagrid-active !important;
         background-color: $bg-datagrid-active;
     }
-
-    &.has-border {
-        .wc-table-col {
-            border-right: 1px solid $bg-datagrid-border;
-            &.wc-last {
-                border-right: none;
-            }
-        }
-    }
 }
 
 .wc-table-col {
@@ -50,7 +41,11 @@
 
     &.wc-col-head {
         height: 100%;
+        border-right: 1px solid $bg-datagrid-border;
         border-bottom: 1px solid $bg-datagrid-border;
+        &.wc-last {
+            border-right: none;
+        }
     }
 }
 

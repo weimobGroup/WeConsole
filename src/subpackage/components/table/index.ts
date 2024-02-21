@@ -78,9 +78,49 @@ export class TableComponent<
     }
     localVirtualListComponentReady(e: Required<MpEvent<E>>) {
         this.$mx.Vl.$vlOnVirtualListComponentReady(e);
+        const oldSet = e.detail.setList;
+        e.detail.setList = (list) => {
+            this.setData({
+                hasData: !!list?.length
+            });
+            oldSet(list);
+        };
         if (Array.isArray(this.data.data) && this.data.data.length) {
             this.$mx.Vl.$vlSetList(this.data.data);
         }
+        this.triggerEvent('ready', e.detail);
+    }
+    rewriteVlExports(exports: E) {
+        Object.keys(exports).forEach((k) => {
+            const old = exports[k];
+            if (k === 'setList') {
+                exports[k] = (list) => {
+                    this.setData({
+                        hasData: !!list?.length
+                    });
+                    old(list);
+                };
+                return;
+            }
+            if (k === 'clear') {
+                exports[k] = () => {
+                    this.setData({
+                        hasData: false
+                    });
+                    old();
+                };
+                return;
+            }
+            if (k === 'appendItem' || k === 'appendItems') {
+                exports[k] = (val) => {
+                    this.setData({
+                        hasData: true
+                    });
+                    old(val);
+                };
+                return;
+            }
+        });
     }
     computeHeadRow() {
         const headRow = this.data.cols.reduce((sum: Record<string, string | TableCell>, col) => {
@@ -170,7 +210,7 @@ export class TableComponent<
             delete this.computeColWidthTimer;
         }, 100);
     }
-    tapCell(e: MpEvent) {
+    onItemInteractEvent(e: MpEvent) {
         console.log(e);
     }
 }
