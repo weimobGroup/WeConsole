@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "table示例",
+    "usingComponents": {
+        "tb": "../../weconsole/subpackage/components/table/index"
+    }
+}

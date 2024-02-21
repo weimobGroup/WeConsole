@@ -1,0 +1,28 @@
+<view wx:if="{{colComputedWidth.length}}" class="wc-table">
+    <view wx:if="{{hasData}}" class="wc-table-line" wx:for="{{lines}}" wx:key="index"></view>
+    <view class="wc-table-head">
+        <row value="{{headRow}}" index="0"
+            state="{{ {cols: cols, colComputedWidth:colComputedWidth, type:'head', hasData: hasData, rowHeight: rowHeight } }}">
+        </row>
+    </view>
+    <!-- 吸顶的数据 -->
+    <view wx:if="{{affixed && affixed.length}}" class="wc-table-affix">
+        <scroll-view scroll-y="{{true}}" style="height:{{rowHeight*affixList.length}}px;">
+            <row wx:for="{{affixList}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex" value="{{row}}"
+                index="{{rowIndex}}"
+                state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected, type:'affix',hasData: hasData, rowHeight: rowHeight } }}">
+            </row>
+        </scroll-view>
+    </view>
+    <!-- 正常的数据 -->
+    <view class="wc-table-body" style="top:{{rowHeight}}px;margin-top:{{rowHeight*affixList.length}}px;">
+        <regular-virtual-list wx:if="{{rowHeightMode==='regular'}}" itemSize="{{rowHeight}}" scroll-y
+            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" generic:item="row" itemKeyField="id"
+            bind:ready="localVirtualListComponentReady" bind:interact="onItemInteractEvent"
+            state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected,hasData: hasData, rowHeight: rowHeight } }}"></regular-virtual-list>
+        <dynamic-virtual-list wx:else itemMinSize="{{rowHeight}}" scroll-y
+            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" generic:item="row" itemKeyField="id"
+            bind:ready="localVirtualListComponentReady" bind:interact="onItemInteractEvent"
+            state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected,hasData: hasData, rowHeight: rowHeight } }}"></dynamic-virtual-list>
+    </view>
+</view>

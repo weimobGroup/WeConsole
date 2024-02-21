@@ -1,0 +1,10 @@
+<view
+    class="wc-table-row {{state.hasData?'has-border':''}} {{state.type==='head'?'wc-head-row':''}} wc-{{index%2===0?'even':'odd'}} {{isSelected?'wc-selected':''}}"
+    data-type="{{state.type}}" style="{{value.rowStyle}}" bindtap="tapRow" bindlongpress="longpressRow">
+    <view wx:for="{{state.cols}}" wx:for-item="col" wx:for-index="colIndex" wx:key="field"
+        class="wc-table-col wc-col-{{state.type}} {{colIndex===state.cols.length-1?'wc-last':''}} {{col.wrap===false?'wc-nowrap':''}}"
+        style="width:{{state.colComputedWidth[colIndex]}}%;min-height:{{state.rowHeight}}px;" bindtap="tapCell"
+        bindlongpress="longpressCell" data-type="{{state.type}}" data-col="{{colIndex}}">
+        <cell value="{{value[col.field]}}"></cell>
+    </view>
+</view>

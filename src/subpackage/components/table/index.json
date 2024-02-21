@@ -1,0 +1,9 @@
+{
+    "component": true,
+    "usingComponents": {
+        "json-viewer": "../json-viewer/index",
+        "row": "../table-row/index",
+        "dynamic-virtual-list": "@cross-virtual-list/mp-wx/components/dynamic/index",
+        "regular-virtual-list": "@cross-virtual-list/mp-wx/components/regular/index"
+    }
+}

@@ -1,0 +1,8 @@
+<block wx:if="{{value.tableCell}}">
+    <view wx:for="{{value.blocks}}" wx:key="key">
+        <text wx:if="{{item.type==='text'}}" style="{{item.style}}">{{item.content}}</text>
+        <json-viewer wx:elif="{{item.type==='json'}}" from="{{from}}_{{index}}" mode="{{2}}" init="{{false}}"></json-viewer>
+        <text wx:else>{{item}}</text>
+    </view>
+</block>
+<block wx:else>{{value}}</block>

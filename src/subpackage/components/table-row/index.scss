@@ -1,0 +1,62 @@
+@import '../style/var.scss';
+
+.wc-table-row {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    color: $cr-renderer-row;
+
+    &.wc-even {
+        background-color: $bg-row-even;
+    }
+
+    &.wc-odd {
+        background-color: $bg-row-odd;
+    }
+    &.wc-head-row {
+        background-color: $bg-datagrid-head;
+    }
+
+    &.wc-selected {
+        color: $cr-datagrid-active !important;
+        background-color: $bg-datagrid-active;
+    }
+
+    &.has-border {
+        .wc-table-col {
+            border-right: 1px solid $bg-datagrid-border;
+            &.wc-last {
+                border-right: none;
+            }
+        }
+    }
+}
+
+.wc-table-col {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
+    justify-content: center;
+    padding: 6rpx 10rpx;
+    font-size: $sz-datagrid-th - 2rpx;
+    line-height: 1.2;
+    border-right: 1px solid transparent;
+
+    &.wc-last {
+        border-right: none;
+    }
+
+    &.wc-col-head {
+        height: 100%;
+        border-bottom: 1px solid $bg-datagrid-border;
+    }
+}
+
+.wc-table-col.wc-nowrap {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

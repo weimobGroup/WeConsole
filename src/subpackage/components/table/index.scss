@@ -1,0 +1,40 @@
+@import '../style/var.scss';
+
+.wc-table {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    color: $cr-datagrid;
+    background-color: $bg-datagrid;
+}
+
+.wc-table-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 10;
+    width: 1px;
+    margin-left: -1px;
+    background-color: $bg-datagrid-border;
+}
+
+.wc-table-head {
+    box-sizing: border-box;
+    font-size: $sz-datagrid-th;
+    background-color: $bg-datagrid-head;
+}
+
+.wc-table-affix {
+    position: relative;
+    z-index: 8;
+    border-bottom: 1px solid $bg-datagrid-border;
+    box-shadow: 0 8rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.wc-table-body {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 5;
+    width: 100%;
+}

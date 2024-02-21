@@ -1,0 +1,7 @@
+{
+    "component": true,
+    "usingComponents": {
+        "json-viewer": "../json-viewer/index",
+        "cell": "../table-cell/index"
+    }
+}
