@@ -1,5 +1,5 @@
 import { registerComponent } from '@/sub/mixins/component';
-import { DataReaderMixin } from '@/sub/mixins/data-reader';
+import { DrMixin } from '@/sub/mixins/dr';
 
 import { clone, isEmptyObject } from '@mpkit/util';
 import { getApiCategoryList } from '@/sub/modules/category';
@@ -7,41 +7,42 @@ import { convertApiMaterial, productToString } from '@/sub/modules/reader';
 import type { MpApiReaderComponentData } from '@/types/api-reader';
 import type { MpApiMaterial, MpProduct } from '@/types/product';
 import { HookScope } from '@/types/common';
-import { computeTime, rpxToPx } from '@/sub/modules/util';
 import type { MpDataReaderComponentData } from '@/types/reader';
 import { MpDataReaderAction } from '@/types/reader';
-import { WeConsoleEvents } from '@/types/scope';
 import { includeString } from '@/sub/modules/json';
 import { ApiStateController } from '@/main/modules/state-controller';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import type { ReaderStateController } from '@/main/modules/reader-state';
 import type { MpDataGridComponentExports } from '@/types/data-grid';
-import type { DataGrid } from '@/sub/components/data-grid/index';
+import { VlMixin } from '@/sub/mixins/vl';
+import type { MpEvent } from '@/types/view';
+import { computeTime } from '@/sub/modules/util';
+import { getUIConfig } from '@/main/config';
 
-type Data = MpApiReaderComponentData & Partial<MpDataReaderComponentData>;
+type Data = MpApiReaderComponentData & MpDataReaderComponentData;
 
-class ApiReaderComponent extends MpComponent {
+class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     ApiStateController: ReaderStateController;
     $DataGridMain?: MpDataGridComponentExports<MpApiMaterial>;
     dataGridWaitMaterials?: MpApiMaterial[];
+    $drActions: Array<MpDataReaderAction> = [
+        MpDataReaderAction.copy,
+        MpDataReaderAction.top,
+        MpDataReaderAction.keepSave,
+        MpDataReaderAction.cancelAllKeepSave,
+        MpDataReaderAction.mark,
+        MpDataReaderAction.cancelAllMark
+    ];
     $mx = {
-        Tool: new ToolMixin(),
-        Dr: new DataReaderMixin<MpApiMaterial>()
+        Tool: new ToolMixin<Data>(),
+        Vl: new VlMixin<MpApiMaterial>(),
+        Dr: new DrMixin<MpApiMaterial>(HookScope.Api)
     };
     initData: Data = {
         categoryList: getApiCategoryList(),
         activeCategory: 'all',
-        materialActions: [
-            MpDataReaderAction.copy,
-            MpDataReaderAction.top,
-            MpDataReaderAction.keepSave,
-            MpDataReaderAction.cancelAllKeepSave,
-            MpDataReaderAction.mark,
-            MpDataReaderAction.cancelAllMark
-        ],
-        affixIds: [],
-        gridPageSize: 20,
+        affixed: [],
         detailTab: 0,
         readerCols: [
             {
@@ -57,7 +58,7 @@ class ApiReaderComponent extends MpComponent {
                 wrap: false
             },
             {
-                field: 'categorys',
+                field: 'category',
                 title: 'Type',
                 width: 15,
                 wrap: false
@@ -77,71 +78,79 @@ class ApiReaderComponent extends MpComponent {
         ]
     };
     created() {
-        setTimeout(() => {
-            this.refreshCategory();
-        }, 400);
         this.ApiStateController = ApiStateController;
-        this.$mx.Tool.$wcOn(WeConsoleEvents.WcMainComponentSizeChange, () => {
-            this.syncGridPageSize();
-        });
     }
     attached() {
+        this.refreshCategory();
         if (this.$mx.Tool.$wcProductController) {
-            const idList = this.ApiStateController.getProductIdList();
-            const activeCategory = this.ApiStateController.getState('activeCategory');
-            // const filterKeyWord = this.ApiStateController.getState('filterKeyWord');
             const categorys = this.ApiStateController.getState('categorys');
             const selectedId = this.ApiStateController.getState('selectedId');
             const selectedIdFrom = this.ApiStateController.getState('selectedIdFrom');
-            // if (filterKeyWord) {
-            //     this.$mx.Dr.$drFilterKeyword = filterKeyWord;
-            // }
-
-            const reanderData: Partial<MpApiReaderComponentData & MpDataReaderComponentData> = {};
+            const renderData: Partial<Data> = {};
             if (categorys?.length) {
-                reanderData.categoryList = categorys;
+                renderData.categoryList = categorys;
             }
             if (selectedId) {
-                reanderData.detailMaterialId = selectedId;
+                renderData.detailMaterialId = selectedId;
             }
             if (selectedIdFrom) {
-                reanderData.detailFrom = selectedIdFrom;
+                renderData.detailFrom = selectedIdFrom;
             }
-            this.$mx.Dr.$drKeepSaveMaterials = this.ApiStateController.keepSave().reduce((sum, item) => {
+            this.$mx.Dr.$drKeepSaveMaterialId = this.ApiStateController.keepSave().reduce((sum, item) => {
                 sum[item] = 1;
                 return sum;
             }, {});
-            this.$mx.Dr.$drTopMaterials = this.ApiStateController.top().concat([]);
-            this.$mx.Dr.$drMarkMaterials = this.ApiStateController.mark().reduce((sum, item) => {
+            this.$mx.Dr.$drTopMaterialId = this.ApiStateController.top().concat([]);
+            this.$mx.Dr.$drMarkMaterialId = this.ApiStateController.mark().reduce((sum, item) => {
                 sum[item] = 1;
                 return sum;
             }, {});
-            if (!isEmptyObject(reanderData)) {
-                this.$mx.Tool.$updateData({
-                    reanderData
-                });
+            if (!isEmptyObject(renderData)) {
+                this.$mx.Tool.$updateData(renderData);
             }
-            const products = this.$mx.Tool.$wcProductController.getList(HookScope.Api, (item) =>
-                idList.some((id) => id === item.id)
-            );
-            products.forEach((item) => {
-                this.addMaterial(item);
+            const materials = this.$mx.Tool.$wcProductController.getList(HookScope.Api).map((item) => {
+                return convertApiMaterial(item, getUIConfig());
             });
-            if (activeCategory) {
-                setTimeout(() => {
-                    this.onCategoryChange(activeCategory);
-                });
+            materials.forEach((mat) => {
+                this.$mx.Dr.$drAddMaterialToActiveList(mat as MpApiMaterial, false, false);
+            });
+            this.onSetActiveMaterialList();
+        }
+    }
+    onSetActiveMaterialList() {
+        this.$mx.Vl.$vlSetList(this.$mx.Dr.$drActiveMaterialList);
+    }
+    onAddActiveMaterial(material: MpApiMaterial) {
+        this.$mx.Vl.$vlAppendItem(material);
+    }
+    onReplaceActiveMaterial(material: MpApiMaterial) {
+        if (material.endTime && material.startTime) {
+            material.time = computeTime(material.endTime - material.startTime);
+        }
+        this.$mx.Vl.$vlReplaceItem(material.id, material);
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    onRemoveActiveMaterial(material: MpApiMaterial) {}
+    onItemInteractEvent(e: Required<MpEvent<{ type: string; id: string; detail?: any }>>) {
+        // if (e.detail.type === 'rowJSONViewerToggle') {
+        //     this.rowJSONViewerToggle(e.detail.id, e.detail.detail.index as number, e.detail.detail);
+        //     return;
+        // }
+        if (e.detail.detail.type !== 'head') {
+            if (e.detail.type === 'tapCell') {
+                this.setDetailMaterial(e.detail.id, undefined, 'tapCell');
+                return;
+            }
+            if (e.detail.type === 'longpressRow') {
+                this.longpressRow(e.detail.id);
+                return;
             }
         }
-        this.syncGridPageSize();
     }
-
-    addMaterial(data) {
-        const material = convertApiMaterial(data, this.$mx.Tool.$wcUIConfig) as MpApiMaterial;
-        material.categorys && this.refreshCategory(material.categorys);
-        this.$mx.Dr.$drAddMaterialToCategory(material);
-        if (this.$mx.Dr.$drReaderShowList?.includes(material)) {
-            this.appendDataToGrid(material);
+    onWcProduct(type: string, data: MpProduct) {
+        if (data.type === HookScope.Api) {
+            const material = convertApiMaterial(data, getUIConfig()) as MpApiMaterial;
+            this.$mx.Dr.$drAddMaterialToActiveList(material);
         }
     }
     refreshCategory(categoryVals?: string[]) {
@@ -150,7 +159,9 @@ class ApiReaderComponent extends MpComponent {
                 categoryList: getApiCategoryList(this.$mx.Tool.$wcUIConfig)
             });
             this.ApiStateController.setState('categorys', JSON.parse(JSON.stringify(this.data.categoryList)));
-        } else if (this.data.categoryList.some((item) => !categoryVals.find((t) => t === item.value))) {
+            return;
+        }
+        if (this.data.categoryList.some((item) => !categoryVals.find((t) => t === item.value))) {
             const list = getApiCategoryList(this.$mx.Tool.$wcUIConfig);
             categoryVals.forEach((categoryVal) => {
                 if (list.every((item) => item.value !== categoryVal)) {
@@ -166,12 +177,6 @@ class ApiReaderComponent extends MpComponent {
             this.ApiStateController.setState('categorys', JSON.parse(JSON.stringify(this.data.categoryList)));
         }
     }
-    reloadVlList(allList) {
-        if (this.$DataGridMain) {
-            this.$DataGridMain.replaceAllList(allList);
-            this.$DataGridMain.reloadAffixList();
-        }
-    }
     filter(keyword) {
         const kd: string = typeof keyword === 'object' && 'detail' in keyword ? keyword.detail : (keyword as string);
         if (kd) {
@@ -180,14 +185,9 @@ class ApiReaderComponent extends MpComponent {
             this.ApiStateController.removeState('filterKeyWord');
         }
         this.$mx.Dr.$drFilterMaterial(kd);
-        this.reloadVlList(this.$mx.Dr.$drReaderShowList);
     }
     clear() {
-        // 清空DataGrid操作缓存
-        delete this.dataGridWaitMaterials;
         this.$mx.Dr.$drClearMaterial();
-        this.syncAffixList();
-        this.reloadVlList(this.$mx.Dr.$drReaderShowList);
         this.setDetailMaterial();
         this.ApiStateController.clearProducts();
         this.ApiStateController.removeState('selectedId');
@@ -212,113 +212,43 @@ class ApiReaderComponent extends MpComponent {
     clearDetailMaterial() {
         this.setDetailMaterial();
     }
-    onCategoryChange(activeCategory) {
-        const category: string =
-            typeof activeCategory === 'object' && activeCategory && activeCategory.currentTarget
-                ? activeCategory.detail
-                : activeCategory;
-        this.$mx.Dr.$drChangeCategory(category);
-        this.reloadVlList(this.$mx.Dr.$drReaderShowList);
-        this.setDetailMaterial();
-        this.ApiStateController.setState('activeCategory', category);
-    }
-    onWcProduct(type: string, data: MpProduct) {
-        if (data.type === HookScope.Api || this.$mx.Dr.$drMaterialExist?.[data.id]) {
-            if (!this.$mx.Dr.$drMaterialExist) {
-                this.$mx.Dr.$drMaterialExist = {};
-            }
-            if (data.category) {
-                this.$mx.Dr.$drMaterialExist[data.id] = data.category;
-            } else if (!this.$mx.Dr.$drMaterialExist[data.id]) {
-                this.$mx.Dr.$drMaterialExist[data.id] = 'other';
-            }
-            this.addMaterial(data);
-        }
-    }
-    appendDataToGrid(material) {
-        if (material.endTime && material.startTime) {
-            material.time = computeTime(material.endTime - material.startTime);
-        }
-        if (this.$DataGridMain) {
-            this.$DataGridMain.addItem(material);
-            return;
-        }
-        if (!this.dataGridWaitMaterials) {
-            this.dataGridWaitMaterials = [];
-        }
-        this.dataGridWaitMaterials.push(material);
-    }
-    syncMarkList() {
-        if (this.data.activeCategory === 'mark') {
-            this.reloadVlList(this.$mx.Dr.$drReaderShowList);
-        }
+    onCategoryChange(e: Required<MpEvent<string>>) {
+        this.$mx.Dr.$drChangeCategory(e.detail);
+        this.ApiStateController.setState('activeCategory', e.detail);
     }
     syncAffixList() {
         this.$mx.Tool.$updateData({
-            affixIds: clone(this.$mx.Dr.$drTopMaterials || [])
+            affixed: clone(this.$mx.Dr.$drTopMaterialId || [])
         });
-        this.$DataGridMain?.reloadAffixList(this.$mx.Dr.$drNormalMaterialCategoryMap?.all);
     }
     changeDetailTab(e) {
         this.$mx.Tool.$updateData({
             detailTab: e.detail
         });
     }
-    gridReady(e) {
-        this.$DataGridMain = e.detail;
-        if (this.dataGridWaitMaterials) {
-            this.dataGridWaitMaterials.forEach((item) => {
-                this.$DataGridMain?.addItem(item);
-            });
-            delete this.dataGridWaitMaterials;
-        }
-        if (this.ApiStateController) {
-            const top = this.ApiStateController.getState('scrollTop');
-            if (top) {
-                this.$DataGridMain?.scrollTo?.(top);
+    longpressRow(rowId: string) {
+        this.setDetailMaterial(rowId, undefined, 'longpressRow');
+        this.$mx.Dr.$drShowMaterialAction(rowId).then(([action, oldSituation]) => {
+            if (action === MpDataReaderAction.top) {
+                this.ApiStateController.top(rowId, !oldSituation);
+                return this.syncAffixList();
             }
-            this.$DataGridMain?.onScroll?.((top: number) => {
-                this.ApiStateController.setState('scrollTop', top);
-            });
-        }
-    }
-    tapGridCell(e) {
-        const { rowId } = e.detail;
-        if (rowId) {
-            this.setDetailMaterial(
-                rowId,
-                undefined,
-                'tapCell'
-                // col && col.field && col.field === "initiator" ? 3 : 0
-            );
-        }
-    }
-    longpressGridRow(e) {
-        const { rowId } = e.detail;
-        if (rowId) {
-            this.setDetailMaterial(rowId, undefined, 'longpressRow');
-            this.$mx.Dr.$drShowMaterialAction(rowId).then(([action, oldSituation]) => {
-                if (action === MpDataReaderAction.top) {
-                    this.ApiStateController.top(rowId, !oldSituation);
-                    return this.syncAffixList();
-                }
-                if (action === MpDataReaderAction.mark) {
-                    this.ApiStateController.mark(rowId, !oldSituation);
-                    return this.syncMarkList();
-                }
-                if (action === MpDataReaderAction.cancelAllMark) {
-                    this.ApiStateController.mark(undefined, false);
-                    return this.syncMarkList();
-                }
-                if (action === MpDataReaderAction.keepSave) {
-                    this.ApiStateController.keepSave(rowId, !oldSituation);
-                    return;
-                }
-                if (action === MpDataReaderAction.cancelAllKeepSave) {
-                    this.ApiStateController.keepSave(undefined, false);
-                }
-            });
-        }
+            if (action === MpDataReaderAction.mark) {
+                this.ApiStateController.mark(rowId, !oldSituation);
+                return;
+            }
+            if (action === MpDataReaderAction.cancelAllMark) {
+                this.ApiStateController.mark(undefined, false);
+                return;
+            }
+            if (action === MpDataReaderAction.keepSave) {
+                this.ApiStateController.keepSave(rowId, !oldSituation);
+                return;
+            }
+            if (action === MpDataReaderAction.cancelAllKeepSave) {
+                this.ApiStateController.keepSave(undefined, false);
+            }
+        });
     }
     materialFilterPolicy(k, item): boolean {
         const product = this.$mx.Dr.$drGetProduct(item.id);
@@ -341,18 +271,6 @@ class ApiReaderComponent extends MpComponent {
         wx.setClipboardData({
             data: productToString(product)
         });
-    }
-    syncGridPageSize() {
-        const grid = this.selectComponent('.fc-reader-body') as DataGrid;
-        if (grid) {
-            Promise.all([rpxToPx(40), grid.$mx.Tool.$getBoundingClientRect('.fc-datagrid-scroll')]).then(
-                ([itemHeight, { height }]) => {
-                    this.$mx.Tool.$updateData({
-                        gridPageSize: Math.ceil(height / itemHeight)
-                    });
-                }
-            );
-        }
     }
 }
 

@@ -4,6 +4,5 @@ export interface MpApiReaderComponentData {
     detailFrom?: string;
     detailTab: number;
     readerCols: DataGridCol[];
-    affixIds: string[];
-    gridPageSize: number;
+    affixed: string[];
 }

@@ -1,4 +1,5 @@
 import type { HookScope, MethodExecStatus, MpCookie, MpDetailKV, MpStackInfo, RequireId } from './common';
+import type { TableCell } from './table';
 
 export interface MpProduct {
     id: string;
@@ -28,16 +29,18 @@ export interface MpMaterial extends RequireId {
 
 export interface MpApiMaterial extends MpMaterial {
     code?: number | string;
-    name?: string;
+    name?: string | TableCell;
+    category?: string;
     method?: string;
     nameDesc?: string;
-    status: string;
+    status: string | TableCell;
     statusDesc?: string;
     startTime?: number;
     endTime?: number;
     time?: string;
     initiator?: string;
     initiatorDesc?: string;
+    rowStyle?: string;
 }
 
 export interface MpConsoleMaterialItem {

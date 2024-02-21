@@ -91,6 +91,7 @@ const passUndefined = (obj: any, prop: string, val: any) => {
     }
 };
 
+// eslint-disable-next-line complexity
 export const convertApiMaterial = (
     product: Partial<MpProduct>,
     mpRunConfig?: MpUIConfig
@@ -101,11 +102,37 @@ export const convertApiMaterial = (
     const categorys = getCategoryValue(product, mpRunConfig);
     if (categorys?.length) {
         material.categorys = categorys;
+        material.category = categorys[0];
     }
     if ('category' in product) {
         material.method = product.category;
         const { name, desc } = getApiNameInfo(product) || {};
-        material.name = name;
+        material.name = {
+            tableCell: true,
+            blocks: [
+                {
+                    block: true,
+                    items: [
+                        {
+                            type: 'text',
+                            content: name || ''
+                        }
+                    ]
+                }
+            ]
+        };
+        if (desc) {
+            material.name.blocks.push({
+                block: true,
+                items: [
+                    {
+                        type: 'text',
+                        content: desc || '',
+                        style: 'opacity: 0.7'
+                    }
+                ]
+            });
+        }
         material.nameDesc = desc;
     }
     if (product.time) {
@@ -122,6 +149,37 @@ export const convertApiMaterial = (
     passUndefined(material, 'code', code);
     passUndefined(material, 'status', status);
     passUndefined(material, 'statusDesc', statusDesc);
+    if (typeof code === 'number' && code >= 400) {
+        material.rowStyle = 'color:red';
+    }
+    if (statusDesc) {
+        material.status = {
+            tableCell: true,
+            blocks: [
+                {
+                    block: true,
+                    items: [
+                        {
+                            type: 'text',
+                            content: status || ''
+                        }
+                    ]
+                }
+            ]
+        };
+        if (statusDesc) {
+            material.status.blocks.push({
+                block: true,
+                items: [
+                    {
+                        type: 'text',
+                        content: statusDesc || '',
+                        style: 'opacity: 0.7'
+                    }
+                ]
+            });
+        }
+    }
 
     if ('stack' in product && product.stack && product.stack.length) {
         material.initiator = convertStockToInitiatorName(product.stack[0]);

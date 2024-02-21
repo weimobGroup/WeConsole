@@ -17,7 +17,6 @@ export interface TableCellJsonItem {
 
 export interface TableCellBlock {
     block: true;
-    key: string;
     items: Array<string | TableCellTextItem | TableCellJsonItem>;
 }
 

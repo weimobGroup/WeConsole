@@ -4,5 +4,4 @@ export interface MpConsoleReaderComponentData {
     itemMinSize: number;
     affixList: MpConsoleMaterial[];
     selectRowId: string;
-    scrollMarginTop: string;
 }

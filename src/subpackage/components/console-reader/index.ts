@@ -50,7 +50,6 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         itemMinSize: rpxToPx(44),
         affixList: [],
         selectRowId: '',
-        scrollMarginTop: '',
         activeCategory: 'all',
         categoryList: [
             {
@@ -166,9 +165,8 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     onAddActiveMaterial(material: MpConsoleMaterial) {
         this.$mx.Vl.$vlAppendItem(material);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onReplaceActiveMaterial(material: MpConsoleMaterial) {
-        // this.$mx.Vl.$vlAppendItem(material);
+        this.$mx.Vl.$vlReplaceItem(material.id, material);
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onRemoveActiveMaterial(material: MpConsoleMaterial) {}
@@ -229,19 +227,9 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         const affixList = (this.$mx.Dr.$drTopMaterialId || []).map((id) => {
             return this.$mx.Dr.$drExistMaterial[id];
         });
-        this.$mx.Tool.$updateData(
-            {
-                affixList,
-                scrollMarginTop: affixList.length ? this.data.scrollMarginTop : '0'
-            },
-            () => {
-                this.$mx.Tool.$getBoundingClientRect('.console-affixs').then((res) => {
-                    this.$mx.Tool.$updateData({
-                        scrollMarginTop: res.height + 'px'
-                    });
-                });
-            }
-        );
+        this.$mx.Tool.$updateData({
+            affixList
+        });
     }
     longpressRow(productId: string) {
         const rowId = productId;
@@ -321,9 +309,6 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
             const material = convertConsoleMaterial(data);
             this.$mx.Dr.$drAddMaterialToActiveList(material);
         }
-    }
-    reloadVlList(allList: MpConsoleMaterial[]) {
-        this.$mx.Vl.$vlSetList(allList);
     }
 }
 

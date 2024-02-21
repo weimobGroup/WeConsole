@@ -75,37 +75,42 @@ Component({
                 if (this.data.requesting) {
                     return;
                 }
-                this.requestType = this.requestType === 0 ? 1 : 0;
                 this.setData({
                     requesting: true
                 });
                 const done = (res, fail) => {
+                    this.requestType++;
+                    this.requestType = this.requestType > 3 ? 0 : this.requestType;
                     console[fail ? 'error' : 'log'](`请求：${fail ? '失败' : '成功'}`, res);
                     this.setData({
                         requesting: false
                     });
                 };
-                if (this.requestType) {
-                    // 请求随机图片，仅供演示，请勿商用
-                    wx.request({
-                        // 感谢免费接口调用服务商，文档：https://api.uomg.com/doc-rand.avatar.html
+                const typeConfig = {
+                    0: {
+                        // 请求随机文案，仅供演示，请勿商用，感谢免费接口调用服务商，文档：https://api.uomg.com/doc-rand.avatar.html
                         url: 'https://api.uomg.com/api/rand.avatar?sort=%E5%A5%B3&format=json',
-                        method: 'GET',
-                        success: done,
-                        fail: (res) => {
-                            done(res, true);
-                        }
-                    });
-                    return;
-                }
-                // 请求随机文案，仅供演示，请勿商用
-                wx.request({
-                    // 感谢免费接口调用服务商，文档：https://api.uomg.com/doc-rand.qinghua.html
-                    url: 'https://api.uomg.com/api/rand.qinghua',
-                    method: 'POST',
-                    data: {
-                        format: 'json'
+                        method: 'GET'
                     },
+                    1: {
+                        // 请求随机图片，仅供演示，请勿商用，感谢免费接口调用服务商，文档：https://api.uomg.com/doc-rand.qinghua.html
+                        url: 'https://api.uomg.com/api/rand.qinghua',
+                        method: 'POST',
+                        data: {
+                            format: 'json'
+                        }
+                    },
+                    2: {
+                        // 模拟接口报错情况，感谢免费接口调用服务商，文档：https://api.uomg.com/doc-rand.qinghua.html
+                        url: 'https://api.uomg.com/api2222/rand.qinghua22222',
+                        method: 'POST',
+                        data: {
+                            format: 'json'
+                        }
+                    }
+                };
+                wx.request({
+                    ...typeConfig[this.requestType],
                     success: done,
                     fail: (res) => {
                         done(res, true);

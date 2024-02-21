@@ -8,6 +8,7 @@ import { registerComponent } from '@/sub/mixins/component';
 import type { RequireId } from '@/types/common';
 import { rpxToPx } from '@/main/modules/util';
 import type { MpVirtualListComponentExports } from '@cross-virtual-list/types';
+import { clone } from '@mpkit/util';
 
 export class TableComponent<
     T extends RequireId = RequireId,
@@ -24,7 +25,10 @@ export class TableComponent<
             type: Array
         },
         affixed: {
-            type: Array
+            type: Array,
+            observer() {
+                this.syncAffixList();
+            }
         },
         rowHeight: {
             type: Number,
@@ -69,6 +73,13 @@ export class TableComponent<
     attached() {
         this.computeColWidth();
         this.computeHeadRow();
+        if (this.$mx.Vl.$vlAdapterExports) {
+            this.syncAffixList();
+        } else {
+            setTimeout(() => {
+                this.syncAffixList();
+            }, 200);
+        }
     }
     detached() {
         if (this.computeColWidthTimer) {
@@ -76,15 +87,20 @@ export class TableComponent<
         }
         delete this.computeColWidthTimer;
     }
+    syncAffixList() {
+        this.setData({
+            affixList: this.data.affixed.reduce((sum: T[], id) => {
+                const item = this.$mx.Vl.$vlFindItemByKey(id);
+                if (item) {
+                    sum.push(clone(item[0]));
+                }
+                return sum;
+            }, [])
+        });
+    }
     localVirtualListComponentReady(e: Required<MpEvent<E>>) {
         this.$mx.Vl.$vlOnVirtualListComponentReady(e);
-        const oldSet = e.detail.setList;
-        e.detail.setList = (list) => {
-            this.setData({
-                hasData: !!list?.length
-            });
-            oldSet(list);
-        };
+        this.rewriteVlExports(e.detail);
         if (Array.isArray(this.data.data) && this.data.data.length) {
             this.$mx.Vl.$vlSetList(this.data.data);
         }
@@ -99,13 +115,15 @@ export class TableComponent<
                         hasData: !!list?.length
                     });
                     old(list);
+                    this.syncAffixList();
                 };
                 return;
             }
             if (k === 'clear') {
                 exports[k] = () => {
                     this.setData({
-                        hasData: false
+                        hasData: false,
+                        affixList: []
                     });
                     old();
                 };
@@ -117,6 +135,7 @@ export class TableComponent<
                         hasData: true
                     });
                     old(val);
+                    this.syncAffixList();
                 };
                 return;
             }
@@ -211,7 +230,7 @@ export class TableComponent<
         }, 100);
     }
     onItemInteractEvent(e: MpEvent) {
-        console.log(e);
+        this.triggerEvent('interact', e.detail);
     }
 }
 
