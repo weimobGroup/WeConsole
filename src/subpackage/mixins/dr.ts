@@ -40,7 +40,7 @@ export class DrMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin
     onReplaceActiveMaterial?: (material: T) => void;
     onRemoveActiveMaterial?: (material: T) => void;
     onSetActiveMaterialList?: () => void;
-    constructor(public $drMaterialType: HookScope) {
+    constructor(public $drMaterialType?: HookScope) {
         super();
     }
     created() {
@@ -194,9 +194,11 @@ export class DrMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin
             this.$drTopMaterialId = [];
             this.$drActiveMaterialList = [];
             this.$drActiveMaterialId = {};
-            // 删除缓存中的数据，但保留keepsave
-            const keepSaveMaterialIdList = Object.keys(this.$drKeepSaveMaterialId);
-            this.$wcProductController.clear(this.$drMaterialType, keepSaveMaterialIdList);
+            if (this.$drMaterialType) {
+                // 删除缓存中的数据，但保留keepsave
+                const keepSaveMaterialIdList = Object.keys(this.$drKeepSaveMaterialId);
+                this.$wcProductController.clear(this.$drMaterialType, keepSaveMaterialIdList);
+            }
 
             Object.keys(this.$drExistMaterial).forEach((id) => {
                 if (id in this.$drKeepSaveMaterialId) {

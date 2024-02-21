@@ -3,6 +3,6 @@
     "usingComponents": {
         "json-viewer": "../json-viewer/index",
         "filter-bar": "../filter-bar/index",
-        "data-grid": "../data-grid/index"
+        "table": "../table/index"
     }
 }

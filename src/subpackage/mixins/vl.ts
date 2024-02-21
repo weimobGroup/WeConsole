@@ -86,7 +86,8 @@ export class VlMixin<
                 appendItems: [],
                 setList: [],
                 findItemByKey: [],
-                replaceItemByKey: []
+                replaceItemByKey: [],
+                removeItemByKey: []
             };
         }
         this.$vlAdapterExportsMethodCallQueue[name].push(args);
@@ -106,6 +107,9 @@ export class VlMixin<
     $vlReplaceItem(key: string, replacement: T | ((target: T) => void)) {
         this.$vlCallExportsMethod('replaceItemByKey', key, replacement);
     }
+    $vlRemoveItem(key: string) {
+        this.$vlCallExportsMethod('removeItemByKey', key);
+    }
     $vlFindItemByKey(key: string) {
         return this.$vlAdapterExports?.findItemByKey(key);
     }
@@ -123,7 +127,8 @@ export class VlMixin<
                 appendItems: [],
                 setList: [],
                 replaceItemByKey: [],
-                findItemByKey: []
+                findItemByKey: [],
+                removeItemByKey: []
             };
         }
         (this.$vlAdapterExportsMethodCallQueue as any).reQueryItemElementSizeByKey =

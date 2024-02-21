@@ -36,7 +36,7 @@ Component({
             if (method === 'setStorageSync') {
                 this.storageIndex++;
                 const key = `s${this.storageIndex}`;
-                wx.setStorageSync(key, Date.now());
+                wx.setStorageSync(key, this.storageIndex % 2 === 0 ? Date.now() : { value: Date.now() });
                 wx.showToast({
                     title: `已设置「${key}」的数据，请前往Storage查看`,
                     icon: 'none'
@@ -80,7 +80,7 @@ Component({
                 });
                 const done = (res, fail) => {
                     this.requestType++;
-                    this.requestType = this.requestType > 3 ? 0 : this.requestType;
+                    this.requestType = this.requestType > 2 ? 0 : this.requestType;
                     console[fail ? 'error' : 'log'](`请求：${fail ? '失败' : '成功'}`, res);
                     this.setData({
                         requesting: false
