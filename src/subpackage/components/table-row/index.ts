@@ -24,7 +24,8 @@ class TableRowComponent<T extends RequireId = RequireId> extends MpComponent<
                 this.computeIsSelected();
             }
         },
-        direction: String
+        direction: String,
+        scope: String
     };
 
     initData: TableRowComponentData = {

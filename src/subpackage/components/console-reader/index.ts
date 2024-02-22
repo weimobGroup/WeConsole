@@ -18,6 +18,7 @@ import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/componen
 import type { MpVirtualListComponentData } from '@/types/virtual-list';
 import type { MpJSONViewerComponentEventDetail } from '@/types/json-viewer';
 import { DrMixin } from '@/sub/mixins/dr';
+import { toJSONString } from '@/sub/modules/util';
 
 type Data = MpConsoleReaderComponentData &
     MpDataReaderComponentData &
@@ -203,7 +204,7 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
             this.$mx.Vl.$vlItemSizeChange(itemId);
         });
     }
-    copyMaterial(m) {
+    onCopyMaterial(m: MpConsoleMaterial) {
         const product = this.$mx.Dr.$drGetProduct(m.id);
         if (!product || !product.request) {
             return;
@@ -212,15 +213,7 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
             return this.$mx.Tool.$wcUIConfig.copyPolicy(product);
         }
         wx.setClipboardData({
-            data: product.request.map((item) => {
-                if (typeof item === 'function') {
-                    return JSON.stringify(item);
-                }
-                if (typeof item === 'object') {
-                    return JSON.stringify(item);
-                }
-                return String(item);
-            })
+            data: toJSONString(product.request)
         });
     }
     syncAffixList() {

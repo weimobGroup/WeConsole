@@ -5,7 +5,13 @@ import { MethodExecStatus } from '@/types/common';
 import type { MpUIConfig } from '@/types/config';
 import type { MpApiMaterial, MpConsoleMaterial, MpConsoleMaterialItem, MpProduct } from '@/types/product';
 import { getCategoryValue } from '@/sub/modules/category';
-import { computeTime, convertStockToInitiatorDesc, convertStockToInitiatorName, getStatusText } from './util';
+import {
+    computeTime,
+    convertStockToInitiatorDesc,
+    convertStockToInitiatorName,
+    getStatusText,
+    toJSONString
+} from './util';
 
 export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; desc: string } | undefined => {
     if ('category' in product) {
@@ -254,7 +260,7 @@ export const requestProductToString = (product: MpProduct): string => {
         });
     }
     if (options.data) {
-        data.push(`\tData: \n\t\t${typeof options.data === 'string' ? options.data : JSON.stringify(options.data)}`);
+        data.push(`\tData: \n\t\t${typeof options.data === 'string' ? options.data : toJSONString(options.data)}`);
     }
     if (response) {
         data.push('Response:');
@@ -269,7 +275,7 @@ export const requestProductToString = (product: MpProduct): string => {
             }
             if (response.data) {
                 data.push(
-                    `\tData: \n\t\t${typeof response.data === 'string' ? response.data : JSON.stringify(response.data)}`
+                    `\tData: \n\t\t${typeof response.data === 'string' ? response.data : toJSONString(response.data)}`
                 );
             }
             if (response?.cookies.length) {
@@ -295,19 +301,19 @@ export const productToString = (product: MpProduct): string => {
     const data: string[] = [];
     data.push(`ApiName: wx.${category}`);
     data.push(`Status: ${m.status}${m.statusDesc ? '(' + m.statusDesc + ')' : ''}`);
-    const d2 = JSON.stringify(options);
+    const d2 = toJSONString(options);
     if (!isEmptyObject(JSON.parse(d2))) {
         data.push(`Data: ${d2}`);
     }
     if (category.indexOf('Sync') !== -1) {
         if (result) {
-            data.push(`Result: ${typeof result === 'string' ? result : JSON.stringify(result)}`);
+            data.push(`Result: ${typeof result === 'string' ? result : toJSONString(result)}`);
         }
     } else if (response) {
         if (response instanceof Error) {
             data.push(`Error: ${response.message}`);
         } else {
-            data.push(`Result: ${JSON.stringify(response)}`);
+            data.push(`Result: ${toJSONString(response)}`);
         }
     }
     return data.join('\n');

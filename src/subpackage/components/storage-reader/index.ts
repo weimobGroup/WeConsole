@@ -182,11 +182,14 @@ class StorageReader extends MpComponent {
     }
     copyDetail() {
         if (this.data.detailMaterialId) {
-            getStorage(this.data.detailMaterialId).then((res) => {
-                wx.setClipboardData({
-                    data: res.value
+            const [row] = this.$mx.Vl.$vlFindItemByKey(this.data.detailMaterialId) || [];
+
+            row &&
+                getStorage(row.key).then((res) => {
+                    wx.setClipboardData({
+                        data: res.value
+                    });
                 });
-            });
         }
     }
     clearDetailMaterial() {

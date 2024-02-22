@@ -107,3 +107,20 @@ export const rpxToPx = (rpx: number): Promise<number> => {
         return (res.windowWidth / 750) * rpx;
     });
 };
+
+export const toJSONString = (obj: any, space?: string | number) => {
+    const set = new WeakSet();
+    return JSON.stringify(
+        obj,
+        (key, val) => {
+            if (typeof val === 'object' && val !== null) {
+                if (set.has(val)) {
+                    return '$$$存在循环引用，该属性无法被复制$$$';
+                }
+                set.add(val);
+            }
+            return val;
+        },
+        space
+    );
+};

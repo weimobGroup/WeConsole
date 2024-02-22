@@ -260,7 +260,7 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         }
         return false;
     }
-    copyMaterial(m: MpApiMaterial) {
+    onCopyMaterial(m: MpApiMaterial) {
         const product = this.$mx.Dr.$drGetProduct(m.id);
         if (!product) {
             return;

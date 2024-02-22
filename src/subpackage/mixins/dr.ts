@@ -126,7 +126,7 @@ export class DrMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin
                 return [action];
             }
             if (action === MpDataReaderAction.copy) {
-                (this as any).onCopyMaterial?.(this.$drExistMaterial[rowId]);
+                this.onCopyMaterial?.(this.$drExistMaterial[rowId]);
                 return [action];
             }
             this.$showToast(`动作${action}功能待实现`);

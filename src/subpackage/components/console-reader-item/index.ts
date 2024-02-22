@@ -3,24 +3,20 @@ import type { MpConsoleMaterial } from '@/types/product';
 import type { MpEvent } from '@/types/view';
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
+import type { MpVirtualListItemComponentProps } from '@cross-virtual-list/types';
 
-interface ConsoleReaderItemComponentProps {
-    value: MpConsoleMaterial;
-    index: number;
-    maxIndex: number;
-    direction: 'x' | 'y';
-    state: { from: string };
-}
+type Props = MpVirtualListItemComponentProps<MpConsoleMaterial, { from: string; type?: string; selectRowId: string }>;
 
 class ConsoleReaderItemComponent extends MpComponent {
-    properties: MpComponentProperties<ConsoleReaderItemComponentProps, ConsoleReaderItemComponent> = {
+    properties: MpComponentProperties<Props, ConsoleReaderItemComponent> = {
         value: {
             type: Object
         },
         maxIndex: Number,
         index: Number,
         state: Object,
-        direction: String
+        direction: String,
+        scope: String
     };
 
     emitInteractEvent(type: string, detail?: any) {

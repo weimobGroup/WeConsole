@@ -1,3 +1,4 @@
+import type { MpVirtualListItemComponentProps } from '@cross-virtual-list/types';
 import type { RequireId } from './common';
 
 export interface TableCell {
@@ -65,12 +66,9 @@ export interface TableCellComponentProps {
     from: string;
 }
 
-export interface TableRowComponentProps<T extends RequireId = RequireId> {
-    value: T;
-    index: number;
-    maxIndex: number;
-    direction: 'x' | 'y';
-    state: {
+export type TableRowComponentProps<T extends RequireId = RequireId> = MpVirtualListItemComponentProps<
+    T,
+    {
         rowHeight: number;
         /** 选中的行ID数组 */
         selected: string[];
@@ -78,8 +76,8 @@ export interface TableRowComponentProps<T extends RequireId = RequireId> {
         cols: TableCol[];
         colComputedWidth: number[];
         type?: string;
-    };
-}
+    }
+>;
 export interface TableRowComponentData {
     isSelected: boolean;
 }
