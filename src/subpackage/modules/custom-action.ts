@@ -38,7 +38,7 @@ export const SystemInfoCustomAction: WcCustomAction = {
             showMode: WcCustomActionShowMode.json,
             handler(): any {
                 const pages = getCurrentPages();
-                return pages?.length ? pages[pages.length - 1] : undefined;
+                return getUIConfig().currentPageGetter?.() || pages?.[pages.length - 1];
             }
         }
     ]

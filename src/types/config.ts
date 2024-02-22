@@ -1,3 +1,4 @@
+import type { MpView } from '@mpkit/types';
 import type { MpNameValue } from './common';
 import type { WcCustomAction } from './other';
 import type { MpProduct } from './product';
@@ -18,6 +19,7 @@ export interface MpUIConfig {
     apiCategoryGetter?: MpProductCategoryMap | MpProductCategoryGetter;
     /** 监控Console数据后，使用该选项进行该数据的分类值计算，计算后的结果显示在界面上 */
     consoleCategoryGetter?: MpProductCategoryMap | MpProductCategoryGetter;
+    currentPageGetter?: () => MpView;
     /** API选项卡下显示的数据分类列表，all、mark、other 分类固定存在 */
     apiCategoryList?: Array<string | MpNameValue<string>>;
     /** 复制策略，传入复制数据，可通过数据的type字段判断数据哪种类型，比如api/console */
