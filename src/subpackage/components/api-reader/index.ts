@@ -16,7 +16,7 @@ import { ToolMixin } from '@/sub/mixins/tool';
 import type { ReaderStateController } from '@/main/modules/reader-state';
 import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
-import { computeTime } from '@/sub/modules/util';
+import { computeTime, setClipboardData } from '@/sub/modules/util';
 import { getUIConfig } from '@/main/config';
 import { rpxToPx } from '@/main/modules/util';
 
@@ -263,9 +263,7 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         if (this.$mx.Tool.$wcUIConfig.copyPolicy) {
             return this.$mx.Tool.$wcUIConfig.copyPolicy(product);
         }
-        wx.setClipboardData({
-            data: productToString(product)
-        });
+        setClipboardData(productToString(product));
     }
 }
 

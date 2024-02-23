@@ -13,6 +13,7 @@ import {
     toJSONString
 } from './util';
 
+// eslint-disable-next-line complexity
 export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; desc: string } | undefined => {
     if ('category' in product) {
         let name = product.category as string;
@@ -27,7 +28,12 @@ export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; des
             } else if (t !== 'undefined') {
                 desc = req;
             }
-        } else if (product.category === 'request' && product.request && product.request[0] && product.request[0].url) {
+            return {
+                name,
+                desc
+            };
+        }
+        if (product.category === 'request' && product.request && product.request[0] && product.request[0].url) {
             let url = product.request[0].url as string;
             url = url.startsWith('//') ? `https:${url}` : url;
             url = url.startsWith('https:') ? url.substr(8) : url.substr(7);
@@ -35,11 +41,65 @@ export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; des
             const arr = before.split('/');
             name = (arr.length > 1 ? arr[arr.length - 1] : '/') + (query ? `?${query}` : '');
             desc = arr.slice(0, arr.length - 1).join('/');
+            return {
+                name,
+                desc
+            };
         }
-        return {
-            name,
-            desc
-        };
+        if (
+            ['switchTab', 'reLaunch', 'redirectTo', 'navigateTo'].indexOf(product.category as string) !== -1 &&
+            product.request?.[0]?.url
+        ) {
+            return {
+                name,
+                desc: product.request[0].url
+            };
+        }
+
+        if (name === 'restartMiniProgram' && product.request?.[0]?.path) {
+            return {
+                name,
+                desc: product.request[0].path
+            };
+        }
+
+        if (
+            ['openEmbeddedMiniProgram', 'navigateToMiniProgram'].indexOf(product.category as string) !== -1 &&
+            product.request?.[0]?.appId
+        ) {
+            return {
+                name,
+                desc: product.request[0].appId
+            };
+        }
+
+        if ((name === 'showToast' || name === 'setNavigationBarTitle') && product.request?.[0]?.title) {
+            return {
+                name,
+                desc: product.request[0].title
+            };
+        }
+
+        if (name === 'showModal' && product.request?.[0]?.content) {
+            return {
+                name,
+                desc: product.request[0].content
+            };
+        }
+
+        if (name === 'loadFontFace' && product.request?.[0]?.family) {
+            return {
+                name,
+                desc: product.request[0].family
+            };
+        }
+
+        if (name === 'showActionSheet' && product.request?.[0]?.alertText) {
+            return {
+                name,
+                desc: product.request[0].alertText
+            };
+        }
     }
 };
 

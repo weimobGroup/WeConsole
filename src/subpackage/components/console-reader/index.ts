@@ -17,7 +17,7 @@ import { ToolMixin } from '@/sub/mixins/tool';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
 import type { MpJSONViewerComponentEventDetail } from '@/types/json-viewer';
 import { DrMixin } from '@/sub/mixins/dr';
-import { toJSONString } from '@/sub/modules/util';
+import { setClipboardData, toJSONString } from '@/sub/modules/util';
 
 type Data = MpConsoleReaderComponentData & MpDataReaderComponentData;
 
@@ -209,9 +209,7 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         if (this.$mx.Tool.$wcUIConfig?.copyPolicy) {
             return this.$mx.Tool.$wcUIConfig.copyPolicy(product);
         }
-        wx.setClipboardData({
-            data: toJSONString(product.request)
-        });
+        setClipboardData(toJSONString(product.request));
     }
     syncAffixList() {
         const affixList = (this.$mx.Dr.$drTopMaterialId || []).map((id) => {

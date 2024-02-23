@@ -58,6 +58,8 @@ export const reportCategoryMapToList = (categoryMap: { [prop: string]: string })
                     text = 'XHR';
                 } else if (categoryVal === 'ws') {
                     text = 'WS';
+                } else if (categoryVal === 'ui') {
+                    text = 'UI';
                 } else {
                     text = categoryVal[0].toUpperCase() + categoryVal.substr(1);
                 }

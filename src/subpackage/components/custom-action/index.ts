@@ -17,7 +17,7 @@ import type {
 } from '@/types/table';
 import { uuid } from '@mpkit/util';
 import { rpxToPx } from '@/main/modules/util';
-import { toJSONString } from '@/sub/modules/util';
+import { setClipboardData, toJSONString } from '@/sub/modules/util';
 const NoUICaseId = '$$$NO_UI$$$';
 
 interface Props {
@@ -439,25 +439,21 @@ class CustomActionComponent extends MpComponent {
             const gridSource = this.caseGridSource as Record<string, WcCustomActionGrid>;
             const gridResult = gridSource[caseId];
             if (res === 0) {
-                wx.setClipboardData({
-                    data: toJSONString(row[gridResult.cols[colIndex].field])
-                });
+                setClipboardData(toJSONString(row[gridResult.cols[colIndex].field]));
                 return;
             }
 
             if (res === 1) {
-                wx.setClipboardData({
-                    data: toJSONString(row)
-                });
+                setClipboardData(toJSONString(row));
                 return;
             }
-            wx.setClipboardData({
-                data: toJSONString(
+            setClipboardData(
+                toJSONString(
                     (this.caseGridFinalList as Record<string, any[]>)[caseId].map((item) => {
                         return this.findFullGridRow(caseId, item[gridResult.rowKeyField || 'id']);
                     })
                 )
-            });
+            );
         });
     }
     findFullGridRow(caseId: string, rowId: string) {

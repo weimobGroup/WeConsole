@@ -16,6 +16,7 @@ import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
 import { clone } from '@mpkit/util';
 import type { TableCol } from '@/types/table';
+import { setClipboardData, toJSONString } from '@/sub/modules/util';
 
 const substr = (str: string | undefined, len: number): string => {
     return typeof str === 'string' ? (str.length > len ? str.substr(0, len) + '...' : str) : 'undefined';
@@ -186,9 +187,7 @@ class StorageReader extends MpComponent {
 
             row &&
                 getStorage(row.key).then((res) => {
-                    wx.setClipboardData({
-                        data: res.value
-                    });
+                    setClipboardData(toJSONString(res.value));
                 });
         }
     }
