@@ -9,6 +9,7 @@ import { once, emit, on, off } from '@/main/modules/ebus';
 import { WeConsoleEvents } from '@/types/scope';
 import type { IMpProductController } from '@/types/hook';
 import { wcScope, wcScopeSingle } from '@/main/config';
+import { nextTick } from '@/main/modules/cross';
 function OnProduct(type, data) {
     this && this.onWcProduct && this.onWcProduct(type, data);
 }
@@ -42,7 +43,7 @@ const fireSetData = (vm: ToolMixin) => {
         return;
     }
     if (!vm.$tlIsAttached) {
-        wx.nextTick(() => {
+        nextTick(() => {
             fireSetData(vm);
         });
         return;
@@ -201,16 +202,6 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
             };
             fire();
         });
-    }
-    $showToast(title: any) {
-        if (typeof title !== 'object' || !title) {
-            wx.showToast({
-                title: title || '',
-                icon: 'none'
-            });
-        } else {
-            wx.showToast(title);
-        }
     }
     $showActionSheet(options: MpShowActionSheetOptions | string[]): Promise<number> {
         if (Array.isArray(options)) {

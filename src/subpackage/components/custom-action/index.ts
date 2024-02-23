@@ -17,7 +17,8 @@ import type {
 } from '@/types/table';
 import { uuid } from '@mpkit/util';
 import { rpxToPx } from '@/main/modules/util';
-import { setClipboardData, toJSONString } from '@/sub/modules/util';
+import { toJSONString } from '@/sub/modules/util';
+import { nextTick, setClipboardData } from '@/main/modules/cross';
 const NoUICaseId = '$$$NO_UI$$$';
 
 interface Props {
@@ -411,7 +412,7 @@ class CustomActionComponent extends MpComponent {
     onItemInteractEvent(e: Required<MpEvent<{ type: string; id: string; detail?: any }>>) {
         const caseId = e.currentTarget.dataset.case;
         if (e.detail.type === 'onJSONViewerToggle') {
-            wx.nextTick(() => {
+            nextTick(() => {
                 const grid = this.caseGrid?.[caseId];
                 if (grid && 'reQueryItemElementSizeByIndex' in grid) {
                     grid.reQueryItemElementSizeByKey(e.detail.id);

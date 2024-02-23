@@ -17,7 +17,8 @@ import { ToolMixin } from '@/sub/mixins/tool';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
 import type { MpJSONViewerComponentEventDetail } from '@/types/json-viewer';
 import { DrMixin } from '@/sub/mixins/dr';
-import { setClipboardData, toJSONString } from '@/sub/modules/util';
+import { toJSONString } from '@/sub/modules/util';
+import { nextTick, setClipboardData } from '@/main/modules/cross';
 
 type Data = MpConsoleReaderComponentData & MpDataReaderComponentData;
 
@@ -197,7 +198,7 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
                 path: vw ? (vw.JSONViewer ? vw.JSONViewer.restoreJSONPropPath(path || []) : path) : path
             }
         });
-        wx.nextTick(() => {
+        nextTick(() => {
             this.$mx.Vl.$vlItemSizeChange(itemId);
         });
     }

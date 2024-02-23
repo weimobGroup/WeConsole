@@ -12,6 +12,7 @@ import {
     getStatusText,
     toJSONString
 } from './util';
+import { getApiVarName } from '@/main/modules/cross';
 
 // eslint-disable-next-line complexity
 export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; desc: string } | undefined => {
@@ -363,7 +364,7 @@ export const productToString = (product: MpProduct): string => {
     const m = getApiStatusInfo(product);
     const result = product.result;
     const data: string[] = [];
-    data.push(`ApiName: wx.${category}`);
+    data.push(`ApiName: ${getApiVarName()}.${category}`);
     data.push(`Status: ${m.status}${m.statusDesc ? '(' + m.statusDesc + ')' : ''}`);
     const d2 = toJSONString(options);
     if (!isEmptyObject(JSON.parse(d2))) {

@@ -1,5 +1,5 @@
-import { promisifyApi } from '@/main/modules/util';
 import { getUIConfig } from '@/main/config';
+import { getSystemInfo } from '@/main/modules/cross';
 import type { WcCustomAction } from '@/types/other';
 import { WcCustomActionShowMode } from '@/types/other';
 
@@ -13,7 +13,7 @@ export const SystemInfoCustomAction: WcCustomAction = {
             button: '系统信息',
             showMode: WcCustomActionShowMode.json,
             handler(): Promise<any> {
-                return promisifyApi('getSystemInfo');
+                return Promise.resolve(getSystemInfo());
             }
         },
         {

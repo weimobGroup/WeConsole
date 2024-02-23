@@ -1,56 +1,73 @@
 /* eslint-disable no-return-assign */
-import type { CrossEnvInfo, CrossEnvVersion, CrossSystemInfo } from '@/types/cross';
+import type { CrossEnvInfo, CrossEnvVersion, CrossSystemInfo, MpStorageInfo } from '@/types/cross';
+import type { AnyFunction } from '@/types/util';
 
-// eslint-disable-next-line complexity
-export const getApiVar = () => {
+export const getApiVar = (): any => {
     if (BUILD_TARGET === 'wx') {
-        if (typeof wx === 'object' && wx && typeof wx.request === 'function') {
-            return wx;
-        }
+        return wx;
     }
 
     if (BUILD_TARGET === 'my') {
-        if (typeof my === 'object' && my && typeof my.request === 'function') {
-            return my;
-        }
+        return my;
     }
 
     if (BUILD_TARGET === 'swan') {
-        if (typeof swan === 'object' && my && typeof swan.request === 'function') {
-            return swan;
-        }
+        return swan;
     }
 
     if (BUILD_TARGET === 'tt') {
-        if (typeof tt === 'object' && tt && typeof tt.request === 'function') {
-            return tt;
-        }
+        return tt;
     }
 
     if (BUILD_TARGET === 'xhs') {
-        if (typeof xhs === 'object' && xhs && typeof xhs.request === 'function') {
-            return xhs;
-        }
+        return xhs;
     }
 
     if (BUILD_TARGET === 'qq') {
-        if (typeof qq === 'object' && qq && typeof qq.request === 'function') {
-            return qq;
-        }
+        return qq;
     }
 
     if (BUILD_TARGET === 'ks') {
-        if (typeof ks === 'object' && ks && typeof ks.request === 'function') {
-            return ks;
-        }
+        return ks;
     }
+};
+
+export const getApiVarName = (): string => {
+    if (BUILD_TARGET === 'wx') {
+        return 'wx';
+    }
+
+    if (BUILD_TARGET === 'my') {
+        return 'my';
+    }
+
+    if (BUILD_TARGET === 'swan') {
+        return 'swan';
+    }
+
+    if (BUILD_TARGET === 'tt') {
+        return 'tt';
+    }
+
+    if (BUILD_TARGET === 'xhs') {
+        return 'xhs';
+    }
+
+    if (BUILD_TARGET === 'qq') {
+        return 'qq';
+    }
+
+    if (BUILD_TARGET === 'ks') {
+        return 'ks';
+    }
+    return '?';
 };
 
 export const getSystemInfo = (() => {
     let cache: CrossSystemInfo | undefined;
-    return (): Readonly<CrossSystemInfo> => {
-        if (!cache) {
-            cache = (getApiVar() as any).getSystemInfoSync();
+    return (ignoreCache?: boolean): Readonly<CrossSystemInfo> => {
+        if (!cache || ignoreCache) {
+            cache = getApiVar().getSystemInfoSync();
         }
         return cache as Readonly<CrossSystemInfo>;
     };
@@ -191,3 +208,160 @@ export const getCurrentAppVersion = (() => {
         return (res = getEnvInfo().version);
     };
 })();
+
+export const setStorage = (key: string, data: any): Promise<void> => {
+    return promisifyApi('setStorage', {
+        key,
+        data
+    }).then(() => {});
+};
+
+export const getStorage = <T>(key: string): Promise<T> => {
+    return promisifyApi('getStorage', {
+        key
+    }).then((res) => res.data);
+};
+
+export const removeStorage = (key: string): Promise<void> => {
+    return promisifyApi('removeStorage', {
+        key
+    }).then(() => {});
+};
+
+export const clearStorage = (): Promise<void> => {
+    return promisifyApi('clearStorage').then(() => {});
+};
+
+export const getStorageInfo = (): Promise<MpStorageInfo> => {
+    return promisifyApi('getStorageInfo').then((res) => {
+        if (BUILD_TARGET === 'my' && (!res || ('success' in res && !res.success))) {
+            return Promise.reject(new Error('支付宝平台getStorageInfo返回值success=false'));
+        }
+        return res;
+    });
+};
+
+export const hookApiMethodCallback = (apiName: string, onSuccess: AnyFunction, onFail: AnyFunction, args: any[]) => {
+    if (!apiName.endsWith('Sync') && (!args.length || args[0] === null)) {
+        args[0] = {};
+    }
+    if (typeof args[0] === 'object' && args[0]) {
+        const { success, fail } = args[0];
+        args[0].success = function HookApiSuccessCallback(...params) {
+            onSuccess(...params);
+            return success?.apply(this, params);
+        };
+        args[0].fail = function HookApiFailCallback(...params) {
+            onFail(...params);
+            return fail?.apply(this, params);
+        };
+    }
+    return args;
+};
+
+const promisifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> => {
+    return new Promise((resolve, reject) => {
+        const apiVar = getApiVar();
+        if (typeof apiVar[apiName] === 'function') {
+            if (apiName.indexOf('Sync') === -1) {
+                const apiOptions = apiArgs[0];
+                let res;
+                try {
+                    res = apiVar[apiName](apiOptions);
+                } catch (error) {
+                    reject(error);
+                    return;
+                }
+                if (apiOptions && typeof apiOptions.onResultReady === 'function') {
+                    apiOptions.onResultReady(res);
+                }
+                resolve(res);
+                return;
+            }
+            hookApiMethodCallback(
+                apiName,
+                (...args) => {
+                    if (args.length < 2) {
+                        resolve(args[0]);
+                    } else {
+                        resolve(args);
+                    }
+                },
+                (...args) => {
+                    const err = new Error('未知错误');
+                    if (args.length < 2 && args[0] && args[0].errMsg) {
+                        err.message = args[0].errMsg;
+                    }
+                    (err as any).failResult = args;
+                    reject(err);
+                },
+                apiArgs
+            );
+            if (apiName.indexOf('Sync') === -1) {
+                const apiOptions = apiArgs[0];
+                const res = apiVar[apiName](apiOptions);
+                if (res && apiOptions && typeof apiOptions.onResultReady === 'function') {
+                    apiOptions.onResultReady(res);
+                }
+            } else {
+                try {
+                    const res = apiVar[apiName](apiArgs);
+                    resolve(res);
+                } catch (error) {
+                    reject(error);
+                }
+            }
+            return;
+        }
+        resolve(apiVar[apiName]);
+    });
+};
+
+export const showToast = (msg: string, duration = 2000) => {
+    const config: any = {
+        duration
+    };
+    if (BUILD_TARGET === 'my') {
+        config.content = msg;
+        config.type = 'none';
+    } else {
+        config.icon = 'none';
+        config.title = msg;
+    }
+    getApiVar().showToast(config);
+};
+
+export const setClipboardData = (data: string, showFailToast = true): Promise<void> => {
+    return new Promise<void>((resolve, reject) => {
+        getApiVar()[BUILD_TARGET === 'my' ? 'setClipboard' : 'setClipboardData']({
+            [BUILD_TARGET === 'my' ? 'text' : 'data']: data,
+            success: () => {
+                resolve();
+            },
+            fail: (res) => {
+                const msg =
+                    res?.errMsg?.indexOf('permission') !== -1
+                        ? '未配置隐私保护指引，无法复制，请参考小程序官方文档'
+                        : `复制失败：${res?.errMsg || '未知错误'}`;
+                if (!showFailToast) {
+                    return reject(new Error(msg));
+                }
+                if (res?.errMsg?.indexOf('permission') !== -1) {
+                    showToast(msg);
+                    return reject(new Error(msg));
+                }
+                showToast(`复制失败：${res?.errMsg}`);
+                return reject(new Error(msg));
+            }
+        });
+    });
+};
+
+export const nextTick = (cb: AnyFunction) => {
+    const apiVar = getApiVar();
+    if ('nextTick' in apiVar) {
+        apiVar.nextTick(cb);
+        return;
+    }
+    setTimeout(cb, 120);
+};

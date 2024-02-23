@@ -19,3 +19,9 @@ export interface CrossEnvInfo {
     /** 小程序的版本号 */
     version: string;
 }
+
+export interface MpStorageInfo {
+    keys: string[];
+    currentSize: number;
+    limitSize: number;
+}

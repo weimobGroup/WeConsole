@@ -2,8 +2,9 @@ import type { MkFuncHook } from '@mpkit/types';
 import { uuid } from '@mpkit/util';
 import type { WeFuncHookState } from '@/types/hook';
 import { HookScope, MethodExecStatus } from '@/types/common';
-import { $$getStack, getWcControlMpViewInstances, hookApiMethodCallback, isMpViewEvent, log, now } from './util';
+import { $$getStack, getWcControlMpViewInstances, isMpViewEvent, log, now } from './util';
 import { Hooker } from './hooker';
+import { hookApiMethodCallback } from './cross';
 export const FuncIDHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
         if (!state.state.id) {
@@ -20,7 +21,7 @@ export const FormatApiMethodCallbackHook: MkFuncHook<WeFuncHookState> = {
         hookApiMethodCallback(
             state.state.funcName,
             (res) => {
-                state.doneCallback(undefined as any, res);
+                state.doneCallback(undefined, res);
             },
             (res) => {
                 state.doneCallback(res);

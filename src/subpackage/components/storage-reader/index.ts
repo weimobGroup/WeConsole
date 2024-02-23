@@ -1,13 +1,7 @@
 import { MpComponent } from 'typescript-mp-component';
 import { registerComponent } from '@/sub/mixins/component';
 import { MpDataReaderAction } from '@/types/reader';
-import {
-    clearStorage,
-    getStorage,
-    getStorageInfo,
-    getStorageInfoAndList,
-    removeStorage
-} from '@/sub/modules/storage-reader';
+import { filterClearStorage, getStorageInfoAndList, getStorageMaterial } from '@/sub/modules/storage-reader';
 import type { MpStorageMaterial } from '@/types/product';
 import { ToolMixin } from '@/sub/mixins/tool';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
@@ -16,7 +10,8 @@ import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
 import { clone } from '@mpkit/util';
 import type { TableCol } from '@/types/table';
-import { setClipboardData, toJSONString } from '@/sub/modules/util';
+import { toJSONString } from '@/sub/modules/util';
+import { getStorageInfo, removeStorage, setClipboardData } from '@/main/modules/cross';
 
 const substr = (str: string | undefined, len: number): string => {
     return typeof str === 'string' ? (str.length > len ? str.substr(0, len) + '...' : str) : 'undefined';
@@ -125,7 +120,7 @@ class StorageReader extends MpComponent {
     clear() {
         this.$mx.Dr.$drClearMaterial();
         this.setDetailMaterial();
-        clearStorage((key) => {
+        filterClearStorage((key) => {
             return this.$mx.Dr.$drActiveMaterialId ? key in this.$mx.Dr.$drActiveMaterialId : false;
         });
     }
@@ -169,7 +164,7 @@ class StorageReader extends MpComponent {
             if (!row) {
                 return;
             }
-            getStorage(row.key, false).then((res) => {
+            getStorageMaterial(row.key, false).then((res) => {
                 if (this.data.detailMaterialId !== id) {
                     return;
                 }
@@ -186,7 +181,7 @@ class StorageReader extends MpComponent {
             const [row] = this.$mx.Vl.$vlFindItemByKey(this.data.detailMaterialId) || [];
 
             row &&
-                getStorage(row.key).then((res) => {
+                getStorageMaterial(row.key).then((res) => {
                     setClipboardData(toJSONString(res.value));
                 });
         }

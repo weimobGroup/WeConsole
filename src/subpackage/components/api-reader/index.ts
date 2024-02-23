@@ -16,9 +16,10 @@ import { ToolMixin } from '@/sub/mixins/tool';
 import type { ReaderStateController } from '@/main/modules/reader-state';
 import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
-import { computeTime, setClipboardData } from '@/sub/modules/util';
+import { computeTime } from '@/sub/modules/util';
 import { getUIConfig } from '@/main/config';
 import { rpxToPx } from '@/main/modules/util';
+import { setClipboardData } from '@/main/modules/cross';
 
 type Data = MpApiReaderComponentData & MpDataReaderComponentData;
 

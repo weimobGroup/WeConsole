@@ -2,7 +2,7 @@ import type { AnyFunction, WcListFilterHandler } from '@/types/util';
 import type { MpStackInfo } from '@/types/common';
 import { wcScopeSingle } from '../config';
 import type { MpViewInstance } from 'typescript-mp-component';
-import { getApiVar, getSystemInfo } from './cross';
+import { getSystemInfo } from './cross';
 
 export const now = (() => {
     let p;
@@ -133,24 +133,6 @@ export const filter = <T = any>(list: T[], filter: WcListFilterHandler<T>): T[] 
     return res;
 };
 
-export const hookApiMethodCallback = (apiName: string, onSuccess: AnyFunction, onFail: AnyFunction, args: any[]) => {
-    if (!apiName.endsWith('Sync') && (!args.length || args[0] === null)) {
-        args[0] = {};
-    }
-    if (typeof args[0] === 'object' && args[0]) {
-        const { success, fail } = args[0];
-        args[0].success = function HookApiSuccessCallback(...params) {
-            onSuccess(...params);
-            return success?.apply(this, params);
-        };
-        args[0].fail = function HookApiFailCallback(...params) {
-            onFail(...params);
-            return fail?.apply(this, params);
-        };
-    }
-    return args;
-};
-
 export const toHump = (name: string): string => {
     name = name.replace(/_(\w)/g, (all, letter) => {
         return letter.toUpperCase();
@@ -159,68 +141,6 @@ export const toHump = (name: string): string => {
         return letter.toUpperCase();
     });
     return name;
-};
-
-export const promisifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> => {
-    return new Promise((resolve, reject) => {
-        const apiVar = getApiVar();
-        if (!apiVar) {
-            reject(new Error('no support'));
-            return;
-        }
-        if (typeof apiVar[apiName] === 'function') {
-            if (apiName.indexOf('Sync') === -1) {
-                const apiOptions = apiArgs[0];
-                let res;
-                try {
-                    res = apiVar[apiName](apiOptions);
-                } catch (error) {
-                    reject(error);
-                    return;
-                }
-                if (apiOptions && typeof apiOptions.onResultReady === 'function') {
-                    apiOptions.onResultReady(res);
-                }
-                resolve(res);
-                return;
-            }
-            hookApiMethodCallback(
-                apiName,
-                (...args) => {
-                    if (args.length < 2) {
-                        resolve(args[0]);
-                    } else {
-                        resolve(args);
-                    }
-                },
-                (...args) => {
-                    const err = new Error('未知错误');
-                    if (args.length < 2 && args[0] && args[0].errMsg) {
-                        err.message = args[0].errMsg;
-                    }
-                    (err as any).failResult = args;
-                    reject(err);
-                },
-                apiArgs
-            );
-            if (apiName.indexOf('Sync') === -1) {
-                const apiOptions = apiArgs[0];
-                const res = apiVar[apiName](apiOptions);
-                if (res && apiOptions && typeof apiOptions.onResultReady === 'function') {
-                    apiOptions.onResultReady(res);
-                }
-            } else {
-                try {
-                    const res = apiVar[apiName](apiArgs);
-                    resolve(res);
-                } catch (error) {
-                    reject(error);
-                }
-            }
-            return;
-        }
-        resolve(apiVar[apiName]);
-    });
 };
 
 export const isApp = (() => {

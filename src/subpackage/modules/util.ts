@@ -98,35 +98,3 @@ export const toJSONString = (obj: any, space?: string | number) => {
         space
     );
 };
-
-export const setClipboardData = (data: string, showFailToast = true): Promise<void> => {
-    return new Promise<void>((resolve, reject) => {
-        wx.setClipboardData({
-            data,
-            success: () => {
-                resolve();
-            },
-            fail: (res) => {
-                const msg =
-                    res?.errMsg?.indexOf('permission') !== -1
-                        ? '未配置隐私保护指引，无法复制，请参考微信文档'
-                        : `复制失败：${res?.errMsg || '未知错误'}`;
-                if (!showFailToast) {
-                    return reject(new Error(msg));
-                }
-                if (res?.errMsg?.indexOf('permission') !== -1) {
-                    wx.showToast({
-                        icon: 'none',
-                        title: msg
-                    });
-                    return reject(new Error(msg));
-                }
-                wx.showToast({
-                    icon: 'none',
-                    title: `复制失败：${res?.errMsg}`
-                });
-                return reject(new Error(msg));
-            }
-        });
-    });
-};

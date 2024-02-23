@@ -1,4 +1,3 @@
-import { promisifyApi } from '@/main/modules/util';
 import type { MpNameValue } from '@/types/common';
 import { getCustomActions } from '@/sub/modules/custom-action';
 import { WeConsoleEvents } from '@/types/scope';
@@ -7,7 +6,7 @@ import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { MainStateController } from '@/main/modules/state-controller';
 import { registerComponent } from '@/sub/mixins/component';
-import { checkDebugEnabled, getCurrentEnvVersion, getSystemInfo } from '@/main/modules/cross';
+import { checkDebugEnabled, getCurrentEnvVersion, getStorage, getSystemInfo, setStorage } from '@/main/modules/cross';
 
 const WcScope = wcScope();
 
@@ -155,12 +154,9 @@ class MainComponent extends MpComponent {
     }
     handMovableEnd(e) {
         const state = JSON.parse(e);
-        wx.setStorage({
-            key: 'wcconsole_xy',
-            data: {
-                x: state.x,
-                y: state.y
-            }
+        setStorage('wcconsole_xy', {
+            x: state.x,
+            y: state.y
         });
         MainStateController.setState('handX', state.x + 'px');
         MainStateController.setState('handY', state.y + 'px');
@@ -253,16 +249,14 @@ class MainComponent extends MpComponent {
         }
         let handPromise = Promise.resolve();
         if (!MainStateController.getState('handX')) {
-            handPromise = promisifyApi('getStorage', {
-                key: 'wcconsole_xy'
-            })
+            handPromise = getStorage<{ x: number; y: number }>('wcconsole_xy')
                 .catch(() => Promise.resolve())
                 .then((res) => {
-                    if (res?.data) {
+                    if (res) {
                         this.$mx.Tool.$updateData({
                             inited: true,
-                            handX: res.data.x + 'px',
-                            handY: res.data.y + 'px'
+                            handX: res.x + 'px',
+                            handY: res.y + 'px'
                         });
                         MainStateController.setState('handX', this.data.handX);
                         MainStateController.setState('handY', this.data.handY);

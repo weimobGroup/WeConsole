@@ -5,6 +5,7 @@ import { MpComponentMixin } from 'typescript-mp-component';
 import type { HookScope } from '@/types/common';
 import type { IMpProductController } from '@/types/hook';
 import type { MpShowActionSheetOptions } from '@/types/view';
+import { showToast } from '@/main/modules/cross';
 
 const filterPass = <T extends MpMaterial = MpMaterial>(item: T, keyword: string, ctx: any): boolean => {
     if (ctx.materialFilterPolicy) {
@@ -20,7 +21,6 @@ export class DrMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin
 > {
     $wcProductController: IMpProductController;
     $showActionSheet: (options: MpShowActionSheetOptions | string[]) => Promise<number>;
-    $showToast: (txt: string) => void;
     $updateData: (data: any, cb?: () => void) => void;
     $forceData: (data: any, cb?: () => void) => void;
     $drFilterKeyword: string;
@@ -129,7 +129,7 @@ export class DrMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin
                 this.onCopyMaterial?.(this.$drExistMaterial[rowId]);
                 return [action];
             }
-            this.$showToast(`动作${action}功能待实现`);
+            showToast(`动作${action}功能待实现`);
             return [action];
         });
     }
