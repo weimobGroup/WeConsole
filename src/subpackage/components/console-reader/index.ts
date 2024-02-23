@@ -15,14 +15,11 @@ import { MpDataReaderAction } from '@/types/reader';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
-import type { MpVirtualListComponentData } from '@/types/virtual-list';
 import type { MpJSONViewerComponentEventDetail } from '@/types/json-viewer';
 import { DrMixin } from '@/sub/mixins/dr';
 import { toJSONString } from '@/sub/modules/util';
 
-type Data = MpConsoleReaderComponentData &
-    MpDataReaderComponentData &
-    Partial<MpVirtualListComponentData<MpConsoleMaterial>>;
+type Data = MpConsoleReaderComponentData & MpDataReaderComponentData;
 
 class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     ConsoleStateController: ReaderStateController;
