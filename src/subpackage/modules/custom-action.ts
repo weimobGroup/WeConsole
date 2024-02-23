@@ -1,4 +1,4 @@
-import { promiseifyApi } from '@/main/modules/util';
+import { promisifyApi } from '@/main/modules/util';
 import { getUIConfig } from '@/main/config';
 import type { WcCustomAction } from '@/types/other';
 import { WcCustomActionShowMode } from '@/types/other';
@@ -13,7 +13,7 @@ export const SystemInfoCustomAction: WcCustomAction = {
             button: '系统信息',
             showMode: WcCustomActionShowMode.json,
             handler(): Promise<any> {
-                return promiseifyApi('getSystemInfo');
+                return promisifyApi('getSystemInfo');
             }
         },
         {

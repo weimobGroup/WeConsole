@@ -1,4 +1,4 @@
-import { promiseifyApi, toHump, isApp, getMpViewType, getWcControlMpViewInstances } from '@/main/modules/util';
+import { promisifyApi, toHump, isApp, getMpViewType, getWcControlMpViewInstances } from '@/main/modules/util';
 import type { MpAttrNode, MpElement } from '@/types/element';
 import { uniq } from './util';
 
@@ -115,7 +115,7 @@ export const hasChild = (vw: any): boolean => {
 
 export const getElementAttrs = (vw: any): Promise<MpAttrNode[]> => {
     if (isApp(vw)) {
-        return promiseifyApi('getAccountInfoSync').then((res) => {
+        return promisifyApi('getAccountInfoSync').then((res) => {
             if (res?.miniProgram && res.miniProgram.appId) {
                 const attrs: MpAttrNode[] = [];
                 attrs.push({

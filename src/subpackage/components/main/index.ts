@@ -1,4 +1,4 @@
-import { promiseifyApi } from '@/main/modules/util';
+import { promisifyApi } from '@/main/modules/util';
 import type { MpNameValue } from '@/types/common';
 import { getCustomActions } from '@/sub/modules/custom-action';
 import { WeConsoleEvents } from '@/types/scope';
@@ -253,7 +253,7 @@ class MainComponent extends MpComponent {
         }
         let handPromise = Promise.resolve();
         if (!MainStateController.getState('handX')) {
-            handPromise = promiseifyApi('getStorage', {
+            handPromise = promisifyApi('getStorage', {
                 key: 'wcconsole_xy'
             })
                 .catch(() => Promise.resolve())

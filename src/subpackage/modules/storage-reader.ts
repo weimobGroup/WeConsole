@@ -1,11 +1,11 @@
 import type { MpStorageInfo } from '@/types/storage-reader';
 import type { MpStorageMaterial } from '@/types/product';
-import { promiseifyApi } from '@/main/modules/util';
+import { promisifyApi } from '@/main/modules/util';
 import type { AnyFunction } from '@/types/util';
 import { uuid } from '@mpkit/util';
 
 export const getStorageInfoAndList = (): Promise<[MpStorageInfo, MpStorageMaterial[]]> => {
-    return promiseifyApi('getStorageInfo')
+    return promisifyApi('getStorageInfo')
         .then((res) => {
             const info = res as MpStorageInfo;
             return Promise.all([info].concat(info.keys.map((key) => getStorage(key)) as any));
@@ -16,11 +16,11 @@ export const getStorageInfoAndList = (): Promise<[MpStorageInfo, MpStorageMateri
 };
 
 export const getStorageInfo = (): Promise<MpStorageInfo> => {
-    return promiseifyApi('getStorageInfo');
+    return promisifyApi('getStorageInfo');
 };
 
 export const getStorage = (key: string, toString = true): Promise<MpStorageMaterial> => {
-    return promiseifyApi('getStorage', {
+    return promisifyApi('getStorage', {
         key
     }).then((res) => {
         return {
@@ -32,16 +32,16 @@ export const getStorage = (key: string, toString = true): Promise<MpStorageMater
 };
 
 export const removeStorage = (key: string): Promise<void> => {
-    return promiseifyApi('removeStorage', {
+    return promisifyApi('removeStorage', {
         key
     });
 };
 
 export const clearStorage = (ignore?: AnyFunction): Promise<void> => {
     if (!ignore) {
-        return promiseifyApi('clearStorage');
+        return promisifyApi('clearStorage');
     }
-    return promiseifyApi('getStorageInfo').then((res) => {
+    return promisifyApi('getStorageInfo').then((res) => {
         return res.keys.map((item) => {
             if (ignore(item)) {
                 return Promise.resolve();

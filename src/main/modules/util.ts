@@ -2,7 +2,7 @@ import type { AnyFunction, WcListFilterHandler } from '@/types/util';
 import type { MpStackInfo } from '@/types/common';
 import { wcScopeSingle } from '../config';
 import type { MpViewInstance } from 'typescript-mp-component';
-import { getSystemInfo } from './cross';
+import { getApiVar, getSystemInfo } from './cross';
 
 export const now = (() => {
     let p;
@@ -161,10 +161,29 @@ export const toHump = (name: string): string => {
     return name;
 };
 
-export const promiseifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> => {
+export const promisifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> => {
     return new Promise((resolve, reject) => {
-        const apiVar = wx;
+        const apiVar = getApiVar();
+        if (!apiVar) {
+            reject(new Error('no support'));
+            return;
+        }
         if (typeof apiVar[apiName] === 'function') {
+            if (apiName.indexOf('Sync') === -1) {
+                const apiOptions = apiArgs[0];
+                let res;
+                try {
+                    res = apiVar[apiName](apiOptions);
+                } catch (error) {
+                    reject(error);
+                    return;
+                }
+                if (apiOptions && typeof apiOptions.onResultReady === 'function') {
+                    apiOptions.onResultReady(res);
+                }
+                resolve(res);
+                return;
+            }
             hookApiMethodCallback(
                 apiName,
                 (...args) => {
@@ -198,9 +217,9 @@ export const promiseifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> 
                     reject(error);
                 }
             }
-        } else {
-            resolve(apiVar[apiName]);
+            return;
         }
+        resolve(apiVar[apiName]);
     });
 };
 
