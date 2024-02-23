@@ -8,6 +8,7 @@ import { uuid } from '@mpkit/util';
 import { EventEmitter } from '@/main/modules/event-emitter';
 import type { MpProduct } from '@/types/product';
 import { MpApiCategoryMap, reportCategoryMapToList } from '@/main/modules/category';
+import { getApiVar } from './modules/cross';
 
 const FinalConfig: Partial<MpUIConfig> = {
     ignoreHookApiNames: ['nextTick'],
@@ -70,6 +71,7 @@ const getNativeGlobal = (() => {
         if (res) {
             return res;
         }
+        let apiVar;
         if (typeof global === 'object' && global) {
             res = global;
         } else if (typeof globalThis === 'object' && globalThis) {
@@ -77,9 +79,9 @@ const getNativeGlobal = (() => {
         } else if (typeof this === 'object' && this) {
             // eslint-disable-next-line @typescript-eslint/no-this-alias
             res = this;
-        } else if (typeof wx === 'object' && wx) {
-            (wx as any).__wcGlobal__ = wx.__wcGlobal__ || {};
-            res = wx.__wcGlobal__;
+        } else if ((apiVar = getApiVar())) {
+            apiVar.__wcGlobal__ = apiVar.__wcGlobal__ || {};
+            res = apiVar.__wcGlobal__;
         } else if (typeof getApp === 'function') {
             const app = getApp({ allowDefault: true });
             app.__wcGlobal__ = app.__wcGlobal__ || {};

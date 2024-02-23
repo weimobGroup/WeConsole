@@ -1,17 +1,9 @@
 import type { AnyFunction, WcListFilterHandler } from '@/types/util';
-import type { MpStackInfo, MpSystemInfo } from '@/types/common';
+import type { MpStackInfo } from '@/types/common';
 import { wcScopeSingle } from '../config';
 import type { MpViewInstance } from 'typescript-mp-component';
+import { getSystemInfo } from './cross';
 
-export const getSystemInfo = (() => {
-    let info: MpSystemInfo;
-    return (ignoreCache?: boolean): MpSystemInfo => {
-        if (!info || ignoreCache) {
-            info = wx.getSystemInfoSync();
-        }
-        return info;
-    };
-})();
 export const now = (() => {
     let p;
     return (): number => {

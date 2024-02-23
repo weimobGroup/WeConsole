@@ -1,5 +1,4 @@
 import { promiseifyApi } from '@/main/modules/util';
-import { getSystemInfo } from '@/sub/modules/util';
 import type { MpNameValue } from '@/types/common';
 import { getCustomActions } from '@/sub/modules/custom-action';
 import { WeConsoleEvents } from '@/types/scope';
@@ -8,6 +7,7 @@ import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { MainStateController } from '@/main/modules/state-controller';
 import { registerComponent } from '@/sub/mixins/component';
+import { checkDebugEnabled, getEnvVersion, getSystemInfo } from '@/main/modules/cross';
 
 const WcScope = wcScope();
 
@@ -231,24 +231,25 @@ class MainComponent extends MpComponent {
         });
     }
     init() {
-        let winPromise = Promise.resolve();
         if (!MainStateController.getState('winHeight')) {
-            winPromise = getSystemInfo().then((res) => {
-                this.$mx.Tool.$updateData({
-                    isFullScreenPhone: res.statusBarHeight && res.statusBarHeight > 20,
-                    winWidth: res.windowWidth - 20,
-                    winHeight: res.windowHeight - 20
-                });
-                // 默认情况下，如果是打开调试时，才显示icon
-                if (!('visible' in WcScope)) {
-                    MainStateController.setState('showIcon', !!res.enableDebug);
-                } else {
-                    MainStateController.setState('showIcon', WcScope.visible);
-                }
-                MainStateController.setState('winHeight', this.data.winHeight);
-                MainStateController.setState('winWidth', this.data.winWidth);
-                MainStateController.setState('isFullScreenPhone', this.data.isFullScreenPhone);
+            const res = getSystemInfo();
+            this.$mx.Tool.$updateData({
+                isFullScreenPhone: res.statusBarHeight && res.statusBarHeight > 20,
+                winWidth: res.windowWidth - 20,
+                winHeight: res.windowHeight - 20
             });
+            // 默认情况下，如果是打开调试时，才显示icon
+            if (!('visible' in WcScope)) {
+                MainStateController.setState(
+                    'showIcon',
+                    checkDebugEnabled() || (getEnvVersion() !== '?' && getEnvVersion() !== 'release')
+                );
+            } else {
+                MainStateController.setState('showIcon', WcScope.visible);
+            }
+            MainStateController.setState('winHeight', this.data.winHeight);
+            MainStateController.setState('winWidth', this.data.winWidth);
+            MainStateController.setState('isFullScreenPhone', this.data.isFullScreenPhone);
         }
         let handPromise = Promise.resolve();
         if (!MainStateController.getState('handX')) {
@@ -274,7 +275,7 @@ class MainComponent extends MpComponent {
                     MainStateController.setState('inited', this.data.inited);
                 });
         }
-        return Promise.all([winPromise, handPromise]).then(() => {
+        return handPromise.then(() => {
             this.syncState();
         });
     }

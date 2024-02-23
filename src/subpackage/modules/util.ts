@@ -1,4 +1,4 @@
-import type { MpStackInfo, MpSystemInfo } from '@/types/common';
+import type { MpStackInfo } from '@/types/common';
 
 export const removeEndZero = (num: number | string): string => {
     const str = String(num);
@@ -73,26 +73,6 @@ export const convertStockToInitiatorDesc = (stock: MpStackInfo): string => {
     return 'Script';
 };
 
-export const getSystemInfo = (() => {
-    let info: MpSystemInfo;
-    return (allowFromCache = true): Promise<MpSystemInfo> => {
-        if (info && allowFromCache) {
-            return Promise.resolve(JSON.parse(JSON.stringify(info)));
-        }
-        return new Promise((resolve, reject) => {
-            wx.getSystemInfo({
-                success(res) {
-                    info = JSON.parse(JSON.stringify(res));
-                    resolve(res);
-                },
-                fail(res) {
-                    reject(new Error(res?.errMsg ? res.errMsg : '未知错误'));
-                }
-            });
-        });
-    };
-})();
-
 export const uniq = <T = any>(list: T[]): T[] => {
     return list.reduce((sum: T[], item) => {
         if (sum.indexOf(item) === -1) {
@@ -100,12 +80,6 @@ export const uniq = <T = any>(list: T[]): T[] => {
         }
         return sum;
     }, []);
-};
-
-export const rpxToPx = (rpx: number): Promise<number> => {
-    return getSystemInfo().then((res) => {
-        return (res.windowWidth / 750) * rpx;
-    });
 };
 
 export const toJSONString = (obj: any, space?: string | number) => {

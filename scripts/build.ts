@@ -24,6 +24,7 @@ const getPlugins = () => [
         delimiters: ['', ''],
         values: {
             VERSION: VERSION,
+            BUILD_TARGET: JSON.stringify(process.env.BUILD_TARGET),
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         },
         preventAssignment: true
@@ -73,6 +74,8 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
         input['subpackage/components/regular/index'] =
             ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/regular/index.js';
     }
+    const distDir = process.env.BUILD_TARGET && process.env.BUILD_TARGET !== 'wx' ? `${process.env.BUILD_TARGET}/` : '';
+
     return [
         {
             external: mode === 'full' ? [] : [/mpkit/, /typescript-mp-component/, /@@cross-virtual-list/],
@@ -80,7 +83,7 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
             input,
             output: [
                 {
-                    dir: `${ROOT_DIR}/dist/${mode}`,
+                    dir: `${ROOT_DIR}/dist/${distDir}${mode}`,
                     format: 'esm',
                     chunkFileNames: '[name].js',
                     hoistTransitiveImports: false,
@@ -104,18 +107,21 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
         },
         () => {
             return Promise.all([
-                copyPromise(ROOT_DIR + '/src/subpackage/mpxs/**/*.*', ROOT_DIR + '/dist/' + mode + '/subpackage/mpxs'),
+                copyPromise(
+                    ROOT_DIR + '/src/subpackage/mpxs/**/*.*',
+                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/mpxs`
+                ),
                 copyPromise(
                     ROOT_DIR + '/src/subpackage/components/**/*.wxml',
-                    ROOT_DIR + '/dist/' + mode + '/subpackage/components'
+                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
                 ),
                 copyPromise(
                     ROOT_DIR + '/src/subpackage/components/**/*.wxss',
-                    ROOT_DIR + '/dist/' + mode + '/subpackage/components'
+                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
                 ),
                 copyPromise(
                     ROOT_DIR + '/src/subpackage/components/**/*.json',
-                    ROOT_DIR + '/dist/' + mode + '/subpackage/components'
+                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
                 ),
                 ...Object.keys(components).reduce((sum: Promise<void>[], k) => {
                     const fileName = components[k].replace('.ts', '.scss');
@@ -123,11 +129,9 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                         sum.push(
                             compileFile(
                                 fileName,
-                                ROOT_DIR +
-                                    '/dist/' +
-                                    mode +
-                                    '/subpackage/components' +
-                                    fileName.split('components')[1].replace('.scss', '.wxss')
+                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components${fileName
+                                    .split('components')[1]
+                                    .replace('.scss', '.wxss')}`
                             )
                         );
                     }
@@ -165,15 +169,15 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                             }),
                             copyPromise(
                                 ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.wxml',
-                                ROOT_DIR + '/dist/' + mode + '/subpackage/components'
+                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
                             ),
                             copyPromise(
                                 ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.wxss',
-                                ROOT_DIR + '/dist/' + mode + '/subpackage/components'
+                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
                             ),
                             copyPromise(
                                 ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.json',
-                                ROOT_DIR + '/dist/' + mode + '/subpackage/components'
+                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
                             )
                         ]);
                     }
