@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 const { replace, showWeConsole, addCustomAction } = require('./weconsole/main/index');
 
 replace();
@@ -30,45 +31,38 @@ addCustomAction({
                             width: '50'
                         }
                     ],
-                    data: [
-                        {
-                            id: '0',
-                            page: 'pages/test1111',
-                            vid: '123\n门店1'
-                        },
-                        {
-                            id: '1',
-                            page: 'pages/test11122323',
-                            vid: '456\n门店2'
-                        },
-                        {
-                            id: '2',
-                            page: 'pages/test11122323',
-                            vid: {
-                                tableCell: true,
-                                blocks: [
-                                    {
-                                        block: true,
-                                        items: [
-                                            '门店',
-                                            {
-                                                type: 'text',
-                                                content: '='
-                                            },
-                                            {
-                                                type: 'json',
-                                                value: {
-                                                    vid: 123123123,
-                                                    vidType: 3,
-                                                    vidName: '哈哈门店'
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        }
-                    ]
+                    data: Array.from({ length: 100 }).map((i, index) => {
+                        return {
+                            id: String(index),
+                            page: `/pages/p${index}`,
+                            vid:
+                                index % 2 === 0
+                                    ? '123\n门店1'
+                                    : {
+                                          tableCell: true,
+                                          blocks: [
+                                              {
+                                                  block: true,
+                                                  items: [
+                                                      '门店',
+                                                      {
+                                                          type: 'text',
+                                                          content: '='
+                                                      },
+                                                      {
+                                                          type: 'json',
+                                                          value: {
+                                                              vid: 123123123,
+                                                              vidType: 3,
+                                                              vidName: '哈哈门店'
+                                                          }
+                                                      }
+                                                  ]
+                                              }
+                                          ]
+                                      }
+                        };
+                    })
                 };
             }
         }

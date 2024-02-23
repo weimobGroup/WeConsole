@@ -109,6 +109,10 @@ export const convertApiMaterial = (
     if (categorys?.length) {
         material.categorys = categorys;
         material.category = categorys[0];
+        if (material.category === 'xhr') {
+            material.rowStyle = material.rowStyle || '';
+            material.rowStyle += 'font-weight: bold;';
+        }
     }
     if ('category' in product) {
         material.method = product.category;
