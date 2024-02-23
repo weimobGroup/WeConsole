@@ -1,5 +1,5 @@
 /* eslint-disable no-return-assign */
-import type { CrossSystemInfo } from '@/types/cross';
+import type { CrossEnvInfo, CrossEnvVersion, CrossSystemInfo } from '@/types/cross';
 
 // eslint-disable-next-line complexity
 export const getApiVar = () => {
@@ -48,11 +48,11 @@ export const getApiVar = () => {
 
 export const getSystemInfo = (() => {
     let cache: CrossSystemInfo | undefined;
-    return (): CrossSystemInfo => {
+    return (): Readonly<CrossSystemInfo> => {
         if (!cache) {
             cache = (getApiVar() as any).getSystemInfoSync();
         }
-        return JSON.parse(JSON.stringify(cache));
+        return cache as Readonly<CrossSystemInfo>;
     };
 })();
 
@@ -84,52 +84,110 @@ export const checkDebugEnabled = (() => {
     };
 })();
 
-/** 获取小程序环境版本，可选值及含义：
- * develop=开发/预览环境版本;
- * trial=体验环境版本;
- * release=发布环境版本;
- * ?=未知环境版本;
- */
-export const getEnvVersion = (() => {
-    let res: 'develop' | 'trial' | 'release' | '?' | undefined;
+const getEnvInfo = (() => {
+    let res: CrossEnvInfo | undefined;
+    const d = (val?: CrossEnvInfo): CrossEnvInfo => {
+        if (val) {
+            return (res = {
+                appId: val.appId || '?',
+                envVersion: val.envVersion || '?',
+                version: val.version || '?'
+            });
+        }
+        return (res = {
+            appId: '?',
+            envVersion: '?',
+            version: '?'
+        });
+    };
     // eslint-disable-next-line complexity
-    return (): 'develop' | 'trial' | 'release' | '?' => {
+    return (): CrossEnvInfo => {
         if (res !== undefined) {
             return res;
         }
         if (BUILD_TARGET === 'wx') {
             if ('getAccountInfoSync' in wx) {
-                res = wx.getAccountInfoSync()?.miniProgram?.envVersion;
+                res = wx.getAccountInfoSync()?.miniProgram;
             }
-            if (!res && typeof __wxConfig === 'object' && __wxConfig.envVersion) {
-                res = __wxConfig.envVersion;
+            if (!res && typeof __wxConfig === 'object') {
+                return d({
+                    envVersion: __wxConfig.envVersion,
+                    appId: __wxConfig.accountInfo?.appId || '?',
+                    version: '?'
+                });
             }
-            return (res = res || '?');
+            return d(res);
+        }
+
+        if (BUILD_TARGET === 'qq') {
+            if ('getAccountInfoSync' in qq) {
+                res = qq.getAccountInfoSync()?.miniProgram;
+            }
+            if (!res && typeof __wxConfig === 'object') {
+                let cfg;
+                if (
+                    (typeof __wxConfig === 'object' ? (cfg = __wxConfig) : false) ||
+                    (typeof __qqConfig === 'object' ? (cfg = __qqConfig) : false)
+                ) {
+                    return d({
+                        envVersion: cfg.envVersion,
+                        appId: cfg.accountInfo?.appId || '?',
+                        version: '?'
+                    });
+                }
+            }
+            return d(res);
         }
 
         if (BUILD_TARGET === 'my') {
             if ('getAccountInfoSync' in my) {
                 res = my.getAccountInfoSync()?.miniProgram?.envVersion;
             }
-            if (!res && typeof __appxStartupParams === 'object' && __appxStartupParams.envVersion) {
-                res = __appxStartupParams.envVersion;
+            if (!res && typeof __appxStartupParams === 'object') {
+                return d({
+                    envVersion: __appxStartupParams.envVersion || ((my as any).isIDE ? 'develop' : '?'),
+                    appId: __appxStartupParams.appId || '?',
+                    version: '?'
+                });
             }
-            if (!res && (my as any).isIDE) {
-                res = 'develop';
-            }
-            return (res = res || '?');
+            return d(res);
         }
+        return d();
+    };
+})();
 
-        if (BUILD_TARGET === 'qq') {
-            let cfg;
-            if (
-                (typeof __wxConfig === 'object' ? (cfg = __wxConfig) : false) ||
-                (typeof __qqConfig === 'object' ? (cfg = __qqConfig) : false)
-            ) {
-                return (res = cfg.envVersion || '?');
-            }
-            return (res = '?');
+/** 获取小程序环境版本，可选值及含义：
+ * develop=开发/预览环境版本;
+ * trial=体验环境版本;
+ * release=发布环境版本;
+ * ?=未知环境版本;
+ */
+export const getCurrentEnvVersion = (() => {
+    let res: CrossEnvVersion | undefined;
+    return (): CrossEnvVersion => {
+        if (res !== undefined) {
+            return res;
         }
-        return '?';
+        return (res = getEnvInfo().envVersion);
+    };
+})();
+
+export const getCurrentAppId = (() => {
+    let res: string | undefined;
+    return (): string => {
+        if (res !== undefined) {
+            return res;
+        }
+        return (res = getEnvInfo().appId);
+    };
+})();
+
+export const getCurrentAppVersion = (() => {
+    let res: string | undefined;
+    return (): string => {
+        if (res !== undefined) {
+            return res;
+        }
+        return (res = getEnvInfo().version);
     };
 })();

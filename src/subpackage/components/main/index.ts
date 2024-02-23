@@ -7,7 +7,7 @@ import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { MainStateController } from '@/main/modules/state-controller';
 import { registerComponent } from '@/sub/mixins/component';
-import { checkDebugEnabled, getEnvVersion, getSystemInfo } from '@/main/modules/cross';
+import { checkDebugEnabled, getCurrentEnvVersion, getSystemInfo } from '@/main/modules/cross';
 
 const WcScope = wcScope();
 
@@ -242,7 +242,7 @@ class MainComponent extends MpComponent {
             if (!('visible' in WcScope)) {
                 MainStateController.setState(
                     'showIcon',
-                    checkDebugEnabled() || (getEnvVersion() !== '?' && getEnvVersion() !== 'release')
+                    checkDebugEnabled() || (getCurrentEnvVersion() !== '?' && getCurrentEnvVersion() !== 'release')
                 );
             } else {
                 MainStateController.setState('showIcon', WcScope.visible);

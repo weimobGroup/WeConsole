@@ -1,6 +1,7 @@
-import { promisifyApi, toHump, isApp, getMpViewType, getWcControlMpViewInstances } from '@/main/modules/util';
+import { toHump, isApp, getMpViewType, getWcControlMpViewInstances } from '@/main/modules/util';
 import type { MpAttrNode, MpElement } from '@/types/element';
 import { uniq } from './util';
+import { getCurrentAppId, getCurrentAppVersion, getCurrentEnvVersion } from '@/main/modules/cross';
 
 const getGroup = (children: MpElement[]): MpElement[] => {
     const map: { [prop: string]: MpElement } = {};
@@ -115,31 +116,24 @@ export const hasChild = (vw: any): boolean => {
 
 export const getElementAttrs = (vw: any): Promise<MpAttrNode[]> => {
     if (isApp(vw)) {
-        return promisifyApi('getAccountInfoSync').then((res) => {
-            if (res?.miniProgram && res.miniProgram.appId) {
-                const attrs: MpAttrNode[] = [];
-                attrs.push({
-                    name: 'tag',
-                    content: 'App'
-                });
-                attrs.push({
-                    name: 'id',
-                    content: res.miniProgram.appId
-                });
-                attrs.push({
-                    name: 'env',
-                    content: res.miniProgram.envVersion
-                });
-                if (res.miniProgram.version) {
-                    attrs.push({
-                        name: 'version',
-                        content: res.miniProgram.version
-                    });
-                }
-                return attrs;
-            }
-            return [];
+        const attrs: MpAttrNode[] = [];
+        attrs.push({
+            name: 'tag',
+            content: 'App'
         });
+        attrs.push({
+            name: 'id',
+            content: getCurrentAppId()
+        });
+        attrs.push({
+            name: 'env',
+            content: getCurrentEnvVersion()
+        });
+        attrs.push({
+            name: 'version',
+            content: getCurrentAppVersion()
+        });
+        return Promise.resolve(attrs);
     }
     const attrs: MpAttrNode[] = [];
     const tagName = getMpViewType(vw);
