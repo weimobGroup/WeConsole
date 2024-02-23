@@ -1,5 +1,5 @@
-import type { DataGridCol } from './data-grid';
-import type { AnyFunction, IEventEmitter } from './util';
+import type { DynamicTableComponentExports, RegularTableComponentExports, TableCol } from './table';
+import type { AnyFunction } from './util';
 
 /** 定制化 */
 
@@ -18,6 +18,7 @@ export const enum WcCustomActionShowMode {
 
 export interface WcCustomActionCase {
     id: string;
+    title?: string;
     /** 按钮文案 */
     button?: string;
     /** 执行逻辑 */
@@ -26,18 +27,29 @@ export interface WcCustomActionCase {
     showMode?: WcCustomActionShowMode;
 }
 
-export interface WcCustomActionGrid {
-    cols: DataGridCol[];
-    data: any;
+export interface WcCustomActionGrid<T = any> {
+    /** 列配置 */
+    cols: TableCol[];
+    /** 行数据唯一key字段名 */
+    rowKeyField?: string;
+    /** 行高，rowHeightMode=dynamic时代表最小行高 */
+    rowHeight: number;
+    /** 行高模式：
+     * regular=固定高度；
+     * dynamic=动态高度；
+     */
+    rowHeightMode: 'regular' | 'dynamic';
+    /** 列最小宽度，单位：% */
+    colMinWidth: number;
+    /** 完全自主控制数据的设置等 */
+    autonomy?: boolean;
+    data?: T[];
+    onReady?: (grid: RegularTableComponentExports<T> | DynamicTableComponentExports<T>) => void;
 }
 
 export interface WcCustomActionComponent {
     name: string;
     data?: any;
-}
-
-export interface WcCustomActionUpdateGrid extends IEventEmitter {
-    cols: DataGridCol[];
 }
 
 export interface WcCustomAction {

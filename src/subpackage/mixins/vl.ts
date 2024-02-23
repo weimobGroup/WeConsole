@@ -22,6 +22,7 @@ export class VlMixin<
     E extends MpVirtualListComponentExports<T> = MpVirtualListComponentExports<T>
 > extends MpComponentMixin<Data, NonNullable<unknown>> {
     $wcOn: (name: string, handler: EventHandler) => void;
+    $forceData: (data: Partial<Data>, cb?: () => void) => void;
     $vlAdapterExports?: E;
     $vlAdapterExportsMethodCallQueue?: AdapterExportsMethodCallQueue;
     $vlItemState?: Record<string, any>;
@@ -33,7 +34,7 @@ export class VlMixin<
         this.$wcOn(WeConsoleEvents.WcMainComponentSizeChange, () => {
             this.$vlMainSizeHash = uuid();
             if (this.$vlIsAttached && !this.$vlPageIsHide) {
-                this.setData({
+                this.$forceData({
                     $vlMainSizeHash: this.$vlMainSizeHash
                 });
             }
@@ -42,7 +43,7 @@ export class VlMixin<
     attached() {
         this.$vlIsAttached = true;
         if (this.$vlMainSizeHash) {
-            this.setData({
+            this.$forceData({
                 $vlMainSizeHash: this.$vlMainSizeHash
             });
         }
@@ -50,7 +51,7 @@ export class VlMixin<
     onPageLifeShow() {
         this.$vlPageIsHide = false;
         if (this.$vlMainSizeHash) {
-            this.setData({
+            this.$forceData({
                 $vlMainSizeHash: this.$vlMainSizeHash
             });
         }

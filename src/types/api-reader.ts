@@ -1,8 +1,9 @@
-import type { DataGridCol } from './data-grid';
+import type { TableCol } from './table';
 export interface MpApiReaderComponentData {
+    rowHeight: number;
     detailMaterialId?: string;
     detailFrom?: string;
     detailTab: number;
-    readerCols: DataGridCol[];
+    readerCols: TableCol[];
     affixed: string[];
 }

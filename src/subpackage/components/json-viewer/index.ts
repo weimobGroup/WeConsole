@@ -4,7 +4,6 @@ import { registerComponent } from '@/sub/mixins/component';
 
 import { equalJSONPropPath, getJSONNode, getPathValue } from '@/sub/modules/json';
 import { cutJSONNode, JSONViewer } from '@/sub/modules/json-viewer';
-import { getSystemInfo } from '@/sub/modules/util';
 import type { IJSONViewer, JSONNode, JSONPropPath, JSONRow, JSONTree, JSONValue } from '@/types/json';
 import type {
     MpJSONViewerComponentData,
@@ -13,7 +12,7 @@ import type {
 } from '@/types/json-viewer';
 import { MpJSONViewerComponentMode } from '@/types/json-viewer';
 import type { MpEvent } from '@/types/view';
-import { log } from '@/main/modules/util';
+import { log, rpxToPx } from '@/main/modules/util';
 import type { AnyFunction } from '@/types/util';
 import { ToolMixin } from '@/sub/mixins/tool';
 // eslint-disable-next-line quotes
@@ -28,10 +27,10 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
     inited: boolean;
     JSONViewer?: IJSONViewer;
     target: any;
-    windowWidth: number;
     onInitedHandlers?: AnyFunction[];
     lastPath?: JSONPropPath;
     lastOpen?: boolean;
+    isDetached: boolean;
     $mx = {
         Tool: new ToolMixin()
     };
@@ -79,7 +78,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
                 value: MpJSONViewerComponentMode.tree
             },
             {
-                name: 'JSON String',
+                name: 'String',
                 value: MpJSONViewerComponentMode.string
             }
         ]
@@ -94,15 +93,18 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
                 root: this.data.json
             });
         }
-    }
-    ready() {
         if (this.data.init) {
             this.init();
         }
+    }
+    ready() {
         this.$mx.Tool.$wcEmit('JSONViewerReady', {
             from: this.data.from,
             viewer: this
         });
+    }
+    detached() {
+        delete this.target;
     }
     syncFontSize() {
         if (!this.JSONViewer) {
@@ -180,6 +182,9 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         return mpData;
     }
     setPathVisible(open: boolean, path?: JSONPropPath) {
+        if (this.isDetached) {
+            return;
+        }
         this.lastOpen = open;
         this.lastPath = path;
         this.$mx.Tool.$forceData(this.buildPath(open, path));
@@ -243,9 +248,6 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         mpData[mpPath] = node;
         this.$mx.Tool.$forceData(mpData);
     }
-    rpxToPx(rpx: number): number {
-        return (this.windowWidth / 750) * rpx;
-    }
     measureText(str: string, fontSize: number): number {
         if (!this.$mx.Tool.$wcCanvasContext) {
             return Infinity;
@@ -254,26 +256,21 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         return this.$mx.Tool.$wcCanvasContext.measureText(str).width;
     }
     initJSONViewer(): Promise<any> {
-        if (this.JSONViewer) {
+        if (this.JSONViewer || this.isDetached) {
             return Promise.resolve();
         }
-        return Promise.all([
-            getSystemInfo(),
-            this.$mx.Tool.$getBoundingClientRect('.json-viewer'),
-            this.$mx.Tool.$getCanvasContext()
-        ])
-            .then(([{ windowWidth }, { width }]) => {
-                this.windowWidth = windowWidth;
+        return Promise.all([this.$mx.Tool.$getBoundingClientRect('.json-viewer'), this.$mx.Tool.$getCanvasContext()])
+            .then(([{ width }]) => {
                 this.measureText = this.measureText.bind(this);
                 const target =
                     'target' in (this as any) ? this.target : 'target' in this.data ? this.data.target : undefined;
                 this.JSONViewer = new JSONViewer({
                     target: target,
-                    arrowWidth: this.rpxToPx(20),
-                    fontSize: this.rpxToPx(this.data.fontSize || 28),
-                    keyFontSize: this.rpxToPx(this.data.smallFontSize || 28 * 0.8),
+                    arrowWidth: rpxToPx(20),
+                    fontSize: rpxToPx(this.data.fontSize || 28),
+                    keyFontSize: rpxToPx(this.data.smallFontSize || 28 * 0.8),
                     measureText: this.measureText,
-                    maxWidth: width - this.rpxToPx(100)
+                    maxWidth: width - rpxToPx(100)
                 });
                 const jsonViewer = this.JSONViewer;
                 return new Promise<void>((resolve) => {
@@ -316,6 +313,9 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         });
     }
     setTarget(target?: any, updateUI = true) {
+        if (this.isDetached) {
+            return;
+        }
         this.target = target;
         if (this.data.mode === MpJSONViewerComponentMode.full || this.data.mode === MpJSONViewerComponentMode.string) {
             updateUI && this.setJSONString();
@@ -342,7 +342,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         }
     }
     init(): Promise<void> {
-        if (this.inited) {
+        if (this.inited || this.isDetached) {
             return Promise.resolve();
         }
         const fire = () => {

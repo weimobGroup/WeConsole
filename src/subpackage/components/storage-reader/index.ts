@@ -10,12 +10,12 @@ import {
 } from '@/sub/modules/storage-reader';
 import type { MpStorageMaterial } from '@/types/product';
 import { ToolMixin } from '@/sub/mixins/tool';
-import type { DataGridCol } from '@/types/data-grid';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
 import { DrMixin } from '@/sub/mixins/dr';
 import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
 import { clone } from '@mpkit/util';
+import type { TableCol } from '@/types/table';
 
 const substr = (str: string | undefined, len: number): string => {
     return typeof str === 'string' ? (str.length > len ? str.substr(0, len) + '...' : str) : 'undefined';
@@ -30,7 +30,7 @@ interface Data {
     currentSize: number;
     limitSize: number;
     sizeProgress: number;
-    readerCols: DataGridCol[];
+    readerCols: TableCol[];
 }
 
 class StorageReader extends MpComponent {

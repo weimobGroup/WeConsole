@@ -41,6 +41,12 @@ const fireSetData = (vm: ToolMixin) => {
     if (!d) {
         return;
     }
+    if (!vm.$tlIsAttached) {
+        wx.nextTick(() => {
+            fireSetData(vm);
+        });
+        return;
+    }
     const cbs = vm.waitingDataCallbacks || [];
     delete vm.waitingDataCallbacks;
     delete vm.waitingData;
@@ -66,6 +72,7 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
     $wcProductControllerHandler: AnyFunction;
     $wcProductController: IMpProductController;
     readonly $wcUIConfig: MpUIConfig;
+    $tlIsAttached: boolean;
     created() {
         Object.defineProperty(this, '$wcUIConfig', {
             get() {
@@ -94,6 +101,9 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
             this.$wcProductController.on('create', this.$wcProductControllerHandler);
             this.$wcProductController.on('change', this.$wcProductControllerHandler);
         }
+    }
+    attached() {
+        this.$tlIsAttached = true;
     }
     detached() {
         if (this.$wcProductController && this.$wcProductControllerHandler) {
@@ -129,20 +139,23 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
     $getProp<T = any>(propName: string, defaultVal?: T): T {
         return this.data[propName] || defaultVal;
     }
+    $addWaitingData(data: Partial<D>, cb?: () => void) {
+        if (!this.waitingData) {
+            this.waitingData = {};
+        }
+        this.waitingDataCallbacks = this.waitingDataCallbacks || [];
+        if (isFunc(cb)) {
+            this.waitingDataCallbacks.push(cb as AnyFunction);
+        }
+        Object.assign(this.waitingData, data);
+        Object.assign(this.data, this.waitingData);
+    }
     $forceData(data: Partial<D>, cb?: () => void) {
         if (!isValidObject(data) || isEmptyObject(data)) {
             cb?.();
             return;
         }
-        if (!this.waitingData) {
-            this.waitingData = {};
-        }
-        this.waitingDataCallbacks = this.waitingDataCallbacks || [];
-
-        Object.assign(this.waitingData, data);
-        if (isFunc(cb)) {
-            this.waitingDataCallbacks.push(cb as AnyFunction);
-        }
+        this.$addWaitingData(data, cb);
         fireSetData(this);
     }
     $updateData(data: Partial<D>, cb?: () => void) {
@@ -150,15 +163,7 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
             cb?.();
             return;
         }
-        if (!this.waitingData) {
-            this.waitingData = {};
-        }
-        this.waitingDataCallbacks = this.waitingDataCallbacks || [];
-        Object.assign(this.waitingData, data);
-        Object.assign(this.data, data);
-        if (isFunc(cb)) {
-            this.waitingDataCallbacks.push(cb as AnyFunction);
-        }
+        this.$addWaitingData(data, cb);
         if (this.updateDataTimer) {
             clearTimeout(this.updateDataTimer);
         }

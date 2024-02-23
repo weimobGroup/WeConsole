@@ -1,7 +1,7 @@
 {
     "component": true,
     "usingComponents": {
-        "data-grid": "../data-grid/index",
+        "table": "../table/index",
         "tabs": "../tabs/index",
         "json-viewer": "../json-viewer/index"
     }

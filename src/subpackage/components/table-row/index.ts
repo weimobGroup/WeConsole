@@ -42,16 +42,23 @@ class TableRowComponent<T extends RequireId = RequireId> extends MpComponent<
         });
     }
 
-    emitInteractEvent(type: string, e: MpEvent) {
+    emitInteractEvent(type: string, e: MpEvent, detail?: any) {
+        if (this.data.state.type === 'head') {
+            return;
+        }
         const id = this.data.value.id;
         this.triggerEvent('interact', {
             type: type,
             id,
             detail: {
                 type: e.currentTarget.dataset.type,
-                colIndex: e.currentTarget.dataset.col ? parseInt(String(e.currentTarget.dataset.col)) : -1
+                colIndex: e.currentTarget.dataset.col ? parseInt(String(e.currentTarget.dataset.col)) : -1,
+                ...(detail || {})
             }
         });
+    }
+    onJSONViewerToggle(e: Required<MpEvent<{ blockIndex: number; jsonItemIndex: number }>>) {
+        this.emitInteractEvent('onJSONViewerToggle', e, e.detail);
     }
 
     tapRow(e: MpEvent) {

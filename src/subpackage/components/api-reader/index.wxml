@@ -3,7 +3,7 @@
         bind:clear="clear" bind:filter="filter" filter clear></filter-bar>
     <table class="fc-reader-body has-bar"
         outerClass="fc-api-datagrid {{detailMaterialId&& detailFrom!=='longpressRow'?'show-detail':''}}"
-        rowClass="method" rowHeight="{{40}}" selected="{{[detailMaterialId]}}" affixed="{{affixed}}"
+        rowClass="method" rowHeight="{{rowHeight}}" selected="{{[detailMaterialId]}}" affixed="{{affixed}}"
         cols="{{readerCols}}" bind:ready="$vlOnVirtualListComponentReady" bind:interact="onItemInteractEvent">
     </table>
     <api-detail wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" data="{{detailMaterialId}}"

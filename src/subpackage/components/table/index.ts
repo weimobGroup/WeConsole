@@ -1,5 +1,13 @@
 import { VlMixin } from '@/sub/mixins/vl';
-import type { TableComponentProps, TableComponentData, TableCell } from '@/types/table';
+import type {
+    TableComponentProps,
+    TableComponentData,
+    TableCell,
+    TableComponentJSONViewerReadyEvent,
+    TableComponentJSONViewerItem,
+    TableCellJsonItem,
+    RegularTableComponentExports
+} from '@/types/table';
 import type { MpEvent } from '@/types/view';
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
@@ -8,19 +16,28 @@ import { registerComponent } from '@/sub/mixins/component';
 import type { RequireId } from '@/types/common';
 import { rpxToPx } from '@/main/modules/util';
 import type { MpVirtualListComponentExports } from '@cross-virtual-list/types';
-import { clone } from '@mpkit/util';
+import { clone, uuid } from '@mpkit/util';
+import type { MpJSONViewerComponentEbusDetail } from '../json-viewer';
 
 export class TableComponent<
     T extends RequireId = RequireId,
     E extends MpVirtualListComponentExports<T> = MpVirtualListComponentExports<T>
 > extends MpComponent<TableComponentData<T>, TableComponentProps<T>, TableComponent<T>> {
     computeColWidthTimer?: ReturnType<typeof setTimeout>;
+    jsonViewReadyCallback?: Array<(e: TableComponentJSONViewerReadyEvent) => void>;
+    jsonViewerMap?: Record<string, TableComponentJSONViewerItem>;
+    jsonViewerMark?: Record<string, 1>;
+    hasSelfSetList: boolean;
     $mx = {
         Tool: new ToolMixin<TableComponentData>(),
         Vl: new VlMixin<T, E>()
     };
     properties: MpComponentProperties<TableComponentProps<T>, TableComponent<T>> = {
         from: String,
+        rowKeyField: {
+            type: String,
+            value: 'id'
+        },
         selected: {
             type: Array
         },
@@ -68,9 +85,45 @@ export class TableComponent<
         lines: [],
         hasData: false,
         headRow: {},
-        affixList: []
+        affixList: [],
+        selfHash: ''
     };
+    created() {
+        this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
+            if (!data.from.startsWith(`${this.data.from || ''}Table_${this.data.selfHash}`)) {
+                return;
+            }
+            const [, , rowType, rowKey, rowIndex, colIndex, blockIndex, jsonItemIndex] = data.from
+                .substring(this.data.from.length)
+                .split('_');
+            const item: TableComponentJSONViewerItem = {
+                from: data.from,
+                rowType,
+                rowKey,
+                rowIndex: parseInt(rowIndex),
+                colIndex: parseInt(colIndex),
+                blockIndex: parseInt(blockIndex),
+                jsonItemIndex: parseInt(jsonItemIndex),
+                viewer: data.viewer
+            };
+            if (!this.jsonViewerMap) {
+                this.jsonViewerMap = {};
+            }
+            this.jsonViewerMap[data.from] = item;
+            this.jsonViewReadyCallback?.forEach((handler) => {
+                handler({
+                    from: this.data.from,
+                    current: item,
+                    all: this.jsonViewerMap as Record<string, TableComponentJSONViewerItem>
+                });
+            });
+            this.setJSONTarget(item);
+        });
+    }
     attached() {
+        this.setData({
+            selfHash: uuid()
+        });
         this.computeColWidth();
         this.computeHeadRow();
         if (this.$mx.Vl.$vlAdapterExports) {
@@ -87,6 +140,26 @@ export class TableComponent<
         }
         delete this.computeColWidthTimer;
     }
+    setJSONTarget(jsonEvent: TableComponentJSONViewerItem) {
+        if (!this.hasSelfSetList && Array.isArray(this.data.data) && this.data.data.length) {
+            const dataItem = this.data.data[jsonEvent.rowIndex]?.[this.data.cols[jsonEvent.colIndex]?.field] as
+                | TableCell
+                | undefined;
+            if (
+                dataItem &&
+                typeof dataItem === 'object' &&
+                jsonEvent.blockIndex in dataItem.blocks &&
+                typeof dataItem.blocks[jsonEvent.blockIndex]?.items?.[jsonEvent.jsonItemIndex] === 'object'
+            ) {
+                const val = (dataItem.blocks[jsonEvent.blockIndex].items[jsonEvent.jsonItemIndex] as TableCellJsonItem)
+                    .value;
+                if (val !== undefined) {
+                    jsonEvent.viewer.setTarget(val);
+                    jsonEvent.viewer.init();
+                }
+            }
+        }
+    }
     syncAffixList() {
         this.setData({
             affixList: this.data.affixed.reduce((sum: T[], id) => {
@@ -99,8 +172,8 @@ export class TableComponent<
         });
     }
     localVirtualListComponentReady(e: Required<MpEvent<E>>) {
-        this.$mx.Vl.$vlOnVirtualListComponentReady(e);
         this.rewriteVlExports(e.detail);
+        this.$mx.Vl.$vlOnVirtualListComponentReady(e);
         if (Array.isArray(this.data.data) && this.data.data.length) {
             this.$mx.Vl.$vlSetList(this.data.data);
         }
@@ -115,6 +188,7 @@ export class TableComponent<
                         hasData: !!list?.length
                     });
                     old(list);
+                    this.hasSelfSetList = true;
                     this.syncAffixList();
                 };
                 return;
@@ -140,6 +214,20 @@ export class TableComponent<
                 return;
             }
         });
+
+        const tableExports = exports as unknown as RegularTableComponentExports<T>;
+        tableExports.onJSONViewerReady = (handler) => {
+            if (!this.jsonViewReadyCallback) {
+                this.jsonViewReadyCallback = [];
+            }
+            this.jsonViewReadyCallback.push(handler);
+        };
+        tableExports.getJSONViewer = () => {
+            if (!this.jsonViewerMap) {
+                this.jsonViewerMap = {};
+            }
+            return this.jsonViewerMap;
+        };
     }
     computeHeadRow() {
         const headRow = this.data.cols.reduce((sum: Record<string, string | TableCell>, col) => {

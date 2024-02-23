@@ -1,16 +1,23 @@
-import type { MpComponentEvent, MpComponentProperties } from 'typescript-mp-component';
+import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { registerComponent } from '@/sub/mixins/component';
-
 import type { WcCustomAction, WcCustomActionCase, WcCustomActionGrid } from '@/types/other';
 import { WcCustomActionShowMode } from '@/types/other';
 import type { MpEvent } from '@/types/view';
 import { getCustomActions } from '@/sub/modules/custom-action';
-import type { DataGridCol, MpDataGridComponentExports } from '@/types/data-grid';
 import type { MpNameValue } from '@/types/common';
-import { each } from '@/main/modules/util';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer';
+import type {
+    DynamicTableComponentExports,
+    RegularTableComponentExports,
+    TableCell,
+    TableComponentJSONViewerItem,
+    TableComponentJSONViewerReadyEvent
+} from '@/types/table';
+import { uuid } from '@mpkit/util';
+import { rpxToPx } from '@/main/modules/util';
+import { toJSONString } from '@/sub/modules/util';
 const NoUICaseId = '$$$NO_UI$$$';
 
 interface Props {
@@ -23,7 +30,10 @@ class CustomActionComponent extends MpComponent {
     };
     caseJSONViewer?: Record<string, JsonViewer>;
     actionDetail?: WcCustomAction;
-    caseGrid?: Record<string, MpDataGridComponentExports>;
+    caseGrid?: Record<string, DynamicTableComponentExports | RegularTableComponentExports>;
+    caseGridJSONSource?: Record<string, { value?: any; jsonViewer?: JsonViewer }>;
+    caseGridSource?: Record<string, WcCustomActionGrid>;
+    caseGridFinalList?: Record<string, any[]>;
     caseResultState?: Record<
         string,
         {
@@ -41,6 +51,7 @@ class CustomActionComponent extends MpComponent {
         }
     };
     initData = {
+        selfHash: '',
         caseList: [],
         noUICaseList: [],
         everyNoUI: false,
@@ -51,39 +62,38 @@ class CustomActionComponent extends MpComponent {
         },
         gridSelected: {}
     };
-    attached() {
-        this.setAction();
-        // const action: WcCustomAction = {
-        //     id: 'd1',
-        //     cases: [
-        //         {
-        //             id: 'c1',
-        //             showMode: WcCustomActionShowMode.none,
-        //             handler: () => console.log('d1-c1')
-        //         },
-        //         {
-        //             id: 'c2',
-        //             showMode: WcCustomActionShowMode.none,
-        //             handler: () => console.log('d1-c2')
-        //         },
-        //         {
-        //             id: 'c2',
-        //             showMode: WcCustomActionShowMode.json,
-        //             handler: () => ({
-        //                 name: 'Tom'
-        //             })
-        //         }
-        //     ]
-        // };
-    }
     created() {
+        this.$mx.Tool.$forceData({
+            selfHash: uuid()
+        });
+        this.setAction();
         this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
-            if (
-                data.from.startsWith(`CustomAction_${this.data.action}`) &&
-                data.viewer.selectOwnerComponent &&
-                data.viewer.selectOwnerComponent() === this
-            ) {
-                const caseId = data.from.split('_')[2];
+            if (!data.from.startsWith(`${this.data.selfHash}`)) {
+                return;
+            }
+            if (data.from.startsWith(`${this.data.selfHash}_CustomActionTable_${this.data.action}`)) {
+                const [, , , caseId, , , rowType, rowKey, rowIndex, colIndex, blockIndex, jsonItemIndex] =
+                    data.from.split('_');
+                const caseItem = this.getCase(caseId);
+                if (!caseItem) {
+                    return;
+                }
+
+                const item: TableComponentJSONViewerItem = {
+                    from: data.from,
+                    rowType,
+                    rowKey,
+                    rowIndex: parseInt(rowIndex),
+                    colIndex: parseInt(colIndex),
+                    blockIndex: parseInt(blockIndex),
+                    jsonItemIndex: parseInt(jsonItemIndex),
+                    viewer: data.viewer
+                };
+                this.setCaseTableJSONTarget(caseId, item);
+                return;
+            }
+            if (data.from.startsWith(`${this.data.selfHash}_CustomAction_${this.data.action}`)) {
+                const caseId = data.from.split('_')[3];
                 const caseItem = this.getCase(caseId);
                 if (!caseItem) {
                     return;
@@ -97,7 +107,7 @@ class CustomActionComponent extends MpComponent {
                     if (!caseItem) {
                         return;
                     }
-                    if (this?.caseResultState && this.caseResultState[caseItem.id]) {
+                    if (this.caseResultState?.[caseItem.id]) {
                         data.viewer.setTarget(this.caseResultState[caseItem.id].res);
                         data.viewer.openPath();
                     }
@@ -126,8 +136,9 @@ class CustomActionComponent extends MpComponent {
         const buttonTexts: [MpNameValue<string>[], MpNameValue<string>[]] = [[], []];
         action.cases.forEach((item) => {
             const nv = {
-                name: item.button || item.id,
-                value: item.id
+                name: item.title || item.button || item.id,
+                value: item.id,
+                button: item.button
             };
             if (!item.showMode || item.showMode === WcCustomActionShowMode.none) {
                 noneCases.push(item);
@@ -212,10 +223,19 @@ class CustomActionComponent extends MpComponent {
                 this.caseResultState = {};
             }
             if (caseItem.showMode === WcCustomActionShowMode.grid) {
-                res = {
-                    ...res
-                };
-                res.data = this.convertCaseGridData(res.data || []);
+                if (!this.caseGridSource) {
+                    this.caseGridSource = {};
+                }
+                this.caseGridSource[caseItem.id] = res;
+                const gridResult = res as WcCustomActionGrid;
+                const finalRes = { ...gridResult };
+                finalRes.rowHeight =
+                    typeof finalRes.rowHeight === 'number' && finalRes.rowHeight > 0 ? finalRes.rowHeight : rpxToPx(80);
+                finalRes.rowHeightMode = finalRes.rowHeightMode || 'dynamic';
+                finalRes.rowKeyField = finalRes.rowKeyField || 'id';
+                res = finalRes;
+                delete res.data;
+                delete res.onReady;
             }
             this.caseResultState[caseItem.id] = {
                 res,
@@ -232,47 +252,26 @@ class CustomActionComponent extends MpComponent {
                 } else if (caseItem.showMode === WcCustomActionShowMode.component) {
                     state.data = res;
                 } else if (caseItem.showMode === WcCustomActionShowMode.grid) {
-                    const options: WcCustomActionGrid = res as WcCustomActionGrid;
-                    state.cols = options.cols;
-                    this.appendDataToGrid(caseItem.id, options.data);
+                    Object.assign(state, res);
+                    if (this.caseGrid?.[caseItem.id]) {
+                        this.syncCaseTableData(caseItem.id);
+                    }
                 } else if (caseItem.showMode === WcCustomActionShowMode.json) {
-                    if (this?.caseJSONViewer && this.caseJSONViewer[caseItem.id]) {
+                    if (this.caseJSONViewer?.[caseItem.id]) {
                         this.caseJSONViewer[caseItem.id].setTarget(res);
                         this.caseJSONViewer[caseItem.id].openPath();
                     }
                 }
-                // else if (
-                //     caseItem.showMode === WcCustomActionShowMode.jsonGrid
-                // ) {
-                //     const options: WcCustomActionGrid =
-                //         res as WcCustomActionGrid;
-                //     state.cols = options.cols;
-                //     const data: any[] = Array.isArray(options.data)
-                //         ? options.data
-                //         : [];
-                //     let list = data;
-                //     if (options.cols.some((item) => item.json)) {
-                //         list = data.map((item) =>
-                //             this.convertJSONGridItem(
-                //                 caseItem,
-                //                 item,
-                //                 options.cols
-                //             )
-                //         );
-                //     }
-
-                //     this.appendDataToGrid(caseItem.id, list);
-                // }
             }
 
-            this.$mx.Tool.$updateData({
+            this.$mx.Tool.$forceData({
                 [`caseLoading.${caseItem.id}`]: false,
                 [`caseState.${caseItem.id}`]: state
             });
         };
         const res = caseItem.handler();
         if (typeof res === 'object' && res.then) {
-            this.$mx.Tool.$updateData({
+            this.$mx.Tool.$forceData({
                 [`caseLoading.${caseItem.id}`]: true
             });
             res.then((val) => show(undefined, val));
@@ -288,91 +287,225 @@ class CustomActionComponent extends MpComponent {
         }
         return action.cases.find((item) => item.id === id);
     }
-    convertJSONGridItem(caseItem: WcCustomActionCase, item: any, cols: DataGridCol[]): any {
-        const res: any = {};
-        each(item, (prop, val) => {
-            const col = cols.find((c) => c.field === prop);
-            if (col?.json) {
-                res[prop] = {
-                    json: 1,
-                    key: `CustomAction_${caseItem.id}_${item.id}_${prop}`
-                };
-            } else {
-                res[prop] = val;
-            }
-        });
-        return res;
-    }
-    convertCaseGridData(list: any[]) {
-        return list.map((data, i) =>
-            Object.keys(data).reduce(
-                (sum, key) => {
-                    const val = data[key];
-                    if (typeof val === 'string' && val.includes('\n')) {
-                        sum[key] = {
-                            multiLine: true,
-                            lines: val.split('\n').map((v, i) => {
-                                return {
-                                    key: String(i),
-                                    content: v,
-                                    type: 'text'
-                                };
-                            })
-                        };
+    convertCaseGridData(caseId: string, res: WcCustomActionGrid, list?: any[]) {
+        if (!this.caseGridFinalList) {
+            this.caseGridFinalList = {};
+        }
+        if (list) {
+            delete this.caseGridFinalList[caseId];
+        }
+        if (!this.caseGridFinalList?.[caseId]) {
+            const colIndexMap = res.cols.reduce((sum, col, index) => {
+                sum[col.field] = index;
+                return sum;
+            }, {});
+            this.caseGridFinalList[caseId] = (list || res.data || []).map((row, rowIndex) => {
+                const rowId = row[res.rowKeyField || 'id'] || String(rowIndex);
+                return Object.keys(row).reduce(
+                    (sum, key) => {
+                        const val = row[key];
+                        if (typeof val === 'string' && val.includes('\n')) {
+                            const cell: TableCell = {
+                                tableCell: true,
+                                blocks: val.split('\n').map((item) => {
+                                    return {
+                                        block: true,
+                                        items: [item]
+                                    };
+                                })
+                            };
+                            sum[key] = cell;
+                            return sum;
+                        }
+                        if (typeof val === 'object' && val?.tableCell && !res.autonomy) {
+                            const cell = val as TableCell;
+                            cell.blocks.forEach((block, blockIndex) => {
+                                block.items.forEach((item, itemIndex) => {
+                                    if (typeof item === 'object' && item?.type === 'json') {
+                                        const jsonValue = item.value;
+                                        if (!this.caseGridJSONSource) {
+                                            this.caseGridJSONSource = {};
+                                        }
+                                        const sourceKey = `${caseId}_${rowId}_${colIndexMap[key]}_${blockIndex}_${itemIndex}`;
+                                        this.caseGridJSONSource[sourceKey] = this.caseGridJSONSource[sourceKey] || {};
+                                        this.caseGridJSONSource[sourceKey].value = jsonValue;
+                                        // if (this.caseGridJSONSource[sourceKey].jsonViewer) {
+                                        //     this.caseGridJSONSource[sourceKey].jsonViewer?.setTarget(jsonValue);
+                                        //     this.caseGridJSONSource[sourceKey].jsonViewer?.init();
+                                        // }
+                                        delete item.value;
+                                    }
+                                });
+                            });
+                            sum[key] = cell;
+                            return sum;
+                        }
+                        sum[key] = val;
                         return sum;
-                    }
-                    sum[key] = val;
-                    return sum;
-                },
-                { id: data.id || String(i) }
-            )
-        );
+                    },
+                    { [res.rowKeyField || 'id']: rowId }
+                );
+            });
+        }
+        return this.caseGridFinalList[caseId];
     }
-    appendDataToGrid(caseId: string, list: any[]) {
-        if (this.caseGrid?.[caseId]) {
-            return this.caseGrid[caseId].replaceAllList(list);
+    syncCaseTableData(caseId: string) {
+        const gridResult = (this.caseGridSource as Record<string, WcCustomActionGrid>)[caseId];
+        if (gridResult.autonomy) {
+            return;
+        }
+        const tableExports = (
+            this.caseGrid as Record<string, DynamicTableComponentExports | RegularTableComponentExports>
+        )[caseId];
+        const list = this.convertCaseGridData(caseId, gridResult);
+        tableExports.setList(list);
+        setTimeout(() => {
+            const colIndexMap = gridResult.cols.reduce((sum, col, index) => {
+                sum[col.field] = index;
+                return sum;
+            }, {});
+            list.forEach((row) => {
+                const rowId = row[gridResult.rowKeyField || 'id'];
+                Object.keys(row).forEach((key) => {
+                    const val = row[key];
+                    if (typeof val === 'object' && val?.tableCell) {
+                        const cell = val as TableCell;
+                        cell.blocks.forEach((block, blockIndex) => {
+                            block.items.forEach((item, itemIndex) => {
+                                if (typeof item === 'object' && item?.type === 'json') {
+                                    const sourceKey = `${caseId}_${rowId}_${colIndexMap[key]}_${blockIndex}_${itemIndex}`;
+                                    const source = this.caseGridJSONSource?.[sourceKey];
+                                    if (source?.value && source.jsonViewer) {
+                                        source.jsonViewer.setTarget(source.value);
+                                        source.jsonViewer.init();
+                                    }
+                                }
+                            });
+                        });
+                    }
+                });
+            });
+        }, 100);
+    }
+    setCaseTableJSONTarget(caseId: string, e: TableComponentJSONViewerItem) {
+        const sourceKey = `${caseId}_${e.rowKey}_${e.colIndex}_${e.blockIndex}_${e.jsonItemIndex}`;
+        if (!this.caseGridJSONSource) {
+            this.caseGridJSONSource = {};
+        }
+        if (!(sourceKey in this.caseGridJSONSource)) {
+            this.caseGridJSONSource[sourceKey] = {};
+        }
+        this.caseGridJSONSource[sourceKey].jsonViewer = e.viewer;
+        const source = this.caseGridJSONSource[sourceKey];
+        if (source.value) {
+            e.viewer.setTarget(source.value);
+            e.viewer.init();
+            const ets = this.caseGrid?.[caseId] as DynamicTableComponentExports;
+            if ('reQueryItemElementSizeByIndex' in ets) {
+                setTimeout(() => {
+                    ets.reQueryItemElementSizeByIndex(e.rowIndex);
+                }, 120);
+            }
         }
     }
-    tapGridCell(e) {
+    onItemInteractEvent(e: Required<MpEvent<{ type: string; id: string; detail?: any }>>) {
         const caseId = e.currentTarget.dataset.case;
-        this.$mx.Tool.$updateData({
-            [`gridSelected.${caseId}`]: e.detail.rowId || ''
-        });
+        if (e.detail.type === 'onJSONViewerToggle') {
+            wx.nextTick(() => {
+                const grid = this.caseGrid?.[caseId];
+                if (grid && 'reQueryItemElementSizeByIndex' in grid) {
+                    grid.reQueryItemElementSizeByKey(e.detail.id);
+                }
+            });
+            return;
+        }
+        if (e.detail.type === 'tapRow') {
+            this.$mx.Tool.$updateData({
+                [`gridSelected.${caseId}`]: [e.detail.id]
+            });
+            return;
+        }
+        if (e.detail.type === 'longpressRow' || e.detail.type === 'longpressCell') {
+            this.longpressGridCell(caseId, e.detail.id, (e.detail as any).colIndex);
+            return;
+        }
     }
-    longpressGridCell(e) {
-        const caseId = e.currentTarget.dataset.case;
-        const detail = e.detail;
+    longpressGridCell(caseId: string, rowId: string, colIndex: number) {
         this.$mx.Tool.$updateData({
-            [`gridSelected.${caseId}`]: e.detail.rowId || ''
+            [`gridSelected.${caseId}`]: [rowId]
         });
         this.$mx.Tool.$showActionSheet(['复制单元格内容', '复制整行内容', '复制整个表格内容']).then((res) => {
+            const row = this.findFullGridRow(caseId, rowId);
+            const gridSource = this.caseGridSource as Record<string, WcCustomActionGrid>;
+            const gridResult = gridSource[caseId];
             if (res === 0) {
-                let row = detail.row;
-                if (row.id) {
-                    row = this.caseResultState?.[caseId].res.data.find((item) => item.id === row.id) || row;
-                }
                 wx.setClipboardData({
-                    data: JSON.stringify(row[detail.col.field])
+                    data: toJSONString(row[gridResult.cols[colIndex].field])
                 });
                 return;
             }
 
             if (res === 1) {
-                let row = detail.row;
-                if (row.id) {
-                    row = this.caseResultState?.[caseId].res.data.find((item) => item.id === row.id) || row;
-                }
                 wx.setClipboardData({
-                    data: JSON.stringify(row)
+                    data: toJSONString(row)
                 });
                 return;
             }
             wx.setClipboardData({
-                data: JSON.stringify(this.caseResultState?.[caseId].res.data)
+                data: toJSONString(
+                    (this.caseGridFinalList as Record<string, any[]>)[caseId].map((item) => {
+                        return this.findFullGridRow(caseId, item[gridResult.rowKeyField || 'id']);
+                    })
+                )
             });
         });
     }
-    gridReady(e: MpComponentEvent<MpDataGridComponentExports>) {
+    findFullGridRow(caseId: string, rowId: string) {
+        if (this.caseGridFinalList?.[caseId]) {
+            const gridSource = this.caseGridSource as Record<string, WcCustomActionGrid>;
+            const gridResult = gridSource[caseId];
+            const rowKeyField = gridResult.rowKeyField || 'id';
+            const row = this.caseGridFinalList[caseId].find((item) => item[rowKeyField] === rowId);
+            if (!row) {
+                return;
+            }
+            const fullRow: any = {};
+            const colIndexMap = gridResult.cols.reduce((sum, col, index) => {
+                sum[col.field] = index;
+                return sum;
+            }, {});
+            Object.keys(row).forEach((key) => {
+                const val = row[key];
+                if (typeof val === 'object' && val?.tableCell) {
+                    fullRow[key] = {
+                        ...val
+                    };
+                    const cell = val as TableCell;
+                    fullRow[key].blocks = cell.blocks.map((block, blockIndex) => {
+                        return {
+                            ...block,
+                            items: block.items.map((item, itemIndex) => {
+                                if (typeof item === 'object' && item?.type === 'json') {
+                                    const sourceKey = `${caseId}_${rowId}_${colIndexMap[key]}_${blockIndex}_${itemIndex}`;
+                                    const source = this.caseGridJSONSource?.[sourceKey];
+
+                                    return {
+                                        ...item,
+                                        value: source?.value || item.value
+                                    };
+                                }
+                                return item;
+                            })
+                        };
+                    });
+                    return;
+                }
+                fullRow[key] = val;
+            });
+            return fullRow;
+        }
+    }
+    gridReady(e: Required<MpEvent<DynamicTableComponentExports | RegularTableComponentExports>>) {
         const caseId = e.currentTarget.dataset.case;
         const caseItem = this.getCase(caseId);
         if (!caseItem) {
@@ -381,54 +514,12 @@ class CustomActionComponent extends MpComponent {
         if (!this.caseGrid) {
             this.caseGrid = {};
         }
-        const grid = e.detail as MpDataGridComponentExports;
+        const grid = e.detail;
         this.caseGrid[caseId] = grid;
-        grid.onJSONReady((data: MpJSONViewerComponentEbusDetail) => {
-            const { from, viewer } = data;
-            if (from?.startsWith('GridCol_CustomAction')) {
-                const [, , caseId, itemId, field] = from.split('_');
-                if (!this.caseResultState || !(caseId in this.caseResultState)) {
-                    return;
-                }
-                const list = this.caseResultState?.[caseId]?.res?.data || [];
-                if (!this.caseResultState[caseId].JSONViewerMap) {
-                    this.caseResultState[caseId].JSONViewerMap = {};
-                }
-                (this.caseResultState[caseId].JSONViewerMap as any)[field] = viewer;
-                const readyItem = list.find((item) => {
-                    if (typeof item.id === 'number') {
-                        return item.id === parseFloat(itemId);
-                    }
-                    return item.id === itemId;
-                });
-                if (readyItem) {
-                    viewer.setTarget(readyItem[field]);
-                    viewer.init();
-                }
-            }
+        grid.onJSONViewerReady((e: TableComponentJSONViewerReadyEvent) => {
+            this.setCaseTableJSONTarget(caseId, e.current);
         });
-        if (this.caseResultState?.[caseId]?.res?.data) {
-            const list: any[] = this.caseResultState[caseId].res.data;
-            grid.replaceAllList(list);
-            // if (
-            //     caseItem.showMode === WcCustomActionShowMode.jsonGrid &&
-            //     this.data.caseState[caseItem.id].cols &&
-            //     this.data.caseState[caseItem.id].cols.some(
-            //         (item) => item.json
-            //     )
-            // ) {
-            //     e.detail.replaceAllList(
-            //         list.map((item) =>
-            //             this.convertJSONGridItem(
-            //                 caseItem,
-            //                 item,
-            //                 this.data.caseState[caseItem.id].cols
-            //             )
-            //         )
-            //     );
-            // } else {
-            // }
-        }
+        this.syncCaseTableData(caseId);
     }
 }
 

@@ -1,4 +1,4 @@
-<view wx:if="{{colComputedWidth.length}}" class="wc-table">
+<view wx:if="{{selfHash && colComputedWidth.length}}" class="wc-table">
     <view wx:if="{{hasData}}" class="wc-table-line" wx:for="{{lines}}" wx:key="index" style="left:{{item}}%;"></view>
     <view class="wc-table-head">
         <row value="{{headRow}}" index="0"
@@ -10,19 +10,19 @@
         <scroll-view scroll-y="{{true}}" style="height:{{rowHeight*affixList.length}}px;">
             <row wx:for="{{affixList}}" wx:for-item="row" wx:for-index="rowIndex" wx:key="rowIndex" value="{{row}}"
                 index="{{rowIndex}}"
-                state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected, type:'affix',hasData: hasData, rowHeight: rowHeight } }}" bind:interact="onItemInteractEvent">
+                state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected, type:'affix',hasData: hasData, rowHeight: rowHeight, tableHash:selfHash, rowKeyField: rowKeyField, from:from } }}" bind:interact="onItemInteractEvent">
             </row>
         </scroll-view>
     </view>
     <!-- 正常的数据 -->
     <view class="wc-table-body" style="top:{{rowHeight}}px;margin-top:{{rowHeight*affixList.length}}px;">
         <regular-virtual-list wx:if="{{rowHeightMode==='regular'}}" itemSize="{{rowHeight}}" scroll-y
-            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" generic:item="row" itemKeyField="id"
+            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" generic:item="row" itemKeyField="{{rowKeyField}}"
             bind:ready="localVirtualListComponentReady" bind:interact="onItemInteractEvent"
-            state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected,hasData: hasData, type:'row', rowHeight: rowHeight } }}"></regular-virtual-list>
+            state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected,hasData: hasData, type:'row', rowHeight: rowHeight, tableHash:selfHash, rowKeyField: rowKeyField, from:from } }}"></regular-virtual-list>
         <dynamic-virtual-list wx:else itemMinSize="{{rowHeight}}" scroll-y
-            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" generic:item="row" itemKeyField="id"
+            containerSizeHash="{{affixList.length + $vlMainSizeHash}}" generic:item="row" itemKeyField="{{rowKeyField}}"
             bind:ready="localVirtualListComponentReady" bind:interact="onItemInteractEvent"
-            state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected,hasData: hasData, type:'row', rowHeight: rowHeight } }}"></dynamic-virtual-list>
+            state="{{ {cols:cols, colComputedWidth:colComputedWidth, selected:selected,hasData: hasData, type:'row', rowHeight: rowHeight, tableHash:selfHash, rowKeyField: rowKeyField, from:from } }}"></dynamic-virtual-list>
     </view>
 </view>

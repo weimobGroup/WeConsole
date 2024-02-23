@@ -14,18 +14,16 @@ import { ApiStateController } from '@/main/modules/state-controller';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import type { ReaderStateController } from '@/main/modules/reader-state';
-import type { MpDataGridComponentExports } from '@/types/data-grid';
 import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
 import { computeTime } from '@/sub/modules/util';
 import { getUIConfig } from '@/main/config';
+import { rpxToPx } from '@/main/modules/util';
 
 type Data = MpApiReaderComponentData & MpDataReaderComponentData;
 
 class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     ApiStateController: ReaderStateController;
-    $DataGridMain?: MpDataGridComponentExports<MpApiMaterial>;
-    dataGridWaitMaterials?: MpApiMaterial[];
     $drActions: Array<MpDataReaderAction> = [
         MpDataReaderAction.copy,
         MpDataReaderAction.top,
@@ -40,6 +38,7 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         Dr: new DrMixin<MpApiMaterial>(HookScope.Api)
     };
     initData: Data = {
+        rowHeight: rpxToPx(80),
         categoryList: getApiCategoryList(),
         activeCategory: 'all',
         affixed: [],
@@ -132,10 +131,6 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onRemoveActiveMaterial(material: MpApiMaterial) {}
     onItemInteractEvent(e: Required<MpEvent<{ type: string; id: string; detail?: any }>>) {
-        // if (e.detail.type === 'rowJSONViewerToggle') {
-        //     this.rowJSONViewerToggle(e.detail.id, e.detail.detail.index as number, e.detail.detail);
-        //     return;
-        // }
         if (e.detail.detail.type !== 'head') {
             if (e.detail.type === 'tapCell') {
                 this.setDetailMaterial(e.detail.id, undefined, 'tapCell');

@@ -1,5 +1,10 @@
-import type { MpVirtualListItemComponentProps } from '@cross-virtual-list/types';
+import type {
+    MpVirtualListComponentExports,
+    MpDynamicSizeVirtualListComponentExports,
+    MpVirtualListItemComponentProps
+} from '@cross-virtual-list/types';
 import type { RequireId } from './common';
+import type { JsonViewer } from '@/sub/components/json-viewer';
 
 export interface TableCell {
     tableCell: true;
@@ -14,6 +19,7 @@ export interface TableCellTextItem {
 
 export interface TableCellJsonItem {
     type: 'json';
+    value?: any;
 }
 
 export interface TableCellBlock {
@@ -38,6 +44,8 @@ export interface TableComponentProps<T extends RequireId = RequireId> {
     selected: string[];
     /** 置顶数据的行ID数组 */
     affixed: string[];
+    /** 行数据唯一key字段名 */
+    rowKeyField?: string;
     /** 行高，rowHeightMode=dynamic时代表最小行高 */
     rowHeight: number;
     /** 行高模式：
@@ -59,6 +67,7 @@ export interface TableComponentData<T extends RequireId = RequireId> {
     hasData: boolean;
     headRow: Record<string, string | TableCell>;
     affixList: T[];
+    selfHash: string;
 }
 
 export interface TableCellComponentProps {
@@ -75,9 +84,41 @@ export type TableRowComponentProps<T extends RequireId = RequireId> = MpVirtualL
         /** 列配置 */
         cols: TableCol[];
         colComputedWidth: number[];
+        tableHash: string;
         type?: string;
+        from: string;
     }
 >;
 export interface TableRowComponentData {
     isSelected: boolean;
 }
+
+export interface TableComponentJSONViewerItem {
+    from: string;
+    rowType: string;
+    rowKey: string;
+    rowIndex: number;
+    colIndex: number;
+    blockIndex: number;
+    jsonItemIndex: number;
+    viewer: JsonViewer;
+}
+
+export interface TableComponentJSONViewerReadyEvent {
+    from: string;
+    current: TableComponentJSONViewerItem;
+    all: Record<string, TableComponentJSONViewerItem>;
+}
+
+export interface TableComponentExports {
+    onJSONViewerReady: (handler: (e: TableComponentJSONViewerReadyEvent) => void) => void;
+    getJSONViewer: () => Record<string, TableComponentJSONViewerItem>;
+}
+
+export interface DynamicTableComponentExports<T = any>
+    extends MpDynamicSizeVirtualListComponentExports<T>,
+        TableComponentExports {}
+
+export interface RegularTableComponentExports<T = any>
+    extends MpVirtualListComponentExports<T>,
+        TableComponentExports {}
