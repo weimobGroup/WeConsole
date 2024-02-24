@@ -29,7 +29,8 @@ class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
     };
     created() {
         this.$mx.Tool.$forceData({
-            selfHash: uuid()
+            selfHash: uuid(),
+            root: getElement(getApp())
         });
         this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
             if (data.from === `${this.data.selfHash}View_${this.data.detailId}`) {
@@ -43,13 +44,6 @@ class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
                     }
                 });
             }
-        });
-    }
-    attached() {
-        getElement(getApp()).then((res) => {
-            this.$mx.Tool.$updateData({
-                root: res
-            });
         });
     }
     buildPath(open: boolean, path?: string[]): Promise<any> {

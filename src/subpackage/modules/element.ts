@@ -49,11 +49,18 @@ const getGroup = (children: MpElement[]): MpElement[] => {
 };
 
 const isPage = (vm) => {
+    // TODO: 适配多渠道与Component方式注册page的方式
     return getMpViewType(vm) === 'Page';
 };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getPageAllChildren = (page) => {
-    return [];
+
+// 只有不支持selectOwnerComponent时才会调用此方法
+const getPageAllChildren = (page): MpElement[] => {
+    return getWcControlMpViewInstances().reduce((sum: MpElement[], item) => {
+        if (item !== page && !isApp(item) && isPageChild(item, page)) {
+            sum.push(getElement(item));
+        }
+        return sum;
+    }, []);
 };
 
 export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[]> => {
@@ -88,42 +95,40 @@ export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[
     });
 };
 
-export const getElement = (vw: any): Promise<MpElement> => {
-    return getElementAttrs(vw).then((attrs) => {
-        const tagAttr = attrs.find((item) => item.name === 'tag') as MpAttrNode;
-        const idAttr = attrs.find((item) => item.name === 'id') as MpAttrNode;
-        const el: MpElement = {
-            id: idAttr.content as string,
-            name: tagAttr.content as string,
-            attrs: attrs.length > 1 ? attrs.slice(1) : [],
-            hasChild: tagAttr.content === 'App' ? true : hasChild(vw)
-        };
-        if (tagAttr.content === 'Component') {
-            const componentPath = attrs.find((item) => item.name === 'is')?.content;
-            const paths = componentPath?.split('/') || [];
-            let name = toHump(
-                paths[paths.length - 1] === 'index'
-                    ? paths[paths.length > 1 ? paths.length - 2 : 0]
-                    : paths[paths.length - 1]
-            );
-            if (name[0].toUpperCase() !== name[0]) {
-                name = name[0].toUpperCase() + name.substr(1);
+export const getElement = (vw: any): MpElement => {
+    const attrs = getElementAttrs(vw);
+    const tagAttr = attrs.find((item) => item.name === 'tag') as MpAttrNode;
+    const idAttr = attrs.find((item) => item.name === 'id') as MpAttrNode;
+    const el: MpElement = {
+        id: idAttr.content as string,
+        name: tagAttr.content as string,
+        attrs: attrs.length > 1 ? attrs.slice(1) : [],
+        hasChild: tagAttr.content === 'App' ? true : hasChild(vw)
+    };
+    if (tagAttr.content === 'Component') {
+        const componentPath = attrs.find((item) => item.name === 'is')?.content;
+        const paths = componentPath?.split('/') || [];
+        let name = toHump(
+            paths[paths.length - 1] === 'index'
+                ? paths[paths.length > 1 ? paths.length - 2 : 0]
+                : paths[paths.length - 1]
+        );
+        if (name[0].toUpperCase() !== name[0]) {
+            name = name[0].toUpperCase() + name.substr(1);
+        }
+        if (paths.length > 1 && paths[paths.length - 1] !== 'index') {
+            let temp = toHump(paths[paths.length - 2]);
+            if (temp[0].toUpperCase() !== temp[0]) {
+                temp = temp[0].toUpperCase() + temp.substr(1);
             }
-            if (paths.length > 1 && paths[paths.length - 1] !== 'index') {
-                let temp = toHump(paths[paths.length - 2]);
-                if (temp[0].toUpperCase() !== temp[0]) {
-                    temp = temp[0].toUpperCase() + temp.substr(1);
-                }
-                if (temp !== name) {
-                    name = temp + name;
-                }
+            if (temp !== name) {
+                name = temp + name;
             }
-
-            el.name = name;
         }
 
-        return el;
-    });
+        el.name = name;
+    }
+    return el;
 };
 
 const isPageChild = (component: any, page: any): boolean => {
@@ -138,7 +143,7 @@ export const hasChild = (vw: any): boolean => {
     if (supportSelectOwnerComponent()) {
         return MpViewInstances.some((item) => item.selectOwnerComponent() === vw);
     }
-    if (getMpViewType(vw) === 'Page') {
+    if (isPage(vw)) {
         return MpViewInstances.some((item) => isPageChild(item, vw));
     }
     return false;
@@ -151,6 +156,7 @@ export const getElementId = (vm: any): string => {
     if (BUILD_TARGET === 'my') {
         return vm.$id;
     }
+    // TODO: 其他渠道
     return '';
 };
 
@@ -182,9 +188,9 @@ const getAppAttrs = () => {
     return attrs;
 };
 
-export const getElementAttrs = (vw: any): Promise<MpAttrNode[]> => {
+export const getElementAttrs = (vw: any): MpAttrNode[] => {
     if (isApp(vw)) {
-        return Promise.resolve(getAppAttrs());
+        return getAppAttrs();
     }
     const attrs: MpAttrNode[] = [];
     const tagName = getMpViewType(vw);
@@ -200,7 +206,7 @@ export const getElementAttrs = (vw: any): Promise<MpAttrNode[]> => {
         name: 'is',
         content: getElementLabel(vw)
     });
-    return Promise.resolve(attrs);
+    return attrs;
 };
 
 export const findPageIns = (id: string): any => {
