@@ -6,7 +6,7 @@
     <view class="fc-status-msg">{{error}}</view>
     <view class="btn-link fc-status-action" bindtap="close">关闭</view>
 </view>
-<tabs wx:elif="{{detail && detail.id}}" class="fc-detail" tabs="{{tabs}}" active="{{activeTabIndex}}"  size="small" bind:change="setTab">
+<tabs wx:elif="{{detail && detail.id && selfHash}}" class="fc-detail" tabs="{{tabs}}" active="{{activeTabIndex}}"  size="small" bind:change="setTab">
     <view slot="headBefore" class="fc-detail-action right-border" bindtap="close">
         <view class="fc-detail-close wic-close"></view>
     </view>
@@ -58,11 +58,11 @@
         </collapse>
         <collapse wx:if="{{detail.originalRequestData}}" open="{{true}}">
             <view class="fc-detail-title" slot="head">Request Data</view>
-            <json-viewer init="{{false}}" from="ApiDetail_{{detail.id}}_RequestData"></json-viewer>
+            <json-viewer init="{{false}}" from="{{selfHash}}ApiDetail_{{detail.id}}_RequestData"></json-viewer>
         </collapse>
         <collapse>
             <view class="fc-detail-title" slot="head">Options</view>
-            <json-viewer mode="{{1}}" init="{{false}}" from="ApiDetail_{{detail.id}}_Options"></json-viewer>
+            <json-viewer mode="{{1}}" init="{{false}}" from="{{selfHash}}ApiDetail_{{detail.id}}_Options"></json-viewer>
         </collapse>
         <view class="detail-tab-plc"></view>
     </scroll-view>
@@ -70,11 +70,11 @@
         <view class="detail-tab-plc"></view>
         <collapse title="preview">
             <view class="fc-detail-title" slot="head">Result</view>
-            <json-viewer mode="{{2}}" init="{{false}}" from="ApiDetail_{{detail.id}}_PreviewResult"></json-viewer>
+            <json-viewer mode="{{2}}" init="{{false}}" from="{{selfHash}}ApiDetail_{{detail.id}}_PreviewResult"></json-viewer>
         </collapse>
         <collapse open="{{true}}">
             <view class="fc-detail-title" slot="head">Response</view>
-            <json-viewer mode="{{2}}" init="{{false}}" from="ApiDetail_{{detail.id}}_PreviewResponse"></json-viewer>
+            <json-viewer mode="{{2}}" init="{{false}}" from="{{selfHash}}ApiDetail_{{detail.id}}_PreviewResponse"></json-viewer>
         </collapse>
         <view class="detail-tab-plc"></view>
     </scroll-view>
@@ -82,11 +82,11 @@
         <view class="detail-tab-plc"></view>
         <collapse>
             <view class="fc-detail-title" slot="head">Result</view>
-            <json-viewer mode="{{3}}" init="{{false}}" from="ApiDetail_{{detail.id}}_Result"></json-viewer>
+            <json-viewer mode="{{3}}" init="{{false}}" from="{{selfHash}}ApiDetail_{{detail.id}}_Result"></json-viewer>
         </collapse>
         <collapse>
             <view class="fc-detail-title" slot="head">Response</view>
-            <json-viewer mode="{{3}}" init="{{false}}" from="ApiDetail_{{detail.id}}_Response"></json-viewer>
+            <json-viewer mode="{{3}}" init="{{false}}" from="{{selfHash}}ApiDetail_{{detail.id}}_Response"></json-viewer>
         </collapse>
         <view class="detail-tab-plc"></view>
     </scroll-view>

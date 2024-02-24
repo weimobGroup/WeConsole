@@ -5,6 +5,7 @@ import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { registerComponent } from '@/sub/mixins/component';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer/index';
+import { uuid } from '@mpkit/util';
 
 interface Data {
     loading: boolean;
@@ -12,7 +13,8 @@ interface Data {
     tabs: any[];
     detail: MpApiDetail | null;
     activeTabIndex: number;
-    stackHideHooks: boolean;
+    // stackHideHooks: boolean;
+    selfHash: string;
 }
 
 class ApiDetailComponent extends MpComponent {
@@ -23,7 +25,7 @@ class ApiDetailComponent extends MpComponent {
     apiResult?: any;
     apiResponse?: any;
     $mx = {
-        Tool: new ToolMixin()
+        Tool: new ToolMixin<Data>()
     };
     properties?: MpComponentProperties<{ tab: number; data: string }, ApiDetailComponent> = {
         data: {
@@ -65,18 +67,19 @@ class ApiDetailComponent extends MpComponent {
         ],
         activeTabIndex: 0,
         detail: null,
-        stackHideHooks: true
+        // stackHideHooks: true,
+        selfHash: ''
     };
     created() {
+        this.$mx.Tool.$forceData({
+            selfHash: uuid()
+        });
         this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
+            if (!data.from.startsWith(this.data.selfHash)) {
+                return;
+            }
             const isFrom = (type: string) => {
-                if (
-                    data.from === `ApiDetail_${this.data.data}_${type}` &&
-                    data.viewer.selectOwnerComponent &&
-                    data.viewer.selectOwnerComponent() === this
-                ) {
-                    return true;
-                }
+                return data.from === `${this.data.selfHash}ApiDetail_${this.data.data}_${type}`;
             };
             const typeData = {
                 Options: this.apiOptinos,
@@ -157,9 +160,9 @@ class ApiDetailComponent extends MpComponent {
                 return;
             }
             if (apiProduct) {
-                this.$mx.Tool.$updateData({
-                    stack: apiProduct.stack
-                });
+                // this.$mx.Tool.$updateData({
+                //     stack: apiProduct.stack
+                // });
                 this.orgDetail = apiProduct;
 
                 this.apiOptinos = apiProduct?.request && apiProduct.request?.[0] ? apiProduct.request[0] : undefined;
@@ -177,9 +180,7 @@ class ApiDetailComponent extends MpComponent {
                 this.setJSONViewer('PreviewResponse', this.apiResponse);
                 const detail = convertApiDetail(apiProduct);
                 const tabs = this.data.tabs;
-                let hasCookies = false;
                 if (detail?.cookies && detail.cookies.length && !tabs.find((item) => item.value === 'cookies')) {
-                    hasCookies = true;
                     tabs.push({
                         name: 'Cookies',
                         value: 'cookies'
@@ -187,7 +188,6 @@ class ApiDetailComponent extends MpComponent {
                 }
                 this.$mx.Tool.$forceData({
                     tabs,
-                    hasCookies,
                     loading: false,
                     error: '',
                     detail
@@ -244,7 +244,7 @@ class ApiDetailComponent extends MpComponent {
             vw.setTarget(target);
             if (type === 'PreviewResponse') {
                 vw.onInited((viewer: JsonViewer) => {
-                    if (viewer.data.from === `ApiDetail_${this.data.data}_PreviewResponse`) {
+                    if (viewer.data.from === `${this.data.selfHash}ApiDetail_${this.data.data}_PreviewResponse`) {
                         viewer.openPath(this.orgDetail && this.orgDetail.category === 'request' ? ['data'] : []);
                     }
                 });
