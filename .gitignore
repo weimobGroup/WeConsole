@@ -107,4 +107,4 @@ dist
 .DS_Store
 
 scripts-dist
-examples/weconsole
+examples/**/weconsole

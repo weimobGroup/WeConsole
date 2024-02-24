@@ -1,0 +1,26 @@
+.action-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.action {
+    position: relative;
+    box-sizing: border-box;
+    width: 48%;
+    padding: 40rpx 30rpx;
+    margin-bottom: 30rpx;
+    line-height: 1.8;
+    text-align: center;
+    border-radius: 10rpx;
+    box-shadow: rgb(255 255 255) 0 0 0 0, rgb(0 0 0 / 5%) 0 0 0 1px, rgb(0 0 0 / 10%) 0 10px 15px -3px,
+        rgb(0 0 0 / 10%) 0 4px 6px -4px;
+}
+
+.lock {
+    opacity: 0.5;
+}
+
+.action text {
+    color: red;
+}

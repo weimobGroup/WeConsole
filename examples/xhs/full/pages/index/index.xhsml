@@ -1,0 +1,13 @@
+<demo></demo>
+<view class="alert-warn">
+    <view>
+        Github: <text bindtap="copy"
+            data-url="https://github.com/weimob-tech/WeConsole">https://github.com/weimob-tech/WeConsole</text>
+    </view>
+    <view>
+        NPM: <text bindtap="copy"
+            data-url="https://www.npmjs.com/package/WeConsole">https://www.npmjs.com/package/WeConsole</text>
+    </view>
+</view>
+
+<weconsole></weconsole>

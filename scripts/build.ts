@@ -4,15 +4,11 @@ import type { RollupOptions, OutputOptions } from 'rollup';
 import { rollup } from 'rollup';
 import NodeResolve from '@rollup/plugin-node-resolve';
 import { ROOT_DIR, VERSION } from './vars';
-import * as fs from 'fs';
-// import swc from 'unplugin-swc';
 import { getFiles, copyPromise, readFile, writeFile } from './fs';
-// import alias from '@rollup/plugin-alias';
 import typescript from '@rollup/plugin-typescript';
-import { compileFile } from './sass';
+import { compilerMpResource } from './mp';
 
 const RollupReplace = require('@rollup/plugin-replace');
-// const { babel } = require('@rollup/plugin-babel');
 const commonjs = require('@rollup/plugin-commonjs');
 
 const getPlugins = () => [
@@ -29,22 +25,6 @@ const getPlugins = () => [
         },
         preventAssignment: true
     }),
-    // alias({
-    //     entries: [
-    //         {
-    //             find: '@/types',
-    //             replacement: ROOT_DIR + '/src/types'
-    //         },
-    //         {
-    //             find: '@/main',
-    //             replacement: ROOT_DIR + '/src/weconsole-main'
-    //         },
-    //         {
-    //             find: '@/sub',
-    //             replacement: ROOT_DIR + '/src/weconsole-subpackage'
-    //         }
-    //     ]
-    // }),
     typescript({
         tsconfig: ROOT_DIR + '/tsconfig.json',
         typescript: require('typescript')
@@ -106,85 +86,56 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
             ]
         },
         () => {
-            return Promise.all([
-                copyPromise(
-                    ROOT_DIR + '/src/subpackage/mpxs/**/*.*',
-                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/mpxs`
-                ),
-                copyPromise(
-                    ROOT_DIR + '/src/subpackage/components/**/*.wxml',
-                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
-                ),
-                copyPromise(
-                    ROOT_DIR + '/src/subpackage/components/**/*.wxss',
-                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
-                ),
-                copyPromise(
-                    ROOT_DIR + '/src/subpackage/components/**/*.json',
-                    `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
-                ),
-                ...Object.keys(components).reduce((sum: Promise<void>[], k) => {
-                    const fileName = components[k].replace('.ts', '.scss');
-                    if (fs.existsSync(fileName)) {
-                        sum.push(
-                            compileFile(
-                                fileName,
-                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components${fileName
-                                    .split('components')[1]
-                                    .replace('.scss', '.wxss')}`
-                            )
-                        );
-                    }
-                    return sum;
-                }, [])
-            ])
+            return compilerMpResource(
+                `${ROOT_DIR}/src`,
+                `${ROOT_DIR}/dist/${distDir}${mode}`,
+                process.env.BUILD_TARGET as any
+            )
                 .then(() => {
                     if (mode === 'full') {
                         return Promise.all([
                             new Promise<void>((resolve) => {
-                                getFiles(ROOT_DIR + '/dist/full/subpackage/components', true).forEach((jsonFile) => {
-                                    if (!jsonFile.endsWith('.json')) {
-                                        return;
+                                getFiles(`${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`, true).forEach(
+                                    (jsonFile) => {
+                                        if (!jsonFile.endsWith('.json')) {
+                                            return;
+                                        }
+                                        const json = JSON.parse(readFile(jsonFile).trim());
+                                        let needChange;
+                                        if (json.usingComponents) {
+                                            Object.keys(json.usingComponents).forEach((k) => {
+                                                const val = json.usingComponents[k];
+                                                if (val === '@cross-virtual-list/mp-wx/components/dynamic/index') {
+                                                    needChange = true;
+                                                    json.usingComponents[k] = '../dynamic/index';
+                                                    return;
+                                                }
+                                                if (val === '@cross-virtual-list/mp-wx/components/regular/index') {
+                                                    needChange = true;
+                                                    json.usingComponents[k] = '../regular/index';
+                                                    return;
+                                                }
+                                            });
+                                        }
+                                        needChange && writeFile(jsonFile, JSON.stringify(json, null, 4));
                                     }
-                                    const json = JSON.parse(readFile(jsonFile).trim());
-                                    let needChange;
-                                    if (json.usingComponents) {
-                                        Object.keys(json.usingComponents).forEach((k) => {
-                                            const val = json.usingComponents[k];
-                                            if (val === '@cross-virtual-list/mp-wx/components/dynamic/index') {
-                                                needChange = true;
-                                                json.usingComponents[k] = '../dynamic/index';
-                                                return;
-                                            }
-                                            if (val === '@cross-virtual-list/mp-wx/components/regular/index') {
-                                                needChange = true;
-                                                json.usingComponents[k] = '../regular/index';
-                                                return;
-                                            }
-                                        });
-                                    }
-                                    needChange && writeFile(jsonFile, JSON.stringify(json, null, 4));
-                                });
+                                );
                                 resolve();
                             }),
-                            copyPromise(
-                                ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.wxml',
-                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
-                            ),
-                            copyPromise(
-                                ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.wxss',
-                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
-                            ),
-                            copyPromise(
-                                ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/**/*.json',
-                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`
+                            compilerMpResource(
+                                `${ROOT_DIR}/node_modules/@cross-virtual-list/mp-wx/dist/npm/components`,
+                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`,
+                                process.env.BUILD_TARGET as any
                             )
                         ]);
                     }
                 })
                 .then(() => {
                     if (mode === 'full') {
-                        return copyPromise(ROOT_DIR + '/dist/' + mode + '/**/*', ROOT_DIR + '/examples/weconsole');
+                        return copyPromise(
+                            `${ROOT_DIR}/dist/${distDir}${mode}/**/*`,
+                            `${ROOT_DIR}/examples/${process.env.BUILD_TARGET}/full/weconsole`
+                        );
                     }
                 });
         }

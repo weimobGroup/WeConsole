@@ -5,10 +5,6 @@ export interface MpClientRect {
     left: number;
 }
 
-export interface MpShowActionSheetOptions {
-    itemList: string[];
-}
-
 export interface MpEventTarget {
     dataset: {
         [prop: string]: any;

@@ -94,6 +94,9 @@ devDependencies:
   eslint-plugin-promise:
     specifier: ^6.1.1
     version: 6.1.1(eslint@8.56.0)
+  forgiving-xml-parser:
+    specifier: ^1.4.2
+    version: 1.4.2
   fse:
     specifier: ^4.0.1
     version: 4.0.1

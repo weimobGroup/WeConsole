@@ -4,7 +4,6 @@ import { MpDataReaderAction } from '@/types/reader';
 import { MpComponentMixin } from 'typescript-mp-component';
 import type { HookScope } from '@/types/common';
 import type { IMpProductController } from '@/types/hook';
-import type { MpShowActionSheetOptions } from '@/types/view';
 import { showToast } from '@/main/modules/cross';
 
 const filterPass = <T extends MpMaterial = MpMaterial>(item: T, keyword: string, ctx: any): boolean => {
@@ -20,7 +19,7 @@ export class DrMixin<T extends MpMaterial = MpMaterial> extends MpComponentMixin
     NonNullable<unknown>
 > {
     $wcProductController: IMpProductController;
-    $showActionSheet: (options: MpShowActionSheetOptions | string[]) => Promise<number>;
+    $showActionSheet: (items: string[], title?: string) => Promise<number>;
     $updateData: (data: any, cb?: () => void) => void;
     $forceData: (data: any, cb?: () => void) => void;
     $drFilterKeyword: string;

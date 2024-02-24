@@ -1,0 +1,8 @@
+<view class="action-list">
+    <view class="action" bind:tap="callWxMethod" data-method="console">随机console</view>
+    <view class="action" bind:tap="callWxMethod" data-method="showToast">xhs.showToast</view>
+    <view class="action" bind:tap="callWxMethod" data-method="setStorageSync">xhs.setStorageSync</view>
+    <view class="action" bind:tap="callWxMethod" data-method="getStorage">xhs.getStorage</view>
+    <view class="action" bind:tap="callWxMethod" data-method="removeStorage">xhs.removeStorage</view>
+    <view class="action {{requesting?'lock':''}}" bind:tap="callWxMethod" data-method="request">xhs.request{{requesting?'(发送中...)':''}}</view>
+</view>

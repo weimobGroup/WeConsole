@@ -4,38 +4,16 @@ import { MpComponentMixin } from 'typescript-mp-component';
 import type { AnyFunction, EventHandler } from '@/types/util';
 import type { MpUIConfig } from '@/types/config';
 import { getUIConfig } from '@/main/index';
-import type { MpClientRect, MpShowActionSheetOptions } from '@/types/view';
+import type { MpClientRect } from '@/types/view';
 import { once, emit, on, off } from '@/main/modules/ebus';
 import { WeConsoleEvents } from '@/types/scope';
 import type { IMpProductController } from '@/types/hook';
 import { wcScope, wcScopeSingle } from '@/main/config';
-import { nextTick } from '@/main/modules/cross';
+import { nextTick, showActionSheet } from '@/main/modules/cross';
 function OnProduct(type, data) {
     this && this.onWcProduct && this.onWcProduct(type, data);
 }
 const WcScope = wcScope();
-
-const promisifyMpApi = <T = any>(apiName: string, options?: any) => {
-    const api = wx;
-    if (!api) {
-        return Promise.reject(new Error(`无法在当前环境找到小程序Api对象，暂时无法执行${apiName}方法`));
-    }
-    if (!(apiName in api) || typeof api[apiName] !== 'function') {
-        return Promise.reject(new Error(`无法小程序Api对象找到${apiName}方法`));
-    }
-    return new Promise((resolve, reject) => {
-        if (!options) {
-            options = {};
-        }
-        options.success = (res) => {
-            resolve(res as T);
-        };
-        options.fail = (res) => {
-            reject(new Error(`${res?.errMsg ? res.errMsg : '未知错误'}`));
-        };
-        api[apiName](options);
-    });
-};
 
 const fireSetData = (vm: ToolMixin) => {
     const d = vm.waitingData;
@@ -203,29 +181,8 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
             fire();
         });
     }
-    $showActionSheet(options: MpShowActionSheetOptions | string[]): Promise<number> {
-        if (Array.isArray(options)) {
-            options = {
-                itemList: options
-            };
-            // eslint-disable-next-line no-empty
-        } else if (typeof options === 'object' && options) {
-        } else {
-            options = {
-                itemList: []
-            };
-        }
-        const tsOptions: any = options;
-        if (!Array.isArray(tsOptions.itemList)) {
-            return Promise.reject(new Error('未传递itemList选项，无法显示菜单'));
-        }
-
-        return promisifyMpApi('showActionSheet', tsOptions).then((res: any) => {
-            if (res && ('tapIndex' in res || 'index' in res)) {
-                return res.tapIndex as number;
-            }
-            return -1;
-        });
+    $showActionSheet(items: string[], title?: string): Promise<number> {
+        return showActionSheet(items, title);
     }
     $wcOn(name: string, handler: EventHandler) {
         if (!this.$wcEvents) {

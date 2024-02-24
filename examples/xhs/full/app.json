@@ -1,0 +1,5 @@
+{
+    "pages": ["pages/index/index", "pages/table/index"],
+    "sitemapLocation": "sitemap.json",
+    "lazyCodeLoading": "requiredComponents"
+}
