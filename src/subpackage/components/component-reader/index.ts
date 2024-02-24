@@ -4,25 +4,34 @@ import { registerComponent } from '@/sub/mixins/component';
 
 import { findComponentIns, findPageIns, getChildrenElements, getElement } from '@/sub/modules/element';
 import type { MpJSONViewerComponentEbusDetail, JsonViewer } from '@/sub/components/json-viewer/index';
+import { uuid } from '@mpkit/util';
 
 interface Data {
     root: any;
     selectId: string;
+    selfHash: string;
+    detailId?: string;
+    detailAlive?: boolean;
+    detailLable?: string;
 }
 
 class ComponentReader extends MpComponent {
     detailTarget?: any;
     detailJSONViewer?: JsonViewer;
     $mx = {
-        Tool: new ToolMixin()
+        Tool: new ToolMixin<Data>()
     };
     initData: Data = {
         root: null,
-        selectId: ''
+        selectId: '',
+        selfHash: ''
     };
     created() {
+        this.$mx.Tool.$forceData({
+            selfHash: uuid()
+        });
         this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
-            if (data.from === `View_${this.data.detailId}` && data.viewer.selectOwnerComponent?.() === this) {
+            if (data.from === `${this.data.selfHash}View_${this.data.detailId}`) {
                 this.detailJSONViewer = data.viewer;
                 data.viewer.init().then(() => {
                     if (data.from === `View_${this.data.detailId}`) {
@@ -186,8 +195,8 @@ class ComponentReader extends MpComponent {
         delete this.detailJSONViewer;
         this.$mx.Tool.$updateData(
             {
-                detailId: null,
-                detailAlive: null,
+                detailId: '',
+                detailAlive: false,
                 detailLable: ''
             },
             cb

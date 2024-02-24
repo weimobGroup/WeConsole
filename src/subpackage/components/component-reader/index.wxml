@@ -4,7 +4,7 @@
         <scroll-view class="wc-elements" scroll-y>
             <wc-element data="{{root}}" bind:toggle="toggle" bind:tapName="showJSON" selectId="{{selectId}}"></wc-element>
         </scroll-view>
-        <view wx:if="{{detailId}}" class="fc-reader-detail">
+        <view wx:if="{{detailId && selfHash}}" class="fc-reader-detail">
             <view class="action-bar">
                 <view class="fc-detail-action absolute right-border" bind:tap="clearDetail">
                     <view class="fc-detail-close wic-close"></view>
@@ -16,7 +16,7 @@
             <view class="detail-scroll">
                 <scroll-view scroll-y style="height:100%">
                     <view wx:if="{{!detailAlive}}" class="death-tip">该组件实例已不在节点树中</view>
-                    <json-viewer from="View_{{detailId}}" mode="{{2}}" init="{{false}}"></json-viewer>
+                    <json-viewer from="{{selfHash}}View_{{detailId}}" mode="{{2}}" init="{{false}}"></json-viewer>
                 </scroll-view>
             </view>
         </view>
