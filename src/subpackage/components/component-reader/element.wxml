@@ -1,5 +1,5 @@
 <view class="wc-el">
-    <view class="wc-el-head {{!data.alive?'death':''}} {{data.id==selectId?'selected':''}} {{data.hasChild?'has-child':''}} {{data.open?'open':''}}" bind:tap="tap">
+    <view class="wc-el-head {{data.id==selectId?'selected':''}} {{data.hasChild?'has-child':''}} {{data.open?'open':''}}" bind:tap="tap">
         <view class="wc-el-boundary">{{l}}</view>
         <view class="wc-el-name {{data.group?'':'tapable'}}" catch:tap="tapName">{{data.name}}</view>
         <block wx:if="{{data.attrs}}">

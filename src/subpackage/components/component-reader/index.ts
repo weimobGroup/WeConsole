@@ -5,9 +5,10 @@ import { registerComponent } from '@/sub/mixins/component';
 import { findComponentIns, findPageIns, getChildrenElements, getElement } from '@/sub/modules/element';
 import type { MpJSONViewerComponentEbusDetail, JsonViewer } from '@/sub/components/json-viewer/index';
 import { uuid } from '@mpkit/util';
+import type { MpElement } from '@/types/element';
 
 interface Data {
-    root: any;
+    root: MpElement | null;
     selectId: string;
     selfHash: string;
     detailId?: string;
@@ -15,7 +16,7 @@ interface Data {
     detailLable?: string;
 }
 
-class ComponentReader extends MpComponent {
+class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
     detailTarget?: any;
     detailJSONViewer?: JsonViewer;
     $mx = {
@@ -34,7 +35,7 @@ class ComponentReader extends MpComponent {
             if (data.from === `${this.data.selfHash}View_${this.data.detailId}`) {
                 this.detailJSONViewer = data.viewer;
                 data.viewer.init().then(() => {
-                    if (data.from === `View_${this.data.detailId}`) {
+                    if (data.from === `${this.data.selfHash}View_${this.data.detailId}`) {
                         if (this.detailTarget) {
                             data.viewer.setTarget(this.detailTarget);
                             data.viewer.openPath();
@@ -71,15 +72,15 @@ class ComponentReader extends MpComponent {
                 });
                 return;
             }
-            let currentChildren: any[];
-            let rootChildren: any[];
-            const initRootChildren = () => {
+            let currentChildren: MpElement[] = [];
+            let rootChildren: MpElement[] | undefined;
+            const initRootChildren = (): Promise<MpElement[]> => {
                 if (rootChildren) {
-                    return Promise.resolve();
+                    return Promise.resolve(rootChildren);
                 }
-                if (this.data?.root && this.data.root.children) {
+                if (this.data.root?.children) {
                     rootChildren = this.data.root.children;
-                    return Promise.resolve();
+                    return Promise.resolve(rootChildren);
                 }
                 return getChildrenElements(getApp()).then((children) => {
                     children.forEach((item) => {
@@ -88,6 +89,7 @@ class ComponentReader extends MpComponent {
                     rootChildren = children;
                     mpData['root.children'] = children;
                     mpData['root.open'] = true;
+                    return rootChildren;
                 });
             };
             let mpPath = 'root.children';
@@ -97,9 +99,9 @@ class ComponentReader extends MpComponent {
                 const p = path[index];
                 const isLast = index === path.length - 1;
                 readyPath.push(p);
-                initRootChildren().then(() => {
+                initRootChildren().then((_rootChildren) => {
                     if (!index) {
-                        currentChildren = rootChildren;
+                        currentChildren = _rootChildren;
                     }
                     const readyIndex = currentChildren.findIndex((item) => item.id === p);
                     if (readyIndex === -1) {
@@ -119,7 +121,7 @@ class ComponentReader extends MpComponent {
 
                     getChildrenElements(
                         ins,
-                        readyItem.group ? readyItem.attrs.find((at) => at.name === 'is').content : ''
+                        readyItem.group ? readyItem.attrs.find((at) => at.name === 'is')?.content || '' : ''
                     ).then((children) => {
                         mpPath += `[${readyIndex}].children`;
                         if (!children.length) {

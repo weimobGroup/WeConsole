@@ -186,7 +186,7 @@ export const convertApiMaterial = (
                     items: [
                         {
                             type: 'text',
-                            content: name || ''
+                            content: name || material.method || ''
                         }
                     ]
                 }

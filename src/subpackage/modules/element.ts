@@ -1,7 +1,12 @@
 import { toHump, isApp, getMpViewType, getWcControlMpViewInstances } from '@/main/modules/util';
 import type { MpAttrNode, MpElement } from '@/types/element';
 import { uniq } from './util';
-import { getCurrentAppId, getCurrentAppVersion, getCurrentEnvVersion } from '@/main/modules/cross';
+import {
+    getCurrentAppId,
+    getCurrentAppVersion,
+    getCurrentEnvVersion,
+    supportSelectOwnerComponent
+} from '@/main/modules/cross';
 
 const getGroup = (children: MpElement[]): MpElement[] => {
     const map: { [prop: string]: MpElement } = {};
@@ -27,7 +32,7 @@ const getGroup = (children: MpElement[]): MpElement[] => {
             res.push(el);
             map[item.name] = el;
         }
-        const attrs = map[item.name].attrs as MpAttrNode[];
+        const attrs = map[item.name].attrs;
         if (parseInt(attrs[0].content as string) < 1) {
             attrs[0].content = String(parseInt(attrs[0].content as string) + 1);
             map[item.name].children?.push(item);
@@ -43,13 +48,28 @@ const getGroup = (children: MpElement[]): MpElement[] => {
     return res;
 };
 
+const isPage = (vm) => {
+    return getMpViewType(vm) === 'Page';
+};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const getPageAllChildren = (page) => {
+    return [];
+};
+
 export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[]> => {
-    if (isApp(vw)) {
+    const vwType = getMpViewType(vw);
+    if (vwType === 'App') {
         const pages = getCurrentPages() as any[];
         if (!pages || !pages.length) {
             return Promise.resolve([]);
         }
         return Promise.all(pages.map((item) => getElement(item)));
+    }
+    if (vwType === 'Component' && !supportSelectOwnerComponent()) {
+        return Promise.resolve([]);
+    }
+    if (isPage(vw) && !supportSelectOwnerComponent()) {
+        return Promise.resolve(getPageAllChildren(vw));
     }
     const MpViewInstances = getWcControlMpViewInstances();
     const children = uniq(
@@ -75,12 +95,9 @@ export const getElement = (vw: any): Promise<MpElement> => {
         const el: MpElement = {
             id: idAttr.content as string,
             name: tagAttr.content as string,
-            hasChild: tagAttr.content === 'App' ? true : hasChild(vw),
-            alive: tagAttr.content === 'App' ? true : !vw.__wcDestoryed__
+            attrs: attrs.length > 1 ? attrs.slice(1) : [],
+            hasChild: tagAttr.content === 'App' ? true : hasChild(vw)
         };
-        if (attrs.length > 1) {
-            el.attrs = attrs.slice(1);
-        }
         if (tagAttr.content === 'Component') {
             const componentPath = attrs.find((item) => item.name === 'is')?.content;
             const paths = componentPath?.split('/') || [];
@@ -109,31 +126,65 @@ export const getElement = (vw: any): Promise<MpElement> => {
     });
 };
 
+const isPageChild = (component: any, page: any): boolean => {
+    if (BUILD_TARGET === 'qq') {
+        return component.__wxWebviewId__ && page.__wxWebviewId__ && component.__wxWebviewId__ === page.__wxWebviewId__;
+    }
+    return false;
+};
+
 export const hasChild = (vw: any): boolean => {
     const MpViewInstances = getWcControlMpViewInstances();
-    return MpViewInstances.some((item) => item.selectOwnerComponent() === vw);
+    if (supportSelectOwnerComponent()) {
+        return MpViewInstances.some((item) => item.selectOwnerComponent() === vw);
+    }
+    if (getMpViewType(vw) === 'Page') {
+        return MpViewInstances.some((item) => isPageChild(item, vw));
+    }
+    return false;
+};
+
+export const getElementId = (vm: any): string => {
+    if (BUILD_TARGET === 'wx' || BUILD_TARGET === 'qq') {
+        return vm.__wxExparserNodeId__;
+    }
+    if (BUILD_TARGET === 'my') {
+        return vm.$id;
+    }
+    return '';
+};
+
+export const getElementLabel = (vm: any): string => {
+    if (BUILD_TARGET === 'wx' || BUILD_TARGET === 'qq' || BUILD_TARGET === 'my') {
+        return vm.is || vm.route || vm.__route__;
+    }
+    return '';
+};
+
+const getAppAttrs = () => {
+    const attrs: MpAttrNode[] = [];
+    attrs.push({
+        name: 'tag',
+        content: 'App'
+    });
+    attrs.push({
+        name: 'id',
+        content: getCurrentAppId()
+    });
+    attrs.push({
+        name: 'env',
+        content: getCurrentEnvVersion()
+    });
+    attrs.push({
+        name: 'version',
+        content: getCurrentAppVersion()
+    });
+    return attrs;
 };
 
 export const getElementAttrs = (vw: any): Promise<MpAttrNode[]> => {
     if (isApp(vw)) {
-        const attrs: MpAttrNode[] = [];
-        attrs.push({
-            name: 'tag',
-            content: 'App'
-        });
-        attrs.push({
-            name: 'id',
-            content: getCurrentAppId()
-        });
-        attrs.push({
-            name: 'env',
-            content: getCurrentEnvVersion()
-        });
-        attrs.push({
-            name: 'version',
-            content: getCurrentAppVersion()
-        });
-        return Promise.resolve(attrs);
+        return Promise.resolve(getAppAttrs());
     }
     const attrs: MpAttrNode[] = [];
     const tagName = getMpViewType(vw);
@@ -143,12 +194,11 @@ export const getElementAttrs = (vw: any): Promise<MpAttrNode[]> => {
     });
     attrs.push({
         name: 'id',
-        content: vw.__wxExparserNodeId__
+        content: getElementId(vw)
     });
-    const route = vw.is || vw.route || vw.__route__;
     attrs.push({
         name: 'is',
-        content: route
+        content: getElementLabel(vw)
     });
     return Promise.resolve(attrs);
 };
@@ -157,5 +207,5 @@ export const findPageIns = (id: string): any => {
     return findComponentIns(id);
 };
 export const findComponentIns = (id: string): any => {
-    return getWcControlMpViewInstances().find((item) => (item as any).__wxExparserNodeId__ === id);
+    return getWcControlMpViewInstances().find((item) => getElementId(item) === id);
 };

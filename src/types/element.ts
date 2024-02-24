@@ -6,11 +6,10 @@ export interface MpAttrNode extends MpNode {
 }
 export interface MpElement extends MpNode {
     id: string;
-    attrs?: MpAttrNode[];
+    attrs: MpAttrNode[];
     hasChild?: boolean;
     children?: MpElement[];
-    content?: string;
-    alive?: boolean;
     group?: boolean;
+    open?: boolean;
     path?: string[];
 }

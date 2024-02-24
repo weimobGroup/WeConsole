@@ -263,18 +263,19 @@ const promisifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> => {
     return new Promise((resolve, reject) => {
         const apiVar = getApiVar();
         if (typeof apiVar[apiName] === 'function') {
-            if (apiName.indexOf('Sync') === -1) {
-                const apiOptions = apiArgs[0];
+            if (apiName.indexOf('Sync') !== -1) {
                 let res;
                 try {
-                    res = apiVar[apiName](apiOptions);
+                    res = apiVar[apiName](...apiArgs);
+                    const apiOptions = apiArgs[0];
+                    if (apiOptions && typeof apiOptions.onResultReady === 'function') {
+                        apiOptions.onResultReady(res);
+                    }
                 } catch (error) {
                     reject(error);
                     return;
                 }
-                if (apiOptions && typeof apiOptions.onResultReady === 'function') {
-                    apiOptions.onResultReady(res);
-                }
+
                 resolve(res);
                 return;
             }
@@ -297,19 +298,14 @@ const promisifyApi = (apiName: string, ...apiArgs: any[]): Promise<any> => {
                 },
                 apiArgs
             );
-            if (apiName.indexOf('Sync') === -1) {
+            try {
                 const apiOptions = apiArgs[0];
-                const res = apiVar[apiName](apiOptions);
-                if (res && apiOptions && typeof apiOptions.onResultReady === 'function') {
+                const res = apiVar[apiName](...apiArgs);
+                if (apiOptions && typeof apiOptions.onResultReady === 'function') {
                     apiOptions.onResultReady(res);
                 }
-            } else {
-                try {
-                    const res = apiVar[apiName](apiArgs);
-                    resolve(res);
-                } catch (error) {
-                    reject(error);
-                }
+            } catch (error) {
+                reject(error);
             }
             return;
         }
@@ -364,4 +360,8 @@ export const nextTick = (cb: AnyFunction) => {
         return;
     }
     setTimeout(cb, 120);
+};
+
+export const supportSelectOwnerComponent = () => {
+    return BUILD_TARGET === 'wx' || BUILD_TARGET === 'my';
 };

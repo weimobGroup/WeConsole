@@ -108,10 +108,10 @@ const hookSpecMethod = (
             hooks.push(MpViewInsCacheSaveHook);
         }
         if (scope === HookScope.ComponentMethod && name === 'detached') {
-            hooks.push(MpViewInsDestoryMarkHook);
+            hooks.push(MpViewInsDestroyMarkHook);
         }
         if (scope === HookScope.PageMethod && name === 'onUnload') {
-            hooks.push(MpViewInsDestoryMarkHook);
+            hooks.push(MpViewInsDestroyMarkHook);
         }
         const hooker = Hooker.for(scope, hooks, method, name, otherState);
         return hooker.target;
@@ -129,7 +129,7 @@ export const MpViewInsCacheSaveHook: MkFuncHook<WeFuncHookState> = {
         getWcControlMpViewInstances().push(state.ctx);
     }
 };
-export const MpViewInsDestoryMarkHook: MkFuncHook<WeFuncHookState> = {
+export const MpViewInsDestroyMarkHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
         Object.defineProperty(state.ctx, '__wcDestoryed__', {
             value: true
