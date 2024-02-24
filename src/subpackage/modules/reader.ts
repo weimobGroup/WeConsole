@@ -12,7 +12,7 @@ import {
     getStatusText,
     toJSONString
 } from './util';
-import { getApiVarName } from '@/main/modules/cross';
+import { getApiVarName } from 'cross-mp-power';
 
 // eslint-disable-next-line complexity
 export const getApiNameInfo = (product: Partial<MpProduct>): { name: string; desc: string } | undefined => {

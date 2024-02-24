@@ -19,7 +19,7 @@ import type { MpEvent } from '@/types/view';
 import { computeTime } from '@/sub/modules/util';
 import { getUIConfig } from '@/main/config';
 import { rpxToPx } from '@/main/modules/util';
-import { setClipboardData } from '@/main/modules/cross';
+import { setClipboardData } from 'cross-mp-power';
 
 type Data = MpApiReaderComponentData & MpDataReaderComponentData;
 

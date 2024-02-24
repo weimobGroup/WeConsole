@@ -6,7 +6,7 @@ import {
     getCurrentAppVersion,
     getCurrentEnvVersion,
     supportSelectOwnerComponent
-} from '@/main/modules/cross';
+} from 'cross-mp-power';
 
 const getGroup = (children: MpElement[]): MpElement[] => {
     const map: { [prop: string]: MpElement } = {};

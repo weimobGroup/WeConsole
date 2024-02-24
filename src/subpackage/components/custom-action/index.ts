@@ -18,7 +18,7 @@ import type {
 import { uuid } from '@mpkit/util';
 import { rpxToPx } from '@/main/modules/util';
 import { toJSONString } from '@/sub/modules/util';
-import { nextTick, setClipboardData } from '@/main/modules/cross';
+import { nextTick, setClipboardData } from 'cross-mp-power';
 const NoUICaseId = '$$$NO_UI$$$';
 
 interface Props {

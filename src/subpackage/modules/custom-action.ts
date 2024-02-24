@@ -1,5 +1,5 @@
 import { getUIConfig } from '@/main/config';
-import { getSystemInfo } from '@/main/modules/cross';
+import { getSystemInfo } from 'cross-mp-power';
 import type { WcCustomAction } from '@/types/other';
 import { WcCustomActionShowMode } from '@/types/other';
 

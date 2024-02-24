@@ -96,6 +96,7 @@
         "@mpkit/func-helper": "^1.1.2",
         "@mpkit/types": "^1.1.2",
         "@mpkit/util": "^1.1.2",
+        "cross-mp-power": "^0.1.2",
         "typescript": "^5.1.6",
         "typescript-mp-component": "0.1.1"
     }

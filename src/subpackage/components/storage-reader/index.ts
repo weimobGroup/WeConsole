@@ -11,7 +11,7 @@ import type { MpEvent } from '@/types/view';
 import { clone } from '@mpkit/util';
 import type { TableCol } from '@/types/table';
 import { toJSONString } from '@/sub/modules/util';
-import { getStorageInfo, removeStorage, setClipboardData } from '@/main/modules/cross';
+import { getStorageInfo, removeStorage, setClipboardData } from 'cross-mp-power';
 
 const substr = (str: string | undefined, len: number): string => {
     return typeof str === 'string' ? (str.length > len ? str.substr(0, len) + '...' : str) : 'undefined';

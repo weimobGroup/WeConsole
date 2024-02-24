@@ -8,7 +8,7 @@ import { uuid } from '@mpkit/util';
 import { EventEmitter } from '@/main/modules/event-emitter';
 import type { MpProduct } from '@/types/product';
 import { MpApiCategoryMap, reportCategoryMapToList } from '@/main/modules/category';
-import { getApiVar } from './modules/cross';
+import { getApiVar } from 'cross-mp-power';
 
 const FinalConfig: Partial<MpUIConfig> = {
     ignoreHookApiNames: ['nextTick'],

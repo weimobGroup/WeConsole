@@ -2,7 +2,7 @@ import type { AnyFunction, WcListFilterHandler } from '@/types/util';
 import type { MpStackInfo } from '@/types/common';
 import { wcScopeSingle } from '../config';
 import type { MpViewInstance } from 'typescript-mp-component';
-import { getSystemInfo } from './cross';
+import { getSystemInfo } from 'cross-mp-power';
 
 export const now = (() => {
     let p;

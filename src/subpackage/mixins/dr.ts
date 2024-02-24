@@ -4,7 +4,7 @@ import { MpDataReaderAction } from '@/types/reader';
 import { MpComponentMixin } from 'typescript-mp-component';
 import type { HookScope } from '@/types/common';
 import type { IMpProductController } from '@/types/hook';
-import { showToast } from '@/main/modules/cross';
+import { showToast } from 'cross-mp-power';
 
 const filterPass = <T extends MpMaterial = MpMaterial>(item: T, keyword: string, ctx: any): boolean => {
     if (ctx.materialFilterPolicy) {

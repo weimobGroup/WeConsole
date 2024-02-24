@@ -1,10 +1,3 @@
-export interface MpClientRect {
-    width: number;
-    height: number;
-    top: number;
-    left: number;
-}
-
 export interface MpEventTarget {
     dataset: {
         [prop: string]: any;

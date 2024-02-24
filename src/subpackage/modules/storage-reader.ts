@@ -1,13 +1,13 @@
 import type { MpStorageMaterial } from '@/types/product';
 import type { AnyFunction } from '@/types/util';
 import { uuid } from '@mpkit/util';
-import { clearStorage, getStorage, getStorageInfo, removeStorage } from '@/main/modules/cross';
-import type { MpStorageInfo } from '@/types/cross';
+import { clearStorage, getStorage, getStorageInfo, removeStorage } from 'cross-mp-power';
+import type { CrossMpStorageInfo } from 'cross-mp-power';
 
-export const getStorageInfoAndList = (): Promise<[MpStorageInfo, MpStorageMaterial[]]> => {
+export const getStorageInfoAndList = (): Promise<[CrossMpStorageInfo, MpStorageMaterial[]]> => {
     return getStorageInfo()
         .then((res) => {
-            return Promise.all([res].concat(res.keys.map((key) => getStorageMaterial(key)) as any));
+            return Promise.all<any>([res].concat(res.keys.map((key) => getStorageMaterial(key)) as any[]));
         })
         .then((res) => {
             return [res.splice(0, 1)[0], res as unknown as MpStorageMaterial[]];

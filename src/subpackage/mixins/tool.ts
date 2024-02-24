@@ -4,12 +4,12 @@ import { MpComponentMixin } from 'typescript-mp-component';
 import type { AnyFunction, EventHandler } from '@/types/util';
 import type { MpUIConfig } from '@/types/config';
 import { getUIConfig } from '@/main/index';
-import type { MpClientRect } from '@/types/view';
 import { once, emit, on, off } from '@/main/modules/ebus';
 import { WeConsoleEvents } from '@/types/scope';
 import type { IMpProductController } from '@/types/hook';
 import { wcScope, wcScopeSingle } from '@/main/config';
-import { nextTick, showActionSheet } from '@/main/modules/cross';
+import type { CrossMpClientRect } from 'cross-mp-power';
+import { nextTick, selectBoundingClientRect, showActionSheet } from 'cross-mp-power';
 function OnProduct(type, data) {
     this && this.onWcProduct && this.onWcProduct(type, data);
 }
@@ -150,32 +150,26 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
             fireSetData(this);
         }, 100);
     }
-    $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<MpClientRect> {
+    $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<CrossMpClientRect> {
         return new Promise((resolve, reject) => {
             const fire = () => {
-                (this as any)
-                    .createSelectorQuery()
-                    .select(selector)
-                    .boundingClientRect()
-                    .exec((res) => {
-                        if (res?.[0] && 'height' in res[0]) {
-                            resolve(res[0]);
-                        } else {
-                            retryCount--;
-                            if (retryCount <= 0 || this.$wcComponentIsDestroyed) {
-                                const err = new Error(
-                                    this.$wcComponentIsDestroyed
-                                        ? `组件已被销毁，无法获取元素${selector}的boundingClientRect`
-                                        : `无法找到元素${selector}进而获取其boundingClientRect`
-                                );
-                                (err as any).com = this;
-                                log('log', err);
-                                return reject(err);
-                            }
-                            setTimeout(() => {
-                                fire();
-                            }, delay);
+                selectBoundingClientRect(selector, this)
+                    .then(resolve)
+                    .catch(() => {
+                        retryCount--;
+                        if (retryCount <= 0 || this.$wcComponentIsDestroyed) {
+                            const err = new Error(
+                                this.$wcComponentIsDestroyed
+                                    ? `组件已被销毁，无法获取元素${selector}的boundingClientRect`
+                                    : `无法找到元素${selector}进而获取其boundingClientRect`
+                            );
+                            (err as any).com = this;
+                            log('log', err);
+                            return reject(err);
                         }
+                        setTimeout(() => {
+                            fire();
+                        }, delay);
                     });
             };
             fire();

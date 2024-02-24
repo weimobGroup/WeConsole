@@ -18,7 +18,7 @@ import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/componen
 import type { MpJSONViewerComponentEventDetail } from '@/types/json-viewer';
 import { DrMixin } from '@/sub/mixins/dr';
 import { toJSONString } from '@/sub/modules/util';
-import { nextTick, setClipboardData } from '@/main/modules/cross';
+import { nextTick, setClipboardData } from 'cross-mp-power';
 
 type Data = MpConsoleReaderComponentData & MpDataReaderComponentData;
 
