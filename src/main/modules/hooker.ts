@@ -8,6 +8,7 @@ import type { AnyFunction } from '@/types/util';
 
 const CONSOLE_METHODS = ['log', 'info', 'warn', 'error'];
 const SingleScopes = [HookScope.Api, HookScope.App, HookScope.Component, HookScope.Page, HookScope.Console];
+
 export class Hooker implements IHooker {
     readonly target: AnyFunction;
     readonly scope: HookScope;
@@ -74,97 +75,7 @@ export class Hooker implements IHooker {
             return;
         }
         if (scope === HookScope.Api) {
-            this.native = wx;
-            const oldWx = this.native;
-            const target = {};
-            let setFail;
-            try {
-                wx = target;
-            } catch (error) {
-                setFail = true;
-            }
-            const setTarget = (prop: string, val: any) => {
-                if (!setFail) {
-                    target[prop] = val;
-                    return;
-                }
-                try {
-                    Object.defineProperty(oldWx, prop, {
-                        value: val
-                    });
-                } catch (error) {}
-            };
-            const config = getUIConfig();
-            const onlyHookApiNames: Record<string, 1> = {};
-            const ignoreHookApiNames: Record<string, 1> = {};
-            let isOnlyHook;
-            if (Array.isArray(config.onlyHookApiNames)) {
-                isOnlyHook = true;
-                config.onlyHookApiNames.forEach((k) => {
-                    onlyHookApiNames[k] = 1;
-                });
-            } else if (Array.isArray(config.ignoreHookApiNames)) {
-                config.ignoreHookApiNames.forEach((k) => {
-                    ignoreHookApiNames[k] = 1;
-                });
-            }
-            const keys = Object.keys(oldWx);
-            keys.forEach((prop) => {
-                if (isOnlyHook && !(prop in onlyHookApiNames)) {
-                    // 只有名单内的API调用会被监控
-                    setTarget(prop, oldWx[prop]);
-                    return;
-                }
-                if (prop in ignoreHookApiNames) {
-                    // 名单内的API调用不会被监控
-                    setTarget(prop, oldWx[prop]);
-                    return;
-                }
-                if (typeof oldWx[prop] === 'function') {
-                    const mehtod = oldWx[prop] || Reflect.get(oldWx, prop);
-                    setTarget(
-                        prop,
-                        replaceFunc(
-                            mehtod,
-                            hookFunc(mehtod, false, this.hooks, {
-                                funcName: prop,
-                                scope: this.scope,
-                                ...otherState
-                            }).func,
-                            (store) => {
-                                this.stores.push(store);
-                            }
-                        )
-                    );
-                    return;
-                }
-                if (prop === 'cloud') {
-                    // 云开发相关
-                    const newCloud = {};
-                    for (const cloudProp in oldWx.cloud) {
-                        if (typeof oldWx.cloud[cloudProp] === 'function') {
-                            const mehtod = oldWx.cloud[cloudProp] || Reflect.get(oldWx.cloud, prop);
-                            newCloud[cloudProp] = replaceFunc(
-                                mehtod,
-                                hookFunc(mehtod, false, this.hooks, {
-                                    funcName: `cloud.${cloudProp}`,
-                                    scope: this.scope,
-                                    hookApiCallback: false,
-                                    ...otherState
-                                }).func,
-                                (store) => {
-                                    this.stores.push(store);
-                                }
-                            );
-                        } else {
-                            newCloud[cloudProp] = oldWx.cloud[cloudProp];
-                        }
-                    }
-                    setTarget(prop, newCloud);
-                    return;
-                }
-                setTarget(prop, oldWx[prop]);
-            });
+            this.rewriteApiVar(otherState);
             return;
         }
         if (scope === HookScope.Console) {
@@ -237,5 +148,151 @@ export class Hooker implements IHooker {
         if (this.stores) {
             this.stores.forEach((item) => item.restore());
         }
+    }
+
+    private rewriteApiVar(otherState: any) {
+        if (BUILD_TARGET === 'wx') {
+            this.native = wx;
+        }
+
+        if (BUILD_TARGET === 'my') {
+            this.native = my;
+        }
+
+        if (BUILD_TARGET === 'swan') {
+            this.native = swan;
+        }
+
+        if (BUILD_TARGET === 'tt') {
+            this.native = tt;
+        }
+
+        if (BUILD_TARGET === 'xhs') {
+            this.native = xhs;
+        }
+
+        if (BUILD_TARGET === 'qq') {
+            this.native = qq;
+        }
+
+        if (BUILD_TARGET === 'ks') {
+            this.native = ks;
+        }
+        const oldWx = this.native;
+        const target = {};
+        let setFail;
+        try {
+            if (BUILD_TARGET === 'wx') {
+                wx = target;
+            }
+
+            if (BUILD_TARGET === 'my') {
+                my = target;
+            }
+
+            if (BUILD_TARGET === 'swan') {
+                swan = target;
+            }
+
+            if (BUILD_TARGET === 'tt') {
+                tt = target;
+            }
+
+            if (BUILD_TARGET === 'xhs') {
+                xhs = target;
+            }
+
+            if (BUILD_TARGET === 'qq') {
+                qq = target;
+            }
+
+            if (BUILD_TARGET === 'ks') {
+                ks = target;
+            }
+        } catch (error) {
+            setFail = true;
+        }
+        const setTarget = (prop: string, val: any) => {
+            if (!setFail) {
+                target[prop] = val;
+                return;
+            }
+            try {
+                Object.defineProperty(oldWx, prop, {
+                    value: val
+                });
+            } catch (error) {}
+        };
+        const config = getUIConfig();
+        const onlyHookApiNames: Record<string, 1> = {};
+        const ignoreHookApiNames: Record<string, 1> = {};
+        let isOnlyHook;
+        if (Array.isArray(config.onlyHookApiNames)) {
+            isOnlyHook = true;
+            config.onlyHookApiNames.forEach((k) => {
+                onlyHookApiNames[k] = 1;
+            });
+        } else if (Array.isArray(config.ignoreHookApiNames)) {
+            config.ignoreHookApiNames.forEach((k) => {
+                ignoreHookApiNames[k] = 1;
+            });
+        }
+        const keys = Object.keys(oldWx);
+        keys.forEach((prop) => {
+            if (isOnlyHook && !(prop in onlyHookApiNames)) {
+                // 只有名单内的API调用会被监控
+                setTarget(prop, oldWx[prop]);
+                return;
+            }
+            if (prop in ignoreHookApiNames) {
+                // 名单内的API调用不会被监控
+                setTarget(prop, oldWx[prop]);
+                return;
+            }
+            if (typeof oldWx[prop] === 'function') {
+                const mehtod = oldWx[prop] || Reflect.get(oldWx, prop);
+                setTarget(
+                    prop,
+                    replaceFunc(
+                        mehtod,
+                        hookFunc(mehtod, false, this.hooks, {
+                            funcName: prop,
+                            scope: this.scope,
+                            ...otherState
+                        }).func,
+                        (store) => {
+                            this.stores.push(store);
+                        }
+                    )
+                );
+                return;
+            }
+            if (prop === 'cloud') {
+                // 云开发相关
+                const newCloud = {};
+                for (const cloudProp in oldWx.cloud) {
+                    if (typeof oldWx.cloud[cloudProp] === 'function') {
+                        const mehtod = oldWx.cloud[cloudProp] || Reflect.get(oldWx.cloud, prop);
+                        newCloud[cloudProp] = replaceFunc(
+                            mehtod,
+                            hookFunc(mehtod, false, this.hooks, {
+                                funcName: `cloud.${cloudProp}`,
+                                scope: this.scope,
+                                hookApiCallback: false,
+                                ...otherState
+                            }).func,
+                            (store) => {
+                                this.stores.push(store);
+                            }
+                        );
+                    } else {
+                        newCloud[cloudProp] = oldWx.cloud[cloudProp];
+                    }
+                }
+                setTarget(prop, newCloud);
+                return;
+            }
+            setTarget(prop, oldWx[prop]);
+        });
     }
 }
