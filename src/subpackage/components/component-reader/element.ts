@@ -20,9 +20,7 @@ interface Data {
 
 class ComponentReaderElement extends MpComponent {
     properties: MpComponentProperties<Props, ComponentReaderElement> = {
-        data: {
-            type: null
-        },
+        data: Object,
         selectId: String
     };
     initData: Data = {

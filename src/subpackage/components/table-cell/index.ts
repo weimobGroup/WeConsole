@@ -6,9 +6,7 @@ import { MpComponent } from 'typescript-mp-component';
 
 class TableCellComponent<T = any> extends MpComponent {
     properties: MpComponentProperties<TableCellComponentProps, TableCellComponent<T>> = {
-        value: {
-            type: null
-        },
+        value: Object,
         from: String
     };
     onJSONViewerToggle(e: MpEvent) {
