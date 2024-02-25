@@ -1,4 +1,4 @@
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import { DrMixin } from '@/sub/mixins/dr';
 
 import { clone, isEmptyObject } from '@mpkit/util';
@@ -268,4 +268,4 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     }
 }
 
-registerComponent(ApiReaderComponent);
+registerClassComponent(ApiReaderComponent);

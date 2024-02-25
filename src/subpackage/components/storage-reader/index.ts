@@ -1,5 +1,5 @@
 import { MpComponent } from 'typescript-mp-component';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import { MpDataReaderAction } from '@/types/reader';
 import { filterClearStorage, getStorageInfoAndList, getStorageMaterial } from '@/sub/modules/storage-reader';
 import type { MpStorageMaterial } from '@/types/product';
@@ -236,4 +236,4 @@ class StorageReader extends MpComponent {
     }
 }
 
-registerComponent(StorageReader);
+registerClassComponent(StorageReader);

@@ -5,7 +5,7 @@ import { wcScope } from '@/main/config';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { MainStateController } from '@/main/modules/state-controller';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import { checkDebugEnabled, getCurrentEnvVersion, getStorage, getSystemInfo, setStorage } from 'cross-mp-power';
 
 const WcScope = wcScope();
@@ -275,4 +275,4 @@ class MainComponent extends MpComponent {
     }
 }
 
-registerComponent(MainComponent);
+registerClassComponent(MainComponent);

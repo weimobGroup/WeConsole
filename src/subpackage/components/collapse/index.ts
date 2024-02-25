@@ -1,7 +1,7 @@
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 
 interface Props {
     open: boolean;
@@ -47,4 +47,4 @@ class Collapse extends MpComponent<{ innerOpen: boolean }, Props, Collapse> {
     }
 }
 
-registerComponent(Collapse);
+registerClassComponent(Collapse);

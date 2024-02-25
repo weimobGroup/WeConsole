@@ -1,6 +1,6 @@
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 
 import { findComponentIns, findPageIns, getChildrenElements, getElement } from '@/sub/modules/element';
 import type { MpJSONViewerComponentEbusDetail, JsonViewer } from '@/sub/components/json-viewer/index';
@@ -200,4 +200,4 @@ class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
     }
 }
 
-registerComponent(ComponentReader);
+registerClassComponent(ComponentReader);

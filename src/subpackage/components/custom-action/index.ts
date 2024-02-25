@@ -1,7 +1,7 @@
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import type { WcCustomAction, WcCustomActionCase, WcCustomActionGrid } from '@/types/other';
 import { WcCustomActionShowMode } from '@/types/other';
 import type { MpEvent } from '@/types/view';
@@ -520,4 +520,4 @@ class CustomActionComponent extends MpComponent {
     }
 }
 
-registerComponent(CustomActionComponent);
+registerClassComponent(CustomActionComponent);

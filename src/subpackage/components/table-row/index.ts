@@ -1,4 +1,4 @@
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import type { RequireId } from '@/types/common';
 import type { TableRowComponentData, TableRowComponentProps } from '@/types/table';
 import type { MpEvent } from '@/types/view';
@@ -76,4 +76,4 @@ class TableRowComponent<T extends RequireId = RequireId> extends MpComponent<
     }
 }
 
-registerComponent(TableRowComponent);
+registerClassComponent(TableRowComponent);

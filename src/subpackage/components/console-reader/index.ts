@@ -1,4 +1,4 @@
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import { VlMixin } from '@/sub/mixins/vl';
 import type { MpConsoleReaderComponentData } from '@/types/console-reader';
 import type { MpConsoleMaterial, MpProduct } from '@/types/product';
@@ -301,4 +301,4 @@ class ConsoleReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     }
 }
 
-registerComponent(ConsoleReaderComponent);
+registerClassComponent(ConsoleReaderComponent);

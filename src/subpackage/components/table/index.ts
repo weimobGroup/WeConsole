@@ -12,7 +12,7 @@ import type { MpEvent } from '@/types/view';
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import type { RequireId } from '@/types/common';
 import { rpxToPx } from '@/main/modules/util';
 import type { MpVirtualListComponentExports } from '@cross-virtual-list/types';
@@ -322,4 +322,4 @@ export class TableComponent<
     }
 }
 
-registerComponent(TableComponent);
+registerClassComponent(TableComponent);

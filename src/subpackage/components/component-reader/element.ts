@@ -1,6 +1,6 @@
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 
 interface Props {
     data: {
@@ -53,4 +53,4 @@ class ComponentReaderElement extends MpComponent {
     }
 }
 
-registerComponent(ComponentReaderElement);
+registerClassComponent(ComponentReaderElement);

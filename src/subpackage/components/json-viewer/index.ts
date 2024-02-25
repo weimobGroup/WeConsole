@@ -1,6 +1,6 @@
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 
 import { equalJSONPropPath, getJSONNode, getPathValue } from '@/sub/modules/json';
 import { cutJSONNode, JSONViewer } from '@/sub/modules/json-viewer';
@@ -375,4 +375,4 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
     }
 }
 
-registerComponent(JsonViewer);
+registerClassComponent(JsonViewer);

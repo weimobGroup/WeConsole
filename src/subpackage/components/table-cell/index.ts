@@ -1,4 +1,4 @@
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import type { TableCellComponentProps } from '@/types/table';
 import type { MpEvent } from '@/types/view';
 import type { MpComponentProperties } from 'typescript-mp-component';
@@ -20,4 +20,4 @@ class TableCellComponent<T = any> extends MpComponent {
     }
 }
 
-registerComponent(TableCellComponent);
+registerClassComponent(TableCellComponent);

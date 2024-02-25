@@ -3,7 +3,7 @@ import type { MpApiDetail, MpProduct } from '@/types/product';
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import type { JsonViewer, MpJSONViewerComponentEbusDetail } from '@/sub/components/json-viewer/index';
 import { uuid } from '@mpkit/util';
 
@@ -253,4 +253,4 @@ class ApiDetailComponent extends MpComponent {
     }
 }
 
-registerComponent(ApiDetailComponent);
+registerClassComponent(ApiDetailComponent);

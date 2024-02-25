@@ -1,6 +1,6 @@
 import type { MpComponentEvent, MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 
 interface Props {
     filter: boolean;
@@ -58,4 +58,4 @@ class FilterBar extends MpComponent {
     }
 }
 
-registerComponent(FilterBar);
+registerClassComponent(FilterBar);

@@ -1,5 +1,5 @@
 import { ToolMixin } from '@/sub/mixins/tool';
-import { registerComponent } from '@/sub/mixins/component';
+import { registerClassComponent } from '@/sub/mixins/component';
 import type { MpComponentEvent, MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 
@@ -73,4 +73,4 @@ class Tabs extends MpComponent {
     }
 }
 
-registerComponent(Tabs);
+registerClassComponent(Tabs);

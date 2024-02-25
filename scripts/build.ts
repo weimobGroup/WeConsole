@@ -7,6 +7,7 @@ import { ROOT_DIR, VERSION } from './vars';
 import { getFiles, copyPromise, readFile, writeFile } from './fs';
 import typescript from '@rollup/plugin-typescript';
 import { compilerMpResource } from './mp';
+import { rimraf } from 'rimraf';
 
 const RollupReplace = require('@rollup/plugin-replace');
 const commonjs = require('@rollup/plugin-commonjs');
@@ -20,6 +21,7 @@ const getPlugins = () => [
         delimiters: ['', ''],
         values: {
             VERSION: VERSION,
+            COMPILE_COMPONENT: 'RegisterCrossComponent',
             BUILD_TARGET: JSON.stringify(process.env.BUILD_TARGET),
             'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
         },
@@ -48,17 +50,16 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
         'main/init': ROOT_DIR + '/src/main/init.ts',
         ...components
     };
-    if (mode === 'full') {
-        input['subpackage/components/dynamic/index'] =
-            ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/dynamic/index.js';
-        input['subpackage/components/regular/index'] =
-            ROOT_DIR + '/node_modules/@cross-virtual-list/mp-wx/dist/npm/components/regular/index.js';
-    }
+    input['subpackage/components/dynamic/index'] = ROOT_DIR + '/src/subpackage/vl-temp/components/dynamic/index.js';
+    input['subpackage/components/regular/index'] = ROOT_DIR + '/src/subpackage/vl-temp/components/regular/index.js';
     const distDir = process.env.BUILD_TARGET && process.env.BUILD_TARGET !== 'wx' ? `${process.env.BUILD_TARGET}/` : '';
 
     return [
         {
-            external: mode === 'full' ? [] : [/mpkit/, /typescript-mp-component/, /@@cross-virtual-list/],
+            external:
+                mode === 'full'
+                    ? []
+                    : [/mpkit/, /typescript-mp-component/, 'cross-mp-power', '@cross-virtual-list/core'],
             plugins: getPlugins(),
             input,
             output: [
@@ -68,8 +69,11 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                     chunkFileNames: '[name].js',
                     hoistTransitiveImports: false,
                     manualChunks: (id) => {
+                        if (id.includes('vl-temp') && !id.includes('components')) {
+                            return 'subpackage/vender';
+                        }
                         if (id.includes('node_modules') && !id.includes('components')) {
-                            if (id.includes('typescript-mp-component') || id.includes('@cross-virtual-list')) {
+                            if (id.includes('typescript-mp-component') || id.includes('@cross-')) {
                                 return 'subpackage/vender';
                             }
                             const name = 'main/vender';
@@ -92,43 +96,41 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                 process.env.BUILD_TARGET as any
             )
                 .then(() => {
-                    if (mode === 'full') {
-                        return Promise.all([
-                            new Promise<void>((resolve) => {
-                                getFiles(`${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`, true).forEach(
-                                    (jsonFile) => {
-                                        if (!jsonFile.endsWith('.json')) {
-                                            return;
-                                        }
-                                        const json = JSON.parse(readFile(jsonFile).trim());
-                                        let needChange;
-                                        if (json.usingComponents) {
-                                            Object.keys(json.usingComponents).forEach((k) => {
-                                                const val = json.usingComponents[k];
-                                                if (val === '@cross-virtual-list/mp-wx/components/dynamic/index') {
-                                                    needChange = true;
-                                                    json.usingComponents[k] = '../dynamic/index';
-                                                    return;
-                                                }
-                                                if (val === '@cross-virtual-list/mp-wx/components/regular/index') {
-                                                    needChange = true;
-                                                    json.usingComponents[k] = '../regular/index';
-                                                    return;
-                                                }
-                                            });
-                                        }
-                                        needChange && writeFile(jsonFile, JSON.stringify(json, null, 4));
+                    return Promise.all([
+                        new Promise<void>((resolve) => {
+                            getFiles(`${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`, true).forEach(
+                                (jsonFile) => {
+                                    if (!jsonFile.endsWith('.json')) {
+                                        return;
                                     }
-                                );
-                                resolve();
-                            }),
-                            compilerMpResource(
-                                `${ROOT_DIR}/node_modules/@cross-virtual-list/mp-wx/dist/npm/components`,
-                                `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`,
-                                process.env.BUILD_TARGET as any
-                            )
-                        ]);
-                    }
+                                    const json = JSON.parse(readFile(jsonFile).trim());
+                                    let needChange;
+                                    if (json.usingComponents) {
+                                        Object.keys(json.usingComponents).forEach((k) => {
+                                            const val = json.usingComponents[k];
+                                            if (val === '@cross-virtual-list/mp-wx/components/dynamic/index') {
+                                                needChange = true;
+                                                json.usingComponents[k] = '../dynamic/index';
+                                                return;
+                                            }
+                                            if (val === '@cross-virtual-list/mp-wx/components/regular/index') {
+                                                needChange = true;
+                                                json.usingComponents[k] = '../regular/index';
+                                                return;
+                                            }
+                                        });
+                                    }
+                                    needChange && writeFile(jsonFile, JSON.stringify(json, null, 4));
+                                }
+                            );
+                            resolve();
+                        }),
+                        compilerMpResource(
+                            `${ROOT_DIR}/node_modules/@cross-virtual-list/mp-wx/dist/npm/components`,
+                            `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components`,
+                            process.env.BUILD_TARGET as any
+                        )
+                    ]);
                 })
                 .then(() => {
                     if (mode === 'full') {
@@ -165,5 +167,19 @@ const fireRollup = (task: [RollupOptions, () => void]): Promise<void> => {
 export const build = () => {
     const fullTask = getBuildOptions('full');
     const npmTask = getBuildOptions('npm');
-    return fireRollup(fullTask).then(() => fireRollup(npmTask));
+    const vlTempDir = `${ROOT_DIR}/src/subpackage/vl-temp`;
+    rimraf.sync(vlTempDir);
+    return copyPromise(`${ROOT_DIR}/node_modules/@cross-virtual-list/mp-wx/dist/npm/**/*.js`, vlTempDir)
+        .then(() => {
+            getFiles(vlTempDir, true).forEach((item) => {
+                if (item.includes('components') && item.endsWith('.js')) {
+                    writeFile(
+                        item,
+                        'import { RegisterCrossComponent } from "../../../modules/cross";\n' + readFile(item)
+                    );
+                }
+            });
+            return fireRollup(fullTask);
+        })
+        .then(() => fireRollup(npmTask));
 };
