@@ -3,6 +3,10 @@
 @import '../style/icon.scss';
 @import '../style/detail.scss';
 
+.fc-detail {
+    border-left: 1px solid $bg-th-bar-border;
+}
+
 .btn-link {
     top: 0;
     right: 15rpx;
