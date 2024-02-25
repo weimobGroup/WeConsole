@@ -199,7 +199,7 @@ export const convertApiMaterial = (
                     {
                         type: 'text',
                         content: desc || '',
-                        style: 'opacity: 0.7'
+                        style: 'opacity: 0.7;font-size:80%;'
                     }
                 ]
             });
@@ -245,7 +245,7 @@ export const convertApiMaterial = (
                     {
                         type: 'text',
                         content: statusDesc || '',
-                        style: 'opacity: 0.7'
+                        style: 'opacity: 0.7;font-size:80%;'
                     }
                 ]
             });

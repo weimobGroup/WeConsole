@@ -44,29 +44,42 @@ Component({
                 return;
             }
             if (method === 'getStorage') {
-                const key = `s${this.storageIndex}`;
                 wx.getStorage({
-                    key,
+                    key: `s${this.storageIndex}`,
                     success: (res) => {
                         wx.showToast({
                             title: `获取内容：${res.data}`,
                             icon: 'none'
                         });
-                        console.log('getStorage result=', res);
+                        console.log('getStorage success=', res);
+                    },
+                    fail: (res) => {
+                        wx.showToast({
+                            title: `获取失败：${res.errMsg}`,
+                            icon: 'none'
+                        });
+                        console.error('getStorage fail=', res);
                     }
                 });
                 return;
             }
             if (method === 'removeStorage') {
-                const key = `s${this.storageIndex}`;
+                const k2 = `s${this.storageIndex}`;
                 wx.removeStorage({
-                    key,
+                    key: k2,
                     success: () => {
                         wx.showToast({
-                            title: `已删除「${key}」的数据`,
+                            title: `已删除「${k2}」的数据`,
                             icon: 'none'
                         });
                         console.log('removeStorage success');
+                    },
+                    fail: (res) => {
+                        wx.showToast({
+                            title: `删除失败：${res.errMsg}`,
+                            icon: 'none'
+                        });
+                        console.error('removeStorage fail=', res);
                     }
                 });
                 return;

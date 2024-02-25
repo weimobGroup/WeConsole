@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@cross-virtual-list/core':
-    specifier: 0.2.2
-    version: 0.2.2
+    specifier: 0.2.3
+    version: 0.2.3
   '@cross-virtual-list/mp-wx':
-    specifier: 0.2.2
-    version: 0.2.2
+    specifier: 0.2.3
+    version: 0.2.3
   '@cross-virtual-list/types':
-    specifier: 0.2.2
-    version: 0.2.2
+    specifier: 0.2.3
+    version: 0.2.3
   '@mpkit/func-helper':
     specifier: ^1.1.2
     version: 1.1.2(forgiving-xml-parser@1.4.2)
@@ -24,8 +24,8 @@ dependencies:
     specifier: ^1.1.2
     version: 1.1.2(forgiving-xml-parser@1.4.2)
   cross-mp-power:
-    specifier: 0.1.3
-    version: 0.1.3
+    specifier: 0.1.5
+    version: 0.1.5
   typescript:
     specifier: ^5.1.6
     version: 5.3.3
@@ -1342,20 +1342,20 @@ packages:
     dev: true
     optional: true
 
-  /@cross-virtual-list/core@0.2.2:
-    resolution: {integrity: sha512-l72wTKGTgfcGtPP6ByCoNwo5Yp7oxv39DMpRdJjbUIedP/bkkK+v8Z9LM5ykaExo2XPXn+bDI82SE0wOogkTvw==}
+  /@cross-virtual-list/core@0.2.3:
+    resolution: {integrity: sha512-zPLPmGW6XDpK7DshDDW5Mm4tipVJlK97ncT0ZhSMxAvjqHU+J8ARzZ+5WToWfTjNyNXlOEnIvMxFvO9l7MAnGw==}
     dev: false
 
-  /@cross-virtual-list/mp-wx@0.2.2:
-    resolution: {integrity: sha512-ghPjJgrYLhFfwQjZXFYnWBetkM+8rqGsLx2PS48dOXl7Ek5tTO2XYFUPwCLaxyD4Bu+EgVxH2Rwy0CkFC/U6Ig==}
+  /@cross-virtual-list/mp-wx@0.2.3:
+    resolution: {integrity: sha512-Ex0/jPW5/EJxYrMcz/98W3HV/eDaxUn0hU8OyfsD30qrbGjziQ6OD+HHp4Qd7mwARJ8q+xBOhJHVIp7k5SZXqA==}
     dependencies:
-      '@cross-virtual-list/core': 0.2.2
-      cross-mp-power: 0.1.3
+      '@cross-virtual-list/core': 0.2.3
+      cross-mp-power: 0.1.5
       typescript-mp-component: 0.1.1
     dev: false
 
-  /@cross-virtual-list/types@0.2.2:
-    resolution: {integrity: sha512-b1S/UFTEFrjI4ITlfLz0ZKAe1b8topgmU8g8mSzyUMi7G53RMX2ki6vibzBhFuO8heYMW6NduSEMhW89weeoGw==}
+  /@cross-virtual-list/types@0.2.3:
+    resolution: {integrity: sha512-sJVkQ1JYa28TgD1cztPTs8fT14ONN0uh96S+LVM2dNIvN5hFlP+ZhH/Qb1pGG2tiSjMSnSJJXjOTwTfXQ6WIHg==}
     dev: false
 
   /@csstools/css-parser-algorithms@2.6.0(@csstools/css-tokenizer@2.2.3):
@@ -2910,8 +2910,8 @@ packages:
       cross-spawn: 7.0.3
     dev: true
 
-  /cross-mp-power@0.1.3:
-    resolution: {integrity: sha512-o93Vl+RAYU3fCYZbWPPhdBjCcCC7zKhAI4gWFiypdqTxe66LgtVeXi5NNrfwARUxmIAqK818TIwfzMgvzVxnSw==}
+  /cross-mp-power@0.1.5:
+    resolution: {integrity: sha512-vTYVaazRIK39N9ZIUWhUxU31RfiGUVrhDBWSL9NJZSRRHIW3xxp1t0ta4SfAepTRijP+mLxdchEJP8rA1i4J0Q==}
     dev: false
 
   /cross-spawn@7.0.3:

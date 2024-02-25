@@ -1,4 +1,4 @@
 dist
 scripts-dist
-examples/weconsole
+examples/**/weconsole
 vl-temp
