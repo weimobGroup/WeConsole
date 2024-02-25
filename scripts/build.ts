@@ -133,6 +133,19 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                     ]);
                 })
                 .then(() => {
+                    const jsonFileList = [
+                        `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components/regular/index.json`,
+                        `${ROOT_DIR}/dist/${distDir}${mode}/subpackage/components/dynamic/index.json`
+                    ];
+                    jsonFileList.forEach((file) => {
+                        const json = JSON.parse(readFile(file).trim());
+                        delete json.componentGenerics;
+                        json.usingComponents = json.usingComponents || {};
+                        json.usingComponents.item = '../vl-item/index';
+                        writeFile(file, JSON.stringify(json));
+                    });
+                })
+                .then(() => {
                     if (mode === 'full') {
                         return copyPromise(
                             `${ROOT_DIR}/dist/${distDir}${mode}/**/*`,

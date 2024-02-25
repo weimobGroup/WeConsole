@@ -1,0 +1,7 @@
+{
+    "component": true,
+    "usingComponents": {
+        "console-reader-item": "../console-reader-item/index",
+        "table-row": "../table-row/index"
+    }
+}

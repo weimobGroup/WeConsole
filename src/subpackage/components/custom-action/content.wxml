@@ -21,8 +21,8 @@
         <table wx:if="{{caseState[caseButton.value].cols && caseState[caseButton.value].cols.length}}"
             cols="{{caseState[caseButton.value].cols}}" rowHeight="{{caseState[caseButton.value].rowHeight}}"
             rowHeightMode="{{caseState[caseButton.value].rowHeightMode}}"
-            rowKeyField="{{caseState[caseButton.value].rowKeyField}}"
-            colMinWidth="{{caseState[caseButton.value].colMinWidth}}" bind:ready="gridReady"
+            rowKeyField="{{caseState[caseButton.value].rowKeyField || ''}}"
+            colMinWidth="{{caseState[caseButton.value].colMinWidth || 5}}" bind:ready="gridReady"
             data-case="{{caseButton.value}}" class="ca-grid" bind:interact="onItemInteractEvent"
             from="{{selfHash}}_CustomActionTable_{{action}}_{{caseButton.value}}" bind:tapCell="tapGridCell"
             bind:longpressCell="longpressGridCell" selected="{{gridSelected[caseButton.value] || []}}"></table>

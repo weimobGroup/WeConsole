@@ -1,0 +1,4 @@
+<table-row wx:if="{{state.source==='table'}}" value="{{value}}" index="{{ index }}" maxIndex="{{ maxIndex }}"
+    direction="{{ direction }}" scope="{{scope}}" state="{{state}}" bind:interact="emitInteract"></table-row>
+<console-reader-item wx:if="{{state.source==='console-reader'}}" value="{{value}}" index="{{ index }}" maxIndex="{{ maxIndex }}"
+    direction="{{ direction }}" scope="{{scope}}" state="{{state}}" bind:interact="emitInteract"></console-reader-item>

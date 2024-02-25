@@ -56,7 +56,8 @@ export class TableComponent<
             value: 'regular'
         },
         colMinWidth: {
-            type: String,
+            type: Number,
+            optionalTypes: [String, Number],
             // 最小宽度 5%
             value: 5,
             observer() {
