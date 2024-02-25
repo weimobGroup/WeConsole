@@ -3,6 +3,6 @@
     "usingComponents": {
         "api-detail": "../api-detail/index",
         "filter-bar": "../filter-bar/index",
-        "table": "../table/index"
+        "data-table": "../data-table/index"
     }
 }

@@ -18,7 +18,9 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "useLiteCompiler": false
+    "useLiteCompiler": false,
+    "useNewCompiler": true,
+    "enableV2": true
   },
   "condition": {},
   "editorSetting": {

@@ -18,14 +18,14 @@
                 {{caseButton.button||caseButton.name}}
             </button>
         </view>
-        <table wx:if="{{caseState[caseButton.value].cols && caseState[caseButton.value].cols.length}}"
+        <data-table wx:if="{{caseState[caseButton.value].cols && caseState[caseButton.value].cols.length}}"
             cols="{{caseState[caseButton.value].cols}}" rowHeight="{{caseState[caseButton.value].rowHeight}}"
             rowHeightMode="{{caseState[caseButton.value].rowHeightMode}}"
             rowKeyField="{{caseState[caseButton.value].rowKeyField || ''}}"
             colMinWidth="{{caseState[caseButton.value].colMinWidth || 5}}" bind:ready="gridReady"
             data-case="{{caseButton.value}}" class="ca-grid" bind:interact="onItemInteractEvent"
             from="{{selfHash}}_CustomActionTable_{{action}}_{{caseButton.value}}" bind:tapCell="tapGridCell"
-            bind:longpressCell="longpressGridCell" selected="{{gridSelected[caseButton.value] || []}}"></table>
+            bind:longpressCell="longpressGridCell" selected="{{gridSelected[caseButton.value] || []}}"></data-table>
     </view>
     <view wx:if="{{caseState[caseButton.value].mode==='component'}}" class="ca-container">
         <view class="ca-section">
