@@ -1,0 +1,5 @@
+{
+  "ignoreHttpDomainCheck": true,
+  "ignoreWebViewDomainCheck": true,
+  "ignoreCertificateDomainCheck": true
+}

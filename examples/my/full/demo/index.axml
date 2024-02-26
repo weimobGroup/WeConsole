@@ -1,0 +1,8 @@
+<view class="action-list">
+    <view class="action" onTap="callWxMethod" data-method="console">随机console</view>
+    <view class="action" onTap="callWxMethod" data-method="showToast">my.showToast</view>
+    <view class="action" onTap="callWxMethod" data-method="setStorageSync">my.setStorageSync</view>
+    <view class="action" onTap="callWxMethod" data-method="getStorage">my.getStorage</view>
+    <view class="action" onTap="callWxMethod" data-method="removeStorage">my.removeStorage</view>
+    <view class="action {{requesting?'lock':''}}" onTap="callWxMethod" data-method="request">my.request{{requesting?'(发送中...)':''}}</view>
+</view>

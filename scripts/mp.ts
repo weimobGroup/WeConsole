@@ -63,7 +63,10 @@ export const compilerMpResource = (
         }
         getFiles(dist, true).forEach((fileName) => {
             if (fileName.endsWith('.wxss')) {
-                renameSync(fileName, fileName.substring(0, fileName.length - 5) + `.${cssFileSuffix[targetPlatform]}`);
+                const newFileName = fileName.substring(0, fileName.length - 5) + `.${cssFileSuffix[targetPlatform]}`;
+                renameSync(fileName, newFileName);
+                const content = readFile(newFileName);
+                writeFile(newFileName, content.replace('module.exports = ', 'export default'));
                 return;
             }
             if (fileName.endsWith('.wxml')) {

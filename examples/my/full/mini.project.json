@@ -1,0 +1,14 @@
+{
+  "format": 2,
+  "compileOptions": {
+    "component2": true,
+    "globalObjectMode": "enable",
+    "transpile": {
+      "script": {
+        "ignore": [
+          "node_modules/**"
+        ]
+      }
+    }
+  }
+}

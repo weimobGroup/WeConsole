@@ -20,8 +20,16 @@ const translatorAttr = (attr: FxNode, node: FxNode) => {
         attr.content = `${attr.content.substring(0, attr.content.length - 4)}.sjs`;
         return;
     }
-    if (attr.name.startsWith('bind')) {
-        // TODO: 事件转换带实现，支付宝不支持组件的自定义事件发射？暂时没查到文档，坑。。。
+    if (node.name === 'wxs' && attr.name === 'module' && attr.content) {
+        attr.name = 'name';
+        return;
+    }
+    if (attr.name.startsWith('bind:')) {
+        attr.name = attr.name.substring(5);
+        attr.name = 'on' + attr.name[0].toUpperCase() + attr.name.substring(1);
+    } else if (attr.name.startsWith('bind')) {
+        attr.name = attr.name.substring(4);
+        attr.name = 'on' + attr.name[0].toUpperCase() + attr.name.substring(1);
     }
 };
 

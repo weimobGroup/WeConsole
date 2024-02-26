@@ -7,6 +7,6 @@
         cols="{{readerCols}}" bind:ready="$vlOnVirtualListComponentReady" bind:interact="onItemInteractEvent">
     </data-table>
     <api-detail wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" data="{{detailMaterialId}}"
-        tab="{{detailTab}} " class="fc-reader-detail-container has-th has-bar" bind:changeTab="changeDetailTab"
+        tab="{{detailTab}}" class="fc-reader-detail-container has-th has-bar" bind:changeTab="changeDetailTab"
         bind:close="clearDetailMaterial"></api-detail>
 </view>
