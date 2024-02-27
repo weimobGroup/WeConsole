@@ -5,12 +5,12 @@ replace();
 showWeConsole();
 
 addCustomAction({
-    id: 'vidLogs',
-    title: '页面栈与进店记录',
+    id: 'customTableDemo',
+    title: '自定义表格示例',
     cases: [
         {
-            id: 'pageStacks',
-            button: '查看页面栈',
+            id: 'showList',
+            button: '查看数据',
             showMode: 'grid',
             handler() {
                 return {
@@ -26,7 +26,7 @@ addCustomAction({
                             width: '40'
                         },
                         {
-                            title: '进店结果',
+                            title: '门店',
                             field: 'vid',
                             width: '50'
                         }
@@ -37,14 +37,14 @@ addCustomAction({
                             page: `/pages/p${index}`,
                             vid:
                                 index % 2 === 0
-                                    ? '123\n门店1'
+                                    ? '门店信息：\n测试门店' + (index + 1)
                                     : {
                                           tableCell: true,
                                           blocks: [
                                               {
                                                   block: true,
                                                   items: [
-                                                      '门店',
+                                                      '门店信息：',
                                                       {
                                                           type: 'text',
                                                           content: '='
@@ -52,9 +52,9 @@ addCustomAction({
                                                       {
                                                           type: 'json',
                                                           value: {
-                                                              vid: 123123123,
-                                                              vidType: 3,
-                                                              vidName: '哈哈门店'
+                                                              id: index,
+                                                              type: 3,
+                                                              name: `测试门店${index + 1}`
                                                           }
                                                       }
                                                   ]

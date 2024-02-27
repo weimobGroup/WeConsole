@@ -1,13 +1,21 @@
+<view class="alert-success">
+    <view>真机调试小程序，就用 WeConsole ！</view>
+    <view>高效、便捷、免代理抓包请求。</view>
+    <view><text>点击</text>屏幕右侧的<text>【蓝色图标】</text>开启调试之旅~</view>
+</view>
 <demo></demo>
 <view class="alert-warn">
+    <view>版本：v{{version}}</view>
     <view>
         Github: <text bindtap="copy"
             data-url="https://github.com/weimob-tech/WeConsole">https://github.com/weimob-tech/WeConsole</text>
     </view>
-    <view>
+    <view style="margin-bottom: 0;">
         NPM: <text bindtap="copy"
             data-url="https://www.npmjs.com/package/WeConsole">https://www.npmjs.com/package/WeConsole</text>
     </view>
 </view>
+
+<button type="primary" bindtap="openDebug">打开微信原生vConsole调试，进行对比</button>
 
 <weconsole></weconsole>

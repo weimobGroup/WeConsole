@@ -1,3 +1,0 @@
-<view style="height:100vh">
-<tb data="{{list}}" cols="{{cols}}" rowHeight="40" rowHeightMode="dynamic" selected="{{[2,5]}}" bind:ready="onTableReady"></tb>
-</view>

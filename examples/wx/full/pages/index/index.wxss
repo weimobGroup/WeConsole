@@ -1,19 +1,36 @@
 /* stylelint-disable-next-line selector-type-no-unknown */
 page {
     box-sizing: border-box;
-    padding: 10rpx 30rpx;
+    padding: 30rpx;
     font-size: 28rpx;
 }
 
-.alert-warn {
-    padding: 30rpx;
-    margin-top: 40rpx;
+.alert-warn,
+.alert-success {
+    padding: 20rpx 30rpx;
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
     font-size: 24rpx;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-success text {
+    font-size: 140%;
+    font-weight: bold;
+    color: #1b9af7;
+}
+
+.alert-warn {
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc;
-    border-style: solid;
-    border-width: 1px;
 }
 
 .alert-warn view {
@@ -29,4 +46,8 @@ page {
     height: 30rpx;
     padding: 5rpx 15rpx 5rpx 50rpx;
     background-color: red;
+}
+
+button {
+    font-size: 24rpx;
 }
