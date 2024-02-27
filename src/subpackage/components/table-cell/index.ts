@@ -10,6 +10,7 @@ class TableCellComponent<T = any> extends MpComponent {
             type: Object,
             optionalTypes: [Object, String]
         },
+        col: Object,
         from: String
     };
     onJSONViewerToggle(e: MpEvent) {

@@ -65,8 +65,7 @@ export const compilerMpResource = (
             if (fileName.endsWith('.wxss')) {
                 const newFileName = fileName.substring(0, fileName.length - 5) + `.${cssFileSuffix[targetPlatform]}`;
                 renameSync(fileName, newFileName);
-                const content = readFile(newFileName);
-                writeFile(newFileName, content.replace('module.exports = ', 'export default'));
+
                 return;
             }
             if (fileName.endsWith('.wxml')) {
@@ -84,7 +83,10 @@ export const compilerMpResource = (
                 return;
             }
             if (fileName.endsWith('.wxs')) {
-                renameSync(fileName, fileName.substring(0, fileName.length - 4) + `.${xjsFileSuffix[targetPlatform]}`);
+                const newFileName = fileName.substring(0, fileName.length - 4) + `.${xjsFileSuffix[targetPlatform]}`;
+                renameSync(fileName, newFileName);
+                const content = readFile(newFileName);
+                writeFile(newFileName, content.replace('module.exports = ', 'export default'));
                 return;
             }
         });

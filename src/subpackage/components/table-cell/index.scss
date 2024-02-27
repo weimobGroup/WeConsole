@@ -1,1 +1,16 @@
 @import '../style/var.scss';
+
+.table-cell.wc-nowrap {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    view,
+    text {
+        flex-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}

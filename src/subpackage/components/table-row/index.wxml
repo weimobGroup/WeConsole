@@ -5,6 +5,6 @@
         class="wc-table-col wc-col-{{state.type}} {{colIndex===state.cols.length-1?'wc-last':''}} {{col.wrap===false?'wc-nowrap':''}}"
         style="width:{{state.colComputedWidth[colIndex]}}%;min-height:{{state.rowHeight}}px;" bindtap="tapCell"
         bindlongpress="longpressCell" data-type="{{state.type}}" data-col="{{colIndex}}">
-        <cell value="{{value[col.field]}}" from="{{state.from||''}}Table_{{state.tableHash}}_{{state.type}}_{{value[state.rowKeyField]||''}}_{{index}}_{{colIndex}}" data-col="{{colIndex}}" data-type="{{state.type}}" bind:onJSONViewerToggle="onJSONViewerToggle"></cell>
+        <cell value="{{value[col.field]}}" col="{{col}}" from="{{state.from||''}}Table_{{state.tableHash}}_{{state.type}}_{{value[state.rowKeyField]||''}}_{{index}}_{{colIndex}}" data-col="{{colIndex}}" data-type="{{state.type}}" bind:onJSONViewerToggle="onJSONViewerToggle"></cell>
     </view>
 </view>

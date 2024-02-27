@@ -1,7 +1,7 @@
 /* stylelint-disable-next-line selector-type-no-unknown */
 page {
     box-sizing: border-box;
-    padding: 10rpx 30rpx;
+    padding: 30rpx;
     font-size: 28rpx;
 }
 

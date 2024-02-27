@@ -84,7 +84,7 @@ export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[
             if (group) {
                 return item.is === group;
             }
-            return item.selectOwnerComponent() === vw;
+            return item.selectOwnerComponent?.() === vw;
         })
     );
     return Promise.all(children.map((item) => getElement(item))).then((list) => {
@@ -141,7 +141,7 @@ const isPageChild = (component: any, page: any): boolean => {
 export const hasChild = (vw: any): boolean => {
     const MpViewInstances = getWcControlMpViewInstances();
     if (supportSelectOwnerComponent()) {
-        return MpViewInstances.some((item) => item.selectOwnerComponent() === vw);
+        return MpViewInstances.some((item) => item.selectOwnerComponent?.() === vw);
     }
     if (isPage(vw)) {
         return MpViewInstances.some((item) => isPageChild(item, vw));

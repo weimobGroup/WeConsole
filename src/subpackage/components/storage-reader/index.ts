@@ -141,8 +141,8 @@ class StorageReader extends MpComponent {
             })
             .then((info) => {
                 this.$mx.Tool.$updateData({
-                    currentSize: info.currentSize,
-                    limitSize: info.limitSize,
+                    currentSize: parseFloat(info.currentSize.toFixed(2)),
+                    limitSize: parseFloat(info.limitSize.toFixed(2)),
                     sizeProgress: parseFloat(((info.currentSize / info.limitSize) * 100).toFixed(2))
                 });
             });
@@ -223,8 +223,8 @@ class StorageReader extends MpComponent {
     replaceData(): Promise<void> {
         return getStorageInfoAndList().then(([info, list]) => {
             this.$mx.Tool.$updateData({
-                currentSize: info.currentSize,
-                limitSize: info.limitSize,
+                currentSize: parseFloat(info.currentSize.toFixed(2)),
+                limitSize: parseFloat(info.limitSize.toFixed(2)),
                 sizeProgress: parseFloat(((info.currentSize / info.limitSize) * 100).toFixed(2))
             });
             list.forEach((item) => {

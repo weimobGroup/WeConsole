@@ -17,12 +17,16 @@
             "ignore": [],
             "disablePlugins": [],
             "outputPath": ""
-        }
+        },
+        "urlCheck": true,
+        "compileHotReLoad": false,
+        "bigPackageSizeSupport": false
     },
     "condition": {},
     "editorSetting": {
         "tabIndent": "insertSpaces",
         "tabSize": 4
     },
-    "appid": "wxdb0fced84d364af9"
+    "appid": "wx38a8d84858e383c3",
+    "projectname": "WeConsole%E7%A4%BA%E4%BE%8B"
 }

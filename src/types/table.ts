@@ -73,6 +73,7 @@ export interface TableComponentData<T extends RequireId = RequireId> {
 export interface TableCellComponentProps {
     value: any;
     from: string;
+    col: TableCol;
 }
 
 export type TableRowComponentProps<T extends RequireId = RequireId> = MpVirtualListItemComponentProps<
