@@ -21,7 +21,7 @@
         "build:my": "pnpm build:before && rimraf ./dist/my && cross-env BUILD_TARGET=my node ./scripts-dist/cli.js",
         "build:qq": "pnpm build:before && rimraf ./dist/qq && cross-env BUILD_TARGET=qq node ./scripts-dist/cli.js",
         "build:xhs": "pnpm build:before && rimraf ./dist/xhs && cross-env BUILD_TARGET=xhs node ./scripts-dist/cli.js",
-        "build": "pnpm build:wx && pnpm build:my && pnpm build:qq",
+        "build": "pnpm build:wx && pnpm build:my",
         "dev": "pnpm tsc --outDir ./dist/full -w && node ./build/watch.js",
         "beta": "npm publish --tag=beta",
         "pub": "npm publish --tag=latest",
@@ -92,9 +92,9 @@
         "watch": "^1.0.2"
     },
     "dependencies": {
-        "@cross-virtual-list/mp-wx": "0.2.5",
-        "@cross-virtual-list/core": "0.2.5",
-        "@cross-virtual-list/types": "0.2.5",
+        "@cross-virtual-list/mp-wx": "0.3.0",
+        "@cross-virtual-list/core": "0.3.0",
+        "@cross-virtual-list/types": "0.3.0",
         "@mpkit/func-helper": "^1.1.2",
         "@mpkit/types": "^1.1.2",
         "@mpkit/util": "^1.1.2",
