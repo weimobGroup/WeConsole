@@ -12,10 +12,6 @@
     background-color: #fff;
     border-bottom: 1px solid $bg-bar;
 
-    &.last-row {
-        border-bottom: none;
-    }
-
     &.is-warn {
         color: $cr-warn;
         background-color: #fff3e0;

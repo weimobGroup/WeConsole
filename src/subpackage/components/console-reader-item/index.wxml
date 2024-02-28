@@ -1,4 +1,4 @@
-<view class="console-row {{index===maxIndex?'last-row':''}} is-{{value.method}} {{state.selectRowId===value.id?'wc-selected':''}}" catch:tap="tapRow" bind:longpress="longpressRow">
+<view class="console-row is-{{value.method}} {{state.selectRowId===value.id?'wc-selected':''}}" catch:tap="tapRow" bind:longpress="longpressRow">
     <view wx:if="{{value.method==='error'}}" class="console-wic wic-error"><view class="wic-arrow-1"></view></view>
     <view wx:if="{{value.method==='warn'}}" class="console-wic wic-warn"></view>
     <view wx:if="{{value.method==='info'}}" class="console-wic wic-info"></view>

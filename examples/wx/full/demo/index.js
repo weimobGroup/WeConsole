@@ -136,7 +136,7 @@ Component({
                     });
                 };
 
-                if (wx.getSystemInfoSync().enableDebug) {
+                if (wx.getSystemInfoSync().enableDebug || this.enableDebug) {
                     fire();
                     return;
                 }
@@ -150,6 +150,7 @@ Component({
                     confirmText: '打开调试',
                     success: (res) => {
                         if (res.confirm) {
+                            this.enableDebug = true;
                             wx.setEnableDebug({
                                 enableDebug: true
                             });
