@@ -16,6 +16,6 @@
     </view>
 </view>
 
-<button type="primary" bindtap="openDebug">打开微信原生vConsole调试，进行对比</button>
+<button type="primary" bindtap="toggleDebug">{{enableDebug?'关闭':'打开'}}微信原生vConsole调试{{enableDebug?'':'，进行对比'}}</button>
 
 <weconsole></weconsole>

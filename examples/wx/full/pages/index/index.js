@@ -10,9 +10,9 @@ Page({
             data: e.currentTarget.dataset.url
         });
     },
-    openDebug() {
+    toggleDebug() {
         wx.setEnableDebug({
-            enableDebug: true
+            enableDebug: !this.data.enableDebug
         });
     }
 });

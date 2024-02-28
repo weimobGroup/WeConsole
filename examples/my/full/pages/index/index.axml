@@ -1,5 +1,11 @@
+<view class="alert-success">
+    <view>真机调试小程序，就用 WeConsole ！</view>
+    <view>高效、便捷、免代理抓包请求。</view>
+    <view><text>点击</text>屏幕右侧的<text>【蓝色图标】</text>开启调试之旅~</view>
+</view>
 <demo />
 <view class="alert-warn">
+    <view>版本：v{{version}}</view>
     <view>
         Github: <text onTap="copy"
             data-url="https://github.com/weimob-tech/WeConsole">https://github.com/weimob-tech/WeConsole</text>
@@ -10,4 +16,24 @@
     </view>
 </view>
 
+<button type="primary" onTap="pk">对比支付宝原生Console调试</button>
+
 <weconsole></weconsole>
+
+<view a:if="{{pkShow}}" class="pk-modal">
+    <button class="btn-close" type="warn" onTap="closePk">关闭对比</button>
+    <view class="pk-tip alert-warn">支付宝无法通过API方式开启调试，请参考截图（可左右滑动）</view>
+    <view class="pk-content">
+        <swiper autoplay>
+            <swiper-item>
+                <image src="./console.jpg"></image>
+            </swiper-item>
+            <swiper-item>
+                <image src="./storage.jpg"></image>
+            </swiper-item>
+            <swiper-item>
+                <image src="./network.jpg"></image>
+            </swiper-item>
+        </swiper>
+    </view>
+</view>

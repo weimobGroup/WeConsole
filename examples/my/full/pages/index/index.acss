@@ -1,3 +1,5 @@
+/* stylelint-disable declaration-block-no-redundant-longhand-properties */
+/* stylelint-disable order/properties-order */
 /* stylelint-disable-next-line selector-type-no-unknown */
 page {
     box-sizing: border-box;
@@ -5,15 +7,32 @@ page {
     font-size: 28rpx;
 }
 
-.alert-warn {
-    padding: 30rpx;
-    margin-top: 40rpx;
+.alert-warn,
+.alert-success {
+    padding: 20rpx 30rpx;
+    margin-top: 30rpx;
+    margin-bottom: 30rpx;
     font-size: 24rpx;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-success text {
+    font-size: 140%;
+    font-weight: bold;
+    color: #1b9af7;
+}
+
+.alert-warn {
     color: #8a6d3b;
     background-color: #fcf8e3;
     border-color: #faebcc;
-    border-style: solid;
-    border-width: 1px;
 }
 
 .alert-warn view {
@@ -29,4 +48,47 @@ page {
     height: 30rpx;
     padding: 5rpx 15rpx 5rpx 50rpx;
     background-color: red;
+}
+
+button {
+    font-size: 24rpx;
+}
+
+.pk-modal {
+    position: fixed;
+    top: 30%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(0 0 0 / 40%);
+    box-shadow: 0 -10rpx 10rpx rgb(0 0 0 / 40%);
+}
+
+.btn-close {
+    flex-shrink: 0;
+    height: 80rpx;
+    line-height: 80rpx;
+}
+
+.pk-content {
+    flex-basis: 75%;
+    flex-shrink: 1;
+}
+
+.pk-modal .alert-warn {
+    margin: 0;
+}
+
+swiper,
+swiper-item,
+image {
+    height: 100%;
+}
+
+image {
+    display: block;
+    margin: 0 auto;
 }

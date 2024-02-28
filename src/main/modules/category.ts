@@ -63,21 +63,23 @@ export const reportCategoryMapToList = (categoryMap: { [prop: string]: string })
                 } else {
                     text = categoryVal[0].toUpperCase() + categoryVal.substr(1);
                 }
+                const oldLen = sum.list.length;
                 sum.list.push({
                     name: text,
                     value: categoryVal
                 });
+                if (!oldLen) {
+                    sum.list.push({
+                        name: 'Cloud',
+                        value: 'cloud'
+                    });
+                }
             }
             return sum;
         },
         {
             mark: {},
-            list: [
-                {
-                    name: 'Cloud',
-                    value: 'cloud'
-                }
-            ] as MpNameValue<string>[]
+            list: [] as MpNameValue<string>[]
         }
     ).list;
 };
