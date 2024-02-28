@@ -6,7 +6,15 @@ import { MpComponent } from 'typescript-mp-component';
 import { ToolMixin } from '@/sub/mixins/tool';
 import { MainStateController } from '@/main/modules/state-controller';
 import { registerClassComponent } from '@/sub/mixins/component';
-import { checkDebugEnabled, getCurrentEnvVersion, getStorage, getSystemInfo, setStorage } from 'cross-mp-power';
+import {
+    checkDebugEnabled,
+    getCurrentEnvVersion,
+    getStorage,
+    getSystemInfo,
+    setClipboardData,
+    setStorage,
+    showToast
+} from 'cross-mp-power';
 
 const WcScope = wcScope();
 
@@ -112,6 +120,11 @@ class MainComponent extends MpComponent {
     onPageLifeHide() {
         this.$mx.Tool.$updateData({
             pageVisible: false
+        });
+    }
+    copyAd() {
+        setClipboardData('https://github.com/weimob-tech/WeConsole').then(() => {
+            showToast('已复制Github项目地址');
         });
     }
     syncState() {

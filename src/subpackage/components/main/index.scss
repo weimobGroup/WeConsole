@@ -74,12 +74,15 @@
     bottom: 0;
     left: 0;
     box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 100rpx;
     margin-bottom: -1px;
     border-top: 1px solid $bg-tab-border;
+    font-family: $ft-code;
+    font-size: 40rpx;
+    font-weight: bold;
+    color: #ccc;
+    text-align: center;
+    padding-top: 20rpx;
 }
 
 .fc-modal-body {
@@ -90,13 +93,27 @@
     left: 0;
 }
 
+.fc-ad-title {
+    opacity: 0.8;
+}
+
 .fc-ad {
-    font-family: fantasy;
-    font-size: 40rpx;
+    opacity: 0.6;
     font-weight: 300;
-    color: #ccc;
-    text-align: center;
-    opacity: 0.5;
+    display: flex;
+    padding: 10rpx 30rpx;
+    font-size: 17rpx;
+    white-space: nowrap;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    align-items: center;
+    justify-content: space-between;
+    text {
+        display: block;
+        font-size: 65%;
+    }
 }
 
 .fc-tabs-action {

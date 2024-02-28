@@ -1,9 +1,9 @@
 <wxs module="movable" src="../../mpxs/movable.wxs"></wxs>
 <view wx:if="{{showIcon && inited}}"
     class="fc-hand {{customHand?'':'fc-hand-prefect'}} {{isFullScreenPhone?'fc-adap':''}} {{visible?'is-hide':''}}"
-    bind:touchstart="{{movable.touchStart}}" bind:touchmove="{{movable.touchMove}}"
-    bind:touchend="{{movable.touchEnd}}" bind:touchcancel="{{movable.touchEnd}}" data-movid="wc_hand"
-    data-movmaxx="{{winWidth}}" data-movmaxy="{{winHeight}}" data-movend="handMovableEnd"
+    bind:touchstart="{{movable.touchStart}}" bind:touchmove="{{movable.touchMove}}" bind:touchend="{{movable.touchEnd}}"
+    bind:touchcancel="{{movable.touchEnd}}" data-movid="wc_hand" data-movmaxx="{{winWidth}}"
+    data-movmaxy="{{winHeight}}" data-movend="handMovableEnd"
     style="z-index:{{zIndex}};{{handStyle||''}};left:{{handX}};top:{{handY}};">
     <view class="fc-hand-toggle" bindtap="toggleVisible">
         <slot wx:if="{{customHand}}" name="hand"></slot>
@@ -41,8 +41,12 @@
             </view>
         </tabs>
     </view>
-    <view wx:if="{{isFullScreenPhone}}" class="fc-modal-adap">
-        <view class="fc-ad">weconsole</view>
+    <view wx:if="{{isFullScreenPhone}}" class="fc-modal-adap" bindtap="copyAd">
+        <view class="fc-ad-title">WeConsole</view>
+        <view class="fc-ad">
+            <view><text>Github:</text><view>weimob-tech/WeConsole</view></view>
+            <view><text>Collaborator:</text> <view>github@imingyu</view><view>mingyuhisoft@163.com</view></view>
+        </view>
     </view>
 </view>
 <canvas id="canvas" type="2d" onReady="onCanvasReady" style="display:none;"></canvas>
