@@ -226,6 +226,7 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     onCategoryChange(e: Required<MpEvent<string>>) {
         this.$mx.Dr.$drChangeCategory(e.detail);
         this.ApiStateController.setState('activeCategory', e.detail);
+        this.setDetailMaterial();
     }
     syncAffixList() {
         this.$mx.Tool.$updateData({
