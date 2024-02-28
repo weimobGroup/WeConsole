@@ -1,0 +1,12 @@
+{
+    "pages": ["pages/index/index"],
+    "window": {
+        "defaultTitle": "WeConsole示例"
+    },
+    "behavior": {
+        "requestReferrerStrategy": "page",
+        "requestReferrerStyle": "full",
+        "requestDefaultEnableCookie": true,
+        "connectSocketDefaultMultiple": true
+    }
+}

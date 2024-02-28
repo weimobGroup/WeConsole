@@ -1,4 +1,4 @@
-# WeConsole——功能全面、界面与体验对标 Chrome devtools 的可定制化的小程序开发调试面板
+# WeConsole——功能全面、界面与体验对标 Chrome devtools 的可定制化的跨平台小程序开发调试面板
 
 [![image](https://img.shields.io/npm/l/weconsole.svg)](https://www.npmjs.com/package/weconsole)
 [![image](https://img.shields.io/npm/v/weconsole.svg)](https://www.npmjs.com/package/weconsole)
@@ -8,6 +8,27 @@
 ![组件效果](./docs/img/ad.png)
 
 ## 更新记录
+
+-   v1.4.0
+
+    -   功能升级
+        -   支持跨平台：目前已支持`微信`、`支付宝`，后续还将支持百度、小红书、QQ 等小程序平台
+        -   优化虚拟列表
+        -   优化`Console`面板
+            -   优化样式
+        -   优化`Api`面板
+            -   切换分类时重置详细页
+            -   优化样式
+        -   优化`Component`面板
+            -   显示`<App>`环境版本和版本号
+    -   修复 BUG
+        -   修复`Api`面板切换详情时 json 数据未变的问题
+        -   修复`Console`面板复制对象存在循环引用情况下无法复制并报错的问题
+    -   重构代码
+        -   自定义`CustomAction`组件对接`table`组件
+        -   抽象跨平台代码到独立 npm 包
+    -   其他
+        -   添加`支付宝`小程序示例代码
 
 -   v1.3.0
 
@@ -55,7 +76,7 @@
 
 但是在近几年兴起的微信小程序的前端开发中，却少有类似的体验和功能对标的开发调试工具出现。当然微信小程序的官方也提供了类似的工具，那就是 vConsole，但是相比 PC 端提供的工具来说确实无论是功能和体验都有所欠缺，所以我们开发了 weconsole 来提供更加全面的功能和更好的体验。
 
-基于上述背景，我们想开发一款运行在微信小程序环境上，无论在用户体验还是功能等方面都能媲美 PC 端的前端开发调试工具，当然某些（如 debugger 代码等）受限于技术在当前时期无法实现的功能我们暂且忽略。
+基于上述背景，我们（**起初**）想开发一款运行在微信小程序环境上（**目前可运行与多个小程序平台**），无论在用户体验还是功能等方面都能媲美 PC 端的前端开发调试工具，当然某些（如 debugger 代码等）受限于技术在当前时期无法实现的功能我们暂且忽略。
 
 我们将这款工具命名为`Weimob Console`，简写为`WeConsole`。
 
@@ -71,23 +92,43 @@ npm i weconsole -S
 
 ### 2、普通方式安装
 
-可将 npm 包下载到本地，然后将其中的`dist/full`文件夹拷贝至项目目录中；
+> 此方式会将`WeConsole`依赖的所有 npm 代码包都自动引入，无需再通过开发者工具进行 npm 编译。
+
+可将 npm 包下载到本地，然后：
+
+-   `微信小程序`：请将`dist/full`目录中的文件拷贝至项目目录中；
+-   `支付宝小程序`：请将`dist/my/full`目录中的文件拷贝至项目目录中；
 
 ### 3、引用
 
-WeConsole 分为`核心`和`组件`两部分，使用时需要全部引用后方可使用，`核心`负责重写系统变量或方法，以达到全局监控的目的；`组件`负责将监控的数据显示出来。
+WeConsole 分为`核心`和`组件`两部分，使用时需要全部引用后方可使用：
 
-在`app.js`文件中引用`核心`：
+-   `核心`负责重写系统变量或方法，以达到全局监控的目的；
+-   `组件`负责将监控的数据显示出来。
+
+#### 3.1 在`app.js`文件中引用`核心`：
+
+-   `微信小程序`引用方式：
 
 ```javascript
 // NPM方式引用
 import 'weconsole/main/init';
 
 // 普通方式引用
-import 'xxx/weconsole/main/init';
+import 'xxx/weconsole/full/main/init';
 ```
 
-引入`weconsole/main/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
+-   `支付宝小程序`引用方式：
+
+```javascript
+// NPM方式引用
+import 'weconsole/my/main/init';
+
+// 普通方式引用
+import 'xxx/weconsole/my/full/main/init';
+```
+
+引入`main/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
 
 ```javascript
 import { replace, restore, showWeConsole, hideWeConsole } from 'weconsole'; // scope可选值：App/Page/Component/Console/Api
@@ -99,9 +140,17 @@ restore(scope);
 showWeConsole();
 ```
 
-> 如果没有显式调用过`showWeConsole/hideWeConsole`方法，组件第一次初始化时，会根据小程序是否`开启调试模式`来决定入口图标的显示性。
+> 如果没有显式调用过`showWeConsole/hideWeConsole`方法，组件第一次初始化时，会根据根据小程序当前状态综合判断入口图标的显示性，这些规则包括：
 
-在需要的地方引用`组件`，需要先将组件注册进`app/page/component.json`中：
+-   当`调试模式开启`时，显示
+-   当处于`开发者工具环境`时，显示
+-   当处于`预览版`时，显示
+-   当处于`体验版`时，显示
+-   当处于`正式版`时，**不显示**
+
+#### 3.2 在需要的地方引用`组件`：
+
+-   `微信小程序`引用方式：
 
 ```javascript
 // NPM方式引用
@@ -111,11 +160,25 @@ showWeConsole();
 
 // 普通方式引用
 "usingComponents": {
-    "weconsole": "xxx/weconsole/subpackage/components/main/index"
+    "weconsole": "xxx/weconsole/full/subpackage/components/main/index"
 }
 ```
 
-然后在`wxml`中使用`<weconsole>`标签进行初始化：
+-   `支付宝小程序`引用方式：
+
+```javascript
+// NPM方式引用
+"usingComponents": {
+    "weconsole": "weconsole/dist/my/npm/subpackage/components/main/index"
+}
+
+// 普通方式引用
+"usingComponents": {
+    "weconsole": "xxx/weconsole/dist/my/full/subpackage/components/main/index"
+}
+```
+
+然后在小程序视图层的`xml`文件中使用`<weconsole>`标签进行初始化：
 
 ```xml
 <!-- page/component.wxml -->
@@ -394,67 +457,31 @@ showWeConsole();
 
 ```typescript
 interface MpUIConfig {
-    /**监控小程序API数据后，使用该选项进行该数据的分类值计算，计算后的结果显示在界面上 */
+    /** 监控小程序API数据后，使用该选项进行该数据的分类值计算，计算后的结果显示在界面上 */
     apiCategoryGetter?: MpProductCategoryMap | MpProductCategoryGetter;
-    /**监控Console数据后，使用该选项进行该数据的分类值计算，计算后的结果显示在界面上 */
+    /** 监控Console数据后，使用该选项进行该数据的分类值计算，计算后的结果显示在界面上 */
     consoleCategoryGetter?: MpProductCategoryMap | MpProductCategoryGetter;
-    /**API选项卡下显示的数据分类列表，all、mark、other 分类固定存在 */
+    /** Other内置信息中获取当前页面实例时执行的方法 */
+    currentPageGetter?: () => MpView;
+    /** API选项卡下显示的数据分类列表，all、mark、other 分类固定存在 */
     apiCategoryList?: Array<string | MpNameValue<string>>;
-    /**复制策略，传入复制数据，可通过数据的type字段判断数据哪种类型，比如api/console */
+    /** 复制策略，传入复制数据，可通过数据的type字段判断数据哪种类型，比如api/console */
     copyPolicy?: MpProductCopyPolicy;
-    /**定制化列表 */
+    /** 定制化列表 */
     customActions?: WcCustomAction[];
+    /** 默认的api分类值 */
+    apiDefaultCategoryValue?: string;
+    /** 默认的console分类值 */
+    consoleDefaultCategoryValue?: string;
+    /** 不监控这些API，也就是说这些API调用后不会在【API】选项卡中显示 */
+    ignoreHookApiNames?: string[];
+    /** 只监控这些API，也就是除了这些API以外的其他调用都不会在【API】选项卡中显示 */
+    onlyHookApiNames?: string[];
+    /** 全局对象，如果你的小程序存在沙盒环境，请务必传递一个可供全局存储数据的单例对象 */
+    globalObject?: any;
 }
 
-/**取数据的category字段值对应的prop */
-interface MpProductCategoryMap {
-    [prop: string]: string | MpProductCategoryGetter;
-}
-interface MpProductCategoryGetter {
-    (product: Partial<MpProduct>): string | string[];
-}
-interface MpProductCopyPolicy {
-    (product: Partial<MpProduct>);
-}
-/**定制化 */
-interface WcCustomAction {
-    /**标识，需要保持唯一 */
-    id: string;
-    /**标题 */
-    title: string;
-    /**默认执行哪个case？ */
-    autoCase?: string;
-    /**该定制化有哪些情况 */
-    cases: WcCustomActionCase[];
-}
-
-const enum WcCustomActionShowMode {
-    /**显示JSON树 */
-    json = 'json',
-    /**显示数据表格 */
-    grid = 'grid',
-    /** 固定显示<weconsole-customer>组件，该组件需要在app.json中注册，同时需要支持传入data属性，属性值就是case handler执行后的结果 */
-    component = 'component',
-    /**显示一段文本 */
-    text = 'text',
-    /**什么都不做 */
-    none = 'none'
-}
-
-interface WcCustomActionCase {
-    id: string;
-    /**按钮文案 */
-    button?: string;
-    /**执行逻辑 */
-    handler: Function;
-    /**显示方式 */
-    showMode?: WcCustomActionShowMode;
-}
-
-interface WcCustomActionGrid {
-    cols: DataGridCol[];
-    data: any;
-}
+// 配置项的详细types请参考源码目录：src/types
 ```
 
 ### addCustomAction(action: WcCustomAction)
@@ -508,14 +535,14 @@ interface IEventEmitter<T = any> {
 
 ## 五、后续规划
 
--   优化包大小
--   单元测试
--   体验优化
--   定制化升级
--   基于网络通信的界面化 weconsole
--   标准化
--   支持 H5
--   支持其他小程序平台（支付宝/百度/字节跳动）
+-   [x] 优化包大小
+-   [x] 体验优化
+-   [x] 定制化升级
+-   [x] 支持其他小程序平台（支付宝/百度/字节跳动）
+-   [] 单元测试
+-   [] 基于网络通信的界面化 weconsole
+-   [] 标准化
+-   [] 支持 H5
 
 ## 六、贡献流程
 

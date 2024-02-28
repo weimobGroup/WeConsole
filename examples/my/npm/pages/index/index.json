@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+        "demo": "../../demo/index",
+        "weconsole": "weconsole/dist/my/npm/subpackage/components/main/index"
+    }
+}
