@@ -45,4 +45,4 @@
         <view class="fc-ad">weconsole</view>
     </view>
 </view>
-<canvas id="canvas" type="2d" style="display:none;"></canvas>
+<canvas id="canvas" type="2d" onReady="onCanvasReady" style="display:none;"></canvas>

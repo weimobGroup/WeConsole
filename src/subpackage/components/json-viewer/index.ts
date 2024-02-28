@@ -25,6 +25,7 @@ export interface MpJSONViewerComponentEbusDetail {
 
 export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONViewerComponentProps> {
     inited: boolean;
+    initPromise?: Promise<void>;
     JSONViewer?: IJSONViewer;
     target: any;
     onInitedHandlers?: AnyFunction[];
@@ -250,46 +251,51 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
     }
     measureText(str: string, fontSize: number): number {
         if (!this.$mx.Tool.$wcCanvasContext) {
-            return Infinity;
+            return fontSize * str.length;
         }
         this.$mx.Tool.$wcCanvasContext.font = `${fontSize}px ${fontName}`;
         return this.$mx.Tool.$wcCanvasContext.measureText(str).width;
     }
-    initJSONViewer(): Promise<any> {
+    initJSONViewer(): Promise<void> {
         if (this.JSONViewer || this.isDetached) {
             return Promise.resolve();
         }
-        return Promise.all([this.$mx.Tool.$getBoundingClientRect('.json-viewer'), this.$mx.Tool.$getCanvasContext()])
-            .then(([{ width }]) => {
-                this.measureText = this.measureText.bind(this);
-                const target =
-                    'target' in (this as any) ? this.target : 'target' in this.data ? this.data.target : undefined;
-                this.JSONViewer = new JSONViewer({
-                    target: target,
-                    arrowWidth: rpxToPx(20),
-                    fontSize: rpxToPx(this.data.fontSize || 28),
-                    keyFontSize: rpxToPx(this.data.smallFontSize || 28 * 0.8),
-                    measureText: this.measureText,
-                    maxWidth: width - rpxToPx(100)
-                });
-                const jsonViewer = this.JSONViewer;
-                return new Promise<void>((resolve) => {
-                    const mpData = this.data.root ? {} : { root: jsonViewer.getJSONNode() };
-                    if (this.lastPath) {
-                        Object.assign(mpData, this.buildPath(!!this.lastOpen, this.lastPath));
-                    }
-                    this.$mx.Tool.$forceData(mpData, () => {
-                        this.triggerEvent('first', this.data.root);
-                        resolve();
+        if (!this.initPromise) {
+            this.initPromise = Promise.all([
+                this.$mx.Tool.$getBoundingClientRect('.json-viewer'),
+                this.$mx.Tool.$getCanvasContext()
+            ])
+                .then(([{ width }]) => {
+                    const target =
+                        'target' in (this as any) ? this.target : 'target' in this.data ? this.data.target : undefined;
+                    this.JSONViewer = new JSONViewer({
+                        target: target,
+                        arrowWidth: rpxToPx(20),
+                        fontSize: rpxToPx(this.data.fontSize || 28),
+                        keyFontSize: rpxToPx(this.data.smallFontSize || 28 * 0.8),
+                        measureText: this.measureText.bind(this),
+                        maxWidth: width - rpxToPx(100)
                     });
+                    const jsonViewer = this.JSONViewer;
+                    return new Promise<void>((resolve) => {
+                        const mpData = this.data.root ? {} : { root: jsonViewer.getJSONNode() };
+                        if (this.lastPath) {
+                            Object.assign(mpData, this.buildPath(!!this.lastOpen, this.lastPath));
+                        }
+                        this.$mx.Tool.$forceData(mpData, () => {
+                            this.triggerEvent('first', this.data.root);
+                            resolve();
+                        });
+                    });
+                })
+                .catch((err) => {
+                    if (this.$mx.Tool.$wcComponentIsDestroyed) {
+                        return;
+                    }
+                    return Promise.reject(err);
                 });
-            })
-            .catch((err) => {
-                if (this.$mx.Tool.$wcComponentIsDestroyed) {
-                    return;
-                }
-                return Promise.reject(err);
-            });
+        }
+        return this.initPromise;
     }
     setJSONString(): Promise<void> {
         return new Promise((resolve) => {

@@ -19,7 +19,7 @@ import type { MpEvent } from '@/types/view';
 import { computeTime } from '@/sub/modules/util';
 import { getUIConfig } from '@/main/config';
 import { rpxToPx } from '@/main/modules/util';
-import { setClipboardData } from 'cross-mp-power';
+import { nextTick, setClipboardData } from 'cross-mp-power';
 
 type Data = MpApiReaderComponentData & MpDataReaderComponentData;
 
@@ -189,21 +189,36 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
         this.ApiStateController.removeState('selectedId');
     }
     setDetailMaterial(id?: string, tab?: number, from?: string) {
-        this.$mx.Tool.$updateData({
-            detailMaterialId: id || '',
-            detailTab: tab || 0,
-            detailFrom: from || ''
+        const fire = (resolve: () => void) => {
+            this.$mx.Tool.$forceData(
+                {
+                    detailMaterialId: id || '',
+                    detailTab: tab || 0,
+                    detailFrom: from || ''
+                },
+                resolve
+            );
+            if (from) {
+                this.ApiStateController.setState('selectedIdFrom', from);
+            } else {
+                this.ApiStateController.removeState('selectedIdFrom');
+            }
+            if (id) {
+                this.ApiStateController.setState('selectedId', id);
+            } else {
+                this.ApiStateController.removeState('selectedId');
+            }
+        };
+        if (id && this.data.detailMaterialId) {
+            return this.setDetailMaterial().then(() => {
+                nextTick(() => {
+                    this.setDetailMaterial(id, tab, from);
+                });
+            });
+        }
+        return new Promise<void>((resolve) => {
+            fire(resolve);
         });
-        if (from) {
-            this.ApiStateController.setState('selectedIdFrom', from);
-        } else {
-            this.ApiStateController.removeState('selectedIdFrom');
-        }
-        if (id) {
-            this.ApiStateController.setState('selectedId', id);
-        } else {
-            this.ApiStateController.removeState('selectedId');
-        }
     }
     clearDetailMaterial() {
         this.setDetailMaterial();

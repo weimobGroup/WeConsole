@@ -18,6 +18,8 @@ const getSysTabs = (): MpNameValue<string>[] =>
 
 class MainComponent extends MpComponent {
     canvasCtx?: any;
+    isCanvasReadyResolve?: boolean;
+    onCanvasReadyResolve?: () => void;
     $mx = {
         Tool: new ToolMixin()
     };
@@ -195,6 +197,10 @@ class MainComponent extends MpComponent {
         MainStateController.setState('activeTabIndex', activeTabIndex);
         MainStateController.setState('tabMountState', JSON.parse(JSON.stringify(this.data.tabMountState)));
     }
+    onCanvasReady() {
+        this.isCanvasReadyResolve = true;
+        this.onCanvasReadyResolve?.();
+    }
     getCanvasCtx() {
         if (this.canvasCtx) {
             return Promise.resolve(this.canvasCtx);
@@ -202,29 +208,87 @@ class MainComponent extends MpComponent {
 
         return new Promise((resolve, reject) => {
             let retryCount = 0;
-            const fire = () => {
-                (this as any)
-                    .createSelectorQuery()
-                    .select('#canvas')
-                    .fields({ node: true })
-                    .exec((res) => {
-                        if (res?.[0] && res?.[0]?.node) {
-                            const canvas = res[0].node;
-                            this.canvasCtx = canvas.getContext('2d');
-                            resolve(this.canvasCtx);
-                        } else {
-                            retryCount++;
-                            if (retryCount > 3 || this.$mx.Tool.$wcComponentIsDestroyed) {
-                                return reject(new Error('无法获得canvas context'));
+            const fromQuery = (cb: (val?: any) => void) => {
+                const exec = () => {
+                    (this as any)
+                        .createSelectorQuery()
+                        .select('#canvas')
+                        .node()
+                        .exec((res) => {
+                            if (res?.[0]?.node?.getContext) {
+                                try {
+                                    const ctx = res[0].node.getContext('2d');
+                                    cb(ctx);
+                                } catch (error) {
+                                    cb();
+                                }
+                            } else {
+                                cb();
                             }
-                            setTimeout(() => {
-                                fire();
-                            }, 200);
-                        }
-                    });
+                        });
+                };
+                if (BUILD_TARGET !== 'my') {
+                    exec();
+                    return;
+                }
+                if (!this.isCanvasReadyResolve) {
+                    this.onCanvasReadyResolve = exec;
+                } else {
+                    exec();
+                }
+            };
+            const fromApi = (cb: (val?: any) => void) => {
+                if (BUILD_TARGET === 'my') {
+                    try {
+                        const ctx = my.createCanvasContext('canvas');
+                        cb(ctx);
+                    } catch (error) {
+                        cb();
+                    }
+                    return;
+                }
+                cb();
+            };
+            const fire = () => {
+                let ctx;
+                let count = 0;
+                const done = () => {
+                    if (count < 2) {
+                        return;
+                    }
+                    if (ctx) {
+                        resolve(ctx);
+                        return;
+                    }
+                    retryCount++;
+                    if (retryCount > 3 || this.$mx.Tool.$wcComponentIsDestroyed) {
+                        return reject(new Error('无法获得canvas context'));
+                    }
+                    setTimeout(() => {
+                        fire();
+                    }, 200);
+                };
+                fromApi((res) => {
+                    count++;
+                    ctx = ctx || res;
+                    done();
+                });
+                fromQuery((res) => {
+                    count++;
+                    ctx = ctx || res;
+                    done();
+                });
             };
             fire();
         });
+
+        return new Promise<void>((resolve) => {
+            if (BUILD_TARGET === 'my' && !this.isCanvasReadyResolve) {
+                this.onCanvasReadyResolve = resolve;
+            } else {
+                resolve();
+            }
+        }).then(() => {});
     }
     init() {
         if (!MainStateController.getState('winHeight')) {

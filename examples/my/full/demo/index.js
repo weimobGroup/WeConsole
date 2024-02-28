@@ -23,10 +23,9 @@ Component({
         callWxMethod(e) {
             const method = e.currentTarget.dataset.method;
             if (method === 'console') {
-                console[consoleType[this.consoleType]](
-                    this.consoleType === 3 ? new Error(Date.now()) : Date.now(),
-                    global
-                );
+                console[consoleType[this.consoleType]](this.consoleType === 3 ? new Error(Date.now()) : Date.now(), {
+                    value: Date.now()
+                });
                 this.consoleType++;
                 this.consoleType = this.consoleType > 3 ? 0 : this.consoleType;
                 return;
@@ -42,7 +41,8 @@ Component({
                 this.storageIndex++;
                 const key = `s${this.storageIndex}`;
                 my.setStorageSync({
-                  key, data:this.storageIndex % 2 === 0 ? Date.now() : { value: Date.now() }
+                    key,
+                    data: this.storageIndex % 2 === 0 ? Date.now() : { value: Date.now() }
                 });
                 my.showToast({
                     content: `已设置「${key}」的数据，请前往Storage查看`,
@@ -76,14 +76,14 @@ Component({
                     key: k2,
                     success: () => {
                         my.showToast({
-                            title: `已删除「${k2}」的数据`,
+                            content: `已删除「${k2}」的数据`,
                             type: 'none'
                         });
                         console.log('removeStorage success');
                     },
                     fail: (res) => {
                         my.showToast({
-                            title: `删除失败：${res.errMsg}`,
+                            content: `删除失败：${res.errMsg}`,
                             type: 'none'
                         });
                         console.error('removeStorage fail=', res);
