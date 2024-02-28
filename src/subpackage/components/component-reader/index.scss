@@ -58,13 +58,15 @@
 }
 
 .fc-detail-action {
-    position: absolute;
-    z-index: 5;
     display: flex;
     align-items: center;
     justify-content: center;
     width: $ht-tab-bar - 20rpx;
     height: $ht-tab-bar - 20rpx;
+
+    &.is-last::after {
+        display: none;
+    }
 
     &::after {
         position: absolute;

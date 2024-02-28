@@ -67,7 +67,6 @@ class CustomActionComponent extends MpComponent {
         this.$mx.Tool.$forceData({
             selfHash: uuid()
         });
-        this.setAction();
         this.$mx.Tool.$wcOn('JSONViewerReady', (type, data: MpJSONViewerComponentEbusDetail) => {
             if (!data.from.startsWith(`${this.data.selfHash}`)) {
                 return;
@@ -115,6 +114,9 @@ class CustomActionComponent extends MpComponent {
                 });
             }
         });
+    }
+    attached() {
+        this.setAction();
     }
     setAction() {
         const actions = getCustomActions();

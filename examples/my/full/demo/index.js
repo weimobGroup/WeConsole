@@ -41,7 +41,9 @@ Component({
             if (method === 'setStorageSync') {
                 this.storageIndex++;
                 const key = `s${this.storageIndex}`;
-                my.setStorageSync(key, this.storageIndex % 2 === 0 ? Date.now() : { value: Date.now() });
+                my.setStorageSync({
+                  key, data:this.storageIndex % 2 === 0 ? Date.now() : { value: Date.now() }
+                });
                 my.showToast({
                     content: `已设置「${key}」的数据，请前往Storage查看`,
                     type: 'none'

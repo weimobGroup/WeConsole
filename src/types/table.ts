@@ -41,9 +41,9 @@ export interface TableCol {
 export interface TableComponentProps<T extends RequireId = RequireId> {
     from: string;
     /** 选中的行ID数组 */
-    selected: string[];
+    selected?: string[];
     /** 置顶数据的行ID数组 */
-    affixed: string[];
+    affixed?: string[];
     /** 行数据唯一key字段名 */
     rowKeyField?: string;
     /** 行高，rowHeightMode=dynamic时代表最小行高 */
@@ -81,7 +81,7 @@ export type TableRowComponentProps<T extends RequireId = RequireId> = MpVirtualL
     {
         rowHeight: number;
         /** 选中的行ID数组 */
-        selected: string[];
+        selected?: string[];
         /** 列配置 */
         cols: TableCol[];
         colComputedWidth: number[];

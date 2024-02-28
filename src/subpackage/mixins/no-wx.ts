@@ -1,3 +1,5 @@
+import { nextTick } from 'cross-mp-power';
+
 /** 重写属性的Observer，确保created在它之前执行 */
 export const makeSureCreatedPriorPropObserver = (spec: any) => {
     if (spec.properties) {
@@ -23,17 +25,19 @@ export const makeSureCreatedPriorPropObserver = (spec: any) => {
         const old = spec.lifetimes.created;
         spec.lifetimes.created = function created() {
             old?.call(this);
-            this.__createdIsFired__ = true;
-            if (this.__waitObserverQueue) {
-                this.__waitObserverQueue.forEach((item) => {
-                    try {
-                        item();
-                    } catch (error) {
-                        console.error(error);
-                    }
-                });
-                delete this.__waitObserverQueue;
-            }
+            nextTick(() => {
+                this.__createdIsFired__ = true;
+                if (this.__waitObserverQueue) {
+                    this.__waitObserverQueue.forEach((item) => {
+                        try {
+                            item();
+                        } catch (error) {
+                            console.error(error);
+                        }
+                    });
+                    delete this.__waitObserverQueue;
+                }
+            });
         };
     }
 };

@@ -475,9 +475,15 @@ export const getOwnPropertyDescriptors = (() => {
     const handleMpView = (obj: any, res: JSONPropDesc[], index: number, filter?: JSONPropFilter) => {
         const type = getMpViewType(obj);
         if (type === 'Page' || type === 'Component') {
-            const props = ['data', 'dataset', 'properties'];
+            const props = ['data'];
+            if (type === 'Component') {
+                props.push('dataset');
+            }
+            if (BUILD_TARGET === 'wx') {
+                props.push('properties');
+            }
             props.forEach((name) => {
-                if (name in obj) {
+                if (name in obj && !res.some((item) => item.prop === name)) {
                     const desc: JSONPropDesc = {
                         prop: name,
                         desc: {

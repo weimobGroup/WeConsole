@@ -14,7 +14,7 @@
                 <view class="fc-detail-action right-border" bind:tap="setDetailMaterial" slot="tabHeadBefore">
                     <view class="fc-detail-close wic-close"></view>
                 </view>
-                <view slot="tabHeadAfter" class="fc-detail-action absolute btn-link" bind:tap="copyDetail">Copy</view>
+                <view slot="tabHeadAfter" class="fc-detail-action absolute is-last btn-link" bind:tap="copyDetail">Copy</view>
             </json-viewer>
         </scroll-view>
     </view>

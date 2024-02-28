@@ -44,18 +44,20 @@ export const rewriteAliSpec = (spec) => {
             }
             const old = properties[k]?.observer;
 
-            observers[k] = function observer(...args) {
-                if (
-                    typeof args[0] !== 'function' &&
-                    JSON.stringify(args[0] === undefined ? null : args[0]) !== JSON.stringify(this.data[k])
-                ) {
-                    this.setData({
-                        [k]: args[0] === undefined ? null : args[0]
-                    });
-                }
-                return old?.apply(this, args);
-            };
-            needSetObservers = true;
+            if (typeof old === 'function') {
+                observers[k] = function observer(...args) {
+                    if (
+                        typeof args[0] !== 'function' &&
+                        JSON.stringify(args[0] === undefined ? null : args[0]) !== JSON.stringify(this.data[k])
+                    ) {
+                        this.setData({
+                            [k]: args[0] === undefined ? null : args[0]
+                        });
+                    }
+                    return old?.apply(this, args);
+                };
+                needSetObservers = true;
+            }
         });
         if (needSetProps) {
             spec.props = props;

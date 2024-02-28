@@ -163,7 +163,7 @@ export class TableComponent<
     }
     syncAffixList() {
         this.setData({
-            affixList: this.data.affixed.reduce((sum: T[], id) => {
+            affixList: (this.data.affixed || []).reduce((sum: T[], id) => {
                 const item = this.$mx.Vl.$vlFindItemByKey(id);
                 if (item) {
                     sum.push(clone(item[0]));

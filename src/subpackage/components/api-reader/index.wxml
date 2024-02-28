@@ -1,12 +1,14 @@
 <view class="fc-reader fc-re-api">
     <filter-bar categorys="{{categoryList}}" activeCategory="{{activeCategory}}" bind:category="onCategoryChange"
         bind:clear="clear" bind:filter="filter" filter clear></filter-bar>
-    <data-table class="fc-reader-body has-bar"
-        outerClass="fc-api-datagrid {{detailMaterialId&& detailFrom!=='longpressRow'?'show-detail':''}}"
-        rowClass="method" rowHeight="{{rowHeight}}" selected="{{[detailMaterialId]}}" affixed="{{affixed}}"
-        cols="{{readerCols}}" bind:ready="$vlOnVirtualListComponentReady" bind:interact="onItemInteractEvent">
-    </data-table>
-    <api-detail wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" data="{{detailMaterialId}}"
-        tab="{{detailTab}}" class="fc-reader-detail-container has-th has-bar" bind:changeTab="changeDetailTab"
-        bind:close="clearDetailMaterial"></api-detail>
+    <view
+        class="fc-reader-body has-bar fc-api-datagrid {{detailMaterialId&& detailFrom!=='longpressRow'?'show-detail':''}}">
+        <data-table rowHeight="{{rowHeight}}" selected="{{[detailMaterialId]}}" affixed="{{affixed}}"
+            cols="{{readerCols}}" bind:ready="$vlOnVirtualListComponentReady" bind:interact="onItemInteractEvent">
+        </data-table>
+    </view>
+    <view wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" class="fc-reader-detail-container has-th has-bar">
+        <api-detail data="{{detailMaterialId}}" tab="{{detailTab}}" bind:changeTab="changeDetailTab"
+            bind:close="clearDetailMaterial"></api-detail>
+    </view>
 </view>
