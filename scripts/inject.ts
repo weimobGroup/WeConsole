@@ -16,11 +16,15 @@ interface InjectConfig {
      * full: 以全依赖引用的方式注入，无需开发者工具主动编译就可使用，缺点是可能存在依赖包被重复打包代码的问题；
      */
     mode?: 'npm' | 'full';
+    /** 注入的小程序项目属于哪个平台？ */
     platform?: 'wx' | 'alipay';
+    /** 注入weconsole标签时传入的fullTop属性值 */
     fullTop?: string;
-    // 刘海屏机型（如iphone12等）下组件全屏化后，距离窗口顶部距离
+    /** 注入weconsole标签时传入的adapFullTop属性值 */
     adapFullTop?: string;
+    /** 注入weconsole标签时传入的zIndex属性值 */
     zIndex?: number;
+    /** 是否在注入时将weconsole的所有JS及组件文件复制到项目根目录？ */
     copy?: boolean;
 }
 

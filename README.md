@@ -98,7 +98,7 @@ npm i weconsole -S
 可将 npm 包下载到本地，然后：
 
 -   `微信小程序`：请将`dist/full`目录中的文件拷贝至项目目录中；
--   `支付宝小程序`：请将`dist/my/full`目录中的文件拷贝至项目目录中；
+-   `支付宝小程序`：请将`dist/alipay/full`目录中的文件拷贝至项目目录中；
 
 ## 3、引用
 
@@ -116,25 +116,29 @@ WeConsole 分为`核心`和`组件`两部分，使用时需要全部引用后方
 import 'weconsole/main/init';
 
 // 普通方式引用
-import 'xxx/weconsole/full/main/init';
+import '{复制后的【dist/full】的路径}/main/init';
 ```
 
 -   `支付宝小程序`引用方式：
 
 ```javascript
 // NPM方式引用
-import 'weconsole/my/main/init';
+import 'weconsole/dist/alipay/npm/main/init';
 
 // 普通方式引用
-import 'xxx/weconsole/my/full/main/init';
+import '{复制后的【dist/alipay/full】的路径}/main/init';
 ```
 
 引入`main/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
 
 ```javascript
-import { replace, restore, showWeConsole, hideWeConsole } from 'weconsole'; // scope可选值：App/Page/Component/Console/Api
+import { replace, restore, showWeConsole, hideWeConsole } from '{NPM或复制后的【dist/alipay/full】的路径}/main/index';
+
+// scope可选值：App/Page/Component/Console/Api
 // 按需替换系统变量或函数以达到监控
-replace(scope); // 可还原
+replace(scope);
+
+// 可还原
 restore(scope);
 
 // 通过show/hide方法控制显示入口图标
@@ -161,7 +165,7 @@ showWeConsole();
 
 // 普通方式引用
 "usingComponents": {
-    "weconsole": "xxx/weconsole/full/subpackage/components/main/index"
+    "weconsole": "{复制后的【dist/full】的路径}/subpackage/components/main/index"
 }
 ```
 
@@ -175,11 +179,13 @@ showWeConsole();
 
 // 普通方式引用
 "usingComponents": {
-    "weconsole": "xxx/weconsole/dist/my/full/subpackage/components/main/index"
+    "weconsole": "{复制后的【dist/alipay/full】的路径}/subpackage/components/main/index"
 }
 ```
 
 然后在小程序视图层的`xml`文件中使用`<weconsole>`标签进行初始化：
+
+> 可以使用 weconsole 提供的命令行工具一键批量插入标签，参考 **【5、一键注入】**
 
 ```xml
 <!-- page/component.wxml -->
@@ -211,6 +217,44 @@ properties: {
 -   分包文件：`dist/{full|npm}/subpackage/*`
 
 > 目前 weconsole 没有提供便捷的主包/分包文件分割功能，后续会提供
+
+## 5、一键注入
+
+如果你不想一个个页面的插入`<weconsole>`标签，或者就想小程序中的所有页面全部插入，那你可以使用 weconsole 提供的命令行工具来完成：
+
+```bash
+# 安装weconsole后，可使用`weconsole inject`命令进行一键注入
+
+npx weconsole inject ./my-mp-xxx copy replace
+```
+
+`weconsole`命令可接受的参数及可选值含义如下：
+
+```ts
+interface InjectConfig {
+    /** 要注入的小程序项目目录 */
+    projectDir: string;
+    /** 如果项目已经被注入过了，是否本次注入要进行替换？ */
+    replace?: boolean;
+    /** 本次注入强行显示weconsole入口图标 */
+    forceShow?: boolean;
+    /** 注入方式：
+     * npm: 以引用npm包的方式注入，但注入后需要开发者工具主动编译才可使用，好处是如果有重复的依赖可以减少代码体积；
+     * full: 以全依赖引用的方式注入，无需开发者工具主动编译就可使用，缺点是可能存在依赖包被重复打包代码的问题；
+     */
+    mode?: 'npm' | 'full';
+    /** 注入的小程序项目属于哪个平台？ */
+    platform?: 'wx' | 'alipay';
+    /** 注入weconsole标签时传入的fullTop属性值 */
+    fullTop?: string;
+    /** 注入weconsole标签时传入的adapFullTop属性值 */
+    adapFullTop?: string;
+    /** 注入weconsole标签时传入的zIndex属性值 */
+    zIndex?: number;
+    /** 是否在注入时将weconsole的所有JS及组件文件复制到项目根目录？ */
+    copy?: boolean;
+}
+```
 
 # 三、功能
 

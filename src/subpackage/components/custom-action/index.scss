@@ -3,18 +3,18 @@
 .ca-button {
     box-sizing: border-box;
     display: block;
-    height: 60rpx;
+    height: 60rpx !important;
     padding: 0 20rpx !important;
     margin-bottom: 15rpx !important;
     overflow: hidden;
-    font-size: 24rpx;
-    line-height: 60rpx;
+    font-size: 24rpx !important;
+    line-height: 60rpx !important;
     color: #fff;
     text-align: center;
     text-overflow: ellipsis;
     white-space: nowrap;
     background-color: $bg-primary;
-    border-radius: 30rpx;
+    border-radius: 30rpx !important;
 
     &:disabled,
     &.disabled {
