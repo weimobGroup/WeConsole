@@ -55,6 +55,7 @@
     },
     "homepage": "https://github.com/weimob-tech/WeConsole#readme",
     "devDependencies": {
+        "@cross-virtual-list/mp-wx": "0.3.0",
         "typescript": "^5.1.6",
         "@babel/core": "^7.22.9",
         "@babel/preset-env": "^7.22.9",
@@ -98,7 +99,6 @@
         "watch": "^1.0.2"
     },
     "dependencies": {
-        "@cross-virtual-list/mp-wx": "0.3.0",
         "@cross-virtual-list/core": "0.3.0",
         "@cross-virtual-list/types": "0.3.0",
         "@mpkit/func-helper": "^1.1.2",

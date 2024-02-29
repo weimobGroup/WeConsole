@@ -8,9 +8,6 @@ dependencies:
   '@cross-virtual-list/core':
     specifier: 0.3.0
     version: 0.3.0
-  '@cross-virtual-list/mp-wx':
-    specifier: 0.3.0
-    version: 0.3.0
   '@cross-virtual-list/types':
     specifier: 0.3.0
     version: 0.3.0
@@ -37,6 +34,9 @@ devDependencies:
   '@babel/preset-env':
     specifier: ^7.22.9
     version: 7.23.9(@babel/core@7.23.9)
+  '@cross-virtual-list/mp-wx':
+    specifier: 0.3.0
+    version: 0.3.0
   '@mpkit/mpxml-parser':
     specifier: ^1.1.2
     version: 1.1.2
@@ -1344,7 +1344,6 @@ packages:
 
   /@cross-virtual-list/core@0.3.0:
     resolution: {integrity: sha512-VwnWozodUnA3XBRMZlAEj7ET3OmHIzPnCBhx36OCyDKESF7Ffhrx8ajqiEYQVycho9W3+aEPXyh47MsP8CmgsA==}
-    dev: false
 
   /@cross-virtual-list/mp-wx@0.3.0:
     resolution: {integrity: sha512-psPlPhIbbGY6Sr2v92Q/jgtXVajE+xhzPhdSpsGPrH7KOsviUmg67KO//GKnuMin3o7YWpO+GuKHlipnpZ9XqA==}
@@ -1352,7 +1351,7 @@ packages:
       '@cross-virtual-list/core': 0.3.0
       cross-mp-power: 0.1.7
       typescript-mp-component: 0.1.1
-    dev: false
+    dev: true
 
   /@cross-virtual-list/types@0.3.0:
     resolution: {integrity: sha512-oztCyWvX+8U/9zuFF2J40l/1IeKeyoKadK5v8nqbe6gGCr8YK6jVJOgyiKe41qBToka4TH7AE0YzybSgnyCjRw==}
@@ -2912,7 +2911,6 @@ packages:
 
   /cross-mp-power@0.1.7:
     resolution: {integrity: sha512-z8Zp0OzJ8QL5pu/a2Og8KGpaxXK/M0ug+5DZ4twwI/qVRrbVYX6WzOpZ5VehZ/x9Q9iMkNcne45+8arEPRlhOg==}
-    dev: false
 
   /cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -7274,7 +7272,6 @@ packages:
 
   /typescript-mp-component@0.1.1:
     resolution: {integrity: sha512-LTGk+ba/vrV/ouPEpkprTAvxq6+WOSTObN4Ndp8Ib2TazjYe5Nli/gQP//I34F4gc2QxKVnpiSguFaGZoTztsQ==}
-    dev: false
 
   /typescript@5.3.3:
     resolution: {integrity: sha512-pXWcraxM0uxAS+tN0AG/BF2TyqmHO014Z070UsJ+pFvYuRSq8KH8DmWpnbXe0pEPDHXZV3FcAbJkijJ5oNEnWw==}
