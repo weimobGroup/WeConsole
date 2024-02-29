@@ -185,7 +185,7 @@ class StorageReader extends MpComponent {
 
             row &&
                 getStorageMaterial(row.key).then((res) => {
-                    setClipboardData(toJSONString(res.value));
+                    setClipboardData(typeof res.value === 'object' ? toJSONString(res.value) : String(res.value));
                 });
         }
     }
