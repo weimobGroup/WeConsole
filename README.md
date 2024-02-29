@@ -132,7 +132,7 @@ import '{复制后的【dist/alipay/full】的路径}/main/init';
 引入`main/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
 
 ```javascript
-import { replace, restore, showWeConsole, hideWeConsole } from '{NPM或复制后的【dist/alipay/full】的路径}/main/index';
+import { replace, restore, showWeConsole, hideWeConsole } from '{NPM或复制后的【dist/full】的路径}/main/index';
 
 // scope可选值：App/Page/Component/Console/Api
 // 按需替换系统变量或函数以达到监控
@@ -213,10 +213,12 @@ properties: {
 
 如果不想将 weconsole 放置在主包中，建议将组件放在分包内使用，利用小程序的 [分包异步化](https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages/async.html) 的特性，减少主包大小；
 
--   主包文件：`dist/{full|npm}/main/*`
--   分包文件：`dist/{full|npm}/subpackage/*`
-
-> 目前 weconsole 没有提供便捷的主包/分包文件分割功能，后续会提供
+-   微信小程序：
+    -   主包文件：`dist/{full|npm}/main/*`
+    -   分包文件：`dist/{full|npm}/subpackage/*`
+-   支付宝小程序：
+    -   主包文件：`dist/alipay/{full|npm}/main/*`
+    -   分包文件：`dist/alipay/{full|npm}/subpackage/*`
 
 ## 5、一键注入
 
