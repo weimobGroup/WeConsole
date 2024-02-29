@@ -52,7 +52,10 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
     };
     input['subpackage/components/dynamic/index'] = ROOT_DIR + '/src/subpackage/vl-temp/components/dynamic/index.js';
     input['subpackage/components/regular/index'] = ROOT_DIR + '/src/subpackage/vl-temp/components/regular/index.js';
-    const distDir = process.env.BUILD_TARGET && process.env.BUILD_TARGET !== 'wx' ? `${process.env.BUILD_TARGET}/` : '';
+    const distDir =
+        process.env.BUILD_TARGET && process.env.BUILD_TARGET !== 'wx'
+            ? `${process.env.BUILD_TARGET === 'my' ? 'alipay' : process.env.BUILD_TARGET}/`
+            : '';
 
     return [
         {

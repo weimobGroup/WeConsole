@@ -3,6 +3,7 @@ import { copyPromise, getFiles, readFile, writeFile } from './fs';
 import { renameSync } from 'fs';
 import { toXhsML } from './translator/xhs';
 import { toAliXml } from './translator/ali';
+import { MpXmlFileSuffix } from './vars';
 
 const cssFileSuffix = {
     wx: 'wxss',
@@ -12,15 +13,6 @@ const cssFileSuffix = {
     swan: 'css',
     tt: 'ttss',
     ks: 'css'
-};
-const xmlFileSuffix = {
-    wx: 'wxml',
-    my: 'axml',
-    xhs: 'xhsml',
-    qq: 'qml',
-    swan: 'swan',
-    tt: 'ttml',
-    ks: 'kxml'
 };
 const xjsFileSuffix = {
     wx: 'wxs',
@@ -69,7 +61,7 @@ export const compilerMpResource = (
                 return;
             }
             if (fileName.endsWith('.wxml')) {
-                const newFileName = fileName.substring(0, fileName.length - 5) + `.${xmlFileSuffix[targetPlatform]}`;
+                const newFileName = fileName.substring(0, fileName.length - 5) + `.${MpXmlFileSuffix[targetPlatform]}`;
                 renameSync(fileName, newFileName);
                 const xml = readFile(newFileName);
                 if (targetPlatform === 'xhs') {

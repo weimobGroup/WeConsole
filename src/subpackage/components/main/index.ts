@@ -15,6 +15,7 @@ import {
     setStorage,
     showToast
 } from 'cross-mp-power';
+import { getElementId } from '@/sub/modules/element';
 
 const WcScope = wcScope();
 
@@ -52,12 +53,13 @@ class MainComponent extends MpComponent {
         }
     };
     initData = {
-        showIcon: MainStateController.getState('showIcon') ? true : WcScope.visible || false,
-        inited: !!MainStateController.getState('handX'),
+        disabled: true,
+        showIcon: false,
+        inited: false,
         handX: MainStateController.getState('handX') || '',
         handY: MainStateController.getState('handY') || '',
-        visible: MainStateController.getState('visible') || false,
-        mounted: MainStateController.getState('mounted') || false,
+        visible: false,
+        mounted: false,
         pageVisible: true,
         fullScreen: MainStateController.getState('fullScreen') || false,
         activeTabIndex: MainStateController.getState('activeTabIndex') || 0,
@@ -92,6 +94,15 @@ class MainComponent extends MpComponent {
         sysTabMountState: MainStateController.getState('sysTabMountState', {})
     };
     attached() {
+        const selfId = getElementId(this);
+        const belongPage = this.getCurrentPageId();
+        if (!belongPage || WcScope[belongPage] !== selfId) {
+            // 保证一个页面不能有两个weconsole组件
+            WcScope[belongPage] = selfId;
+            this.$mx.Tool.$updateData({
+                disabled: false
+            });
+        }
         this.$mx.Tool.$wcOn(WeConsoleEvents.WcVisibleChange, (type, data) => {
             MainStateController.setState('showIcon', !!data);
             this.$mx.Tool.$updateData({
@@ -121,6 +132,15 @@ class MainComponent extends MpComponent {
         this.$mx.Tool.$updateData({
             pageVisible: false
         });
+    }
+    getCurrentPageId() {
+        if (BUILD_TARGET === 'wx') {
+            return this.getPageId();
+        }
+        if (BUILD_TARGET === 'my') {
+            return (this as any).$page?.$id || '';
+        }
+        return '';
     }
     copyAd() {
         setClipboardData('https://github.com/weimob-tech/WeConsole').then(() => {

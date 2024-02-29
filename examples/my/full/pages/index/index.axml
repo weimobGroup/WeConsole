@@ -3,7 +3,7 @@
     <view>高效、便捷、免代理抓包请求。</view>
     <view><text>点击</text>屏幕右侧的<text>【蓝色图标】</text>开启调试之旅~</view>
 </view>
-<demo />
+<demo id="d" />
 <view class="alert-warn">
     <view>版本：v{{version}}</view>
     <view>

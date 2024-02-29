@@ -6,9 +6,12 @@
     "miniprogram": "dist/npm",
     "files": [
         "dist",
+        "scripts-dist",
+        "bin",
         "LICENSE",
         "README.md"
     ],
+    "bin": "./bin/weconsole.js",
     "scripts": {
         "lint:style": "pnpm stylelint 'src/**/*.scss'",
         "lint:es": "pnpm eslint 'src/**/*.ts' 'build/**/*.js' '*.js'",
