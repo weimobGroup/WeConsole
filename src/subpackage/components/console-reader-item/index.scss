@@ -5,12 +5,12 @@
     position: relative;
     box-sizing: border-box;
     min-height: 44rpx;
-    padding: 5rpx 15rpx 5rpx 50rpx;
+    padding: 5rpx 15rpx 5rpx 50rpx !important;
     font-size: 0;
     color: $cr-datagrid;
     letter-spacing: 0;
     background-color: #fff;
-    border-bottom: 1px solid $bg-bar;
+    border-bottom: 1px solid $bg-bar !important;
 
     &.is-warn {
         color: $cr-warn;
@@ -117,7 +117,7 @@
 }
 
 .console-division {
-    padding-left: 16rpx;
+    padding-left: 16rpx !important;
 }
 
 .console-json {

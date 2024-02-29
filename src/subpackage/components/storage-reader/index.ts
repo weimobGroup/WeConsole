@@ -12,6 +12,7 @@ import { clone } from '@mpkit/util';
 import type { TableCol } from '@/types/table';
 import { toJSONString } from '@/sub/modules/util';
 import { getStorageInfo, removeStorage, setClipboardData } from 'cross-mp-power';
+import { rpxToPx } from '@/main/modules/util';
 
 const substr = (str: string | undefined, len: number): string => {
     return typeof str === 'string' ? (str.length > len ? str.substr(0, len) + '...' : str) : 'undefined';
@@ -27,6 +28,7 @@ interface Data {
     limitSize: number;
     sizeProgress: number;
     readerCols: TableCol[];
+    rowHeight: number;
 }
 
 class StorageReader extends MpComponent {
@@ -45,6 +47,7 @@ class StorageReader extends MpComponent {
         Dr: new DrMixin<MpStorageMaterial>()
     };
     initData: Data = {
+        rowHeight: rpxToPx(60),
         activeCategory: 'all',
         affixed: [],
         currentSize: 0,

@@ -14,7 +14,7 @@ $sep: 10rpx;
 }
 
 .wc-el-head {
-    padding: 4rpx 0;
+    padding: 4rpx 0 !important;
     font-size: 0;
     line-height: 0;
     word-break: break-all;
@@ -29,7 +29,7 @@ $sep: 10rpx;
 .wc-el-body,
 .wc-el-footer {
     box-sizing: border-box;
-    padding-left: 20rpx;
+    padding-left: 20rpx !important;
 }
 
 .wc-el-boundary {
@@ -82,7 +82,7 @@ $sep: 10rpx;
         bottom: 2px;
         left: 0;
         content: '';
-        border-bottom: 1px dashed #ad9cad;
+        border-bottom: 1px dashed #ad9cad !important;
     }
 }
 

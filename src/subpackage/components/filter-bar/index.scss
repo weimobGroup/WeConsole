@@ -9,7 +9,7 @@
     font-size: $sz-filter-bar;
     color: $cr-filter-bar;
     background-color: $bg-filter-bar;
-    border-bottom: 2px solid $bg-filter-bar-border;
+    border-bottom: 2px solid $bg-filter-bar-border !important;
 
     &.has-refresh {
         .fc-filter-items {
@@ -36,15 +36,15 @@
     flex-wrap: nowrap;
     align-items: center;
     height: 100%;
-    padding: 0 15rpx;
+    padding: 0 15rpx !important;
 }
 
 .fc-filter-input {
     flex-shrink: 0;
     width: 200rpx;
     height: $ht-filter-bar - 16rpx;
-    padding: 0 5rpx;
-    margin-right: 15rpx;
+    padding: 0 5rpx !important;
+    margin-right: 15rpx !important;
     font-size: $sz-filter-bar - 4rpx;
     font-weight: bold;
     line-height: $ht-filter-bar - 16rpx;
@@ -55,8 +55,8 @@
     display: flex;
     flex-shrink: 0;
     align-items: center;
-    padding: 8rpx 10rpx;
-    margin-right: 15rpx;
+    padding: 8rpx 10rpx !important;
+    margin-right: 15rpx !important;
     line-height: 1;
     border-radius: 4rpx;
 
@@ -68,7 +68,7 @@
 
 .fc-filter-category-br {
     height: 100%;
-    margin-right: 15rpx;
+    margin-right: 15rpx !important;
 }
 
 .fc-filter-category-br,

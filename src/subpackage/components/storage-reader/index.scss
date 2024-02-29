@@ -4,7 +4,7 @@
 @import '../style/detail.scss';
 
 .fc-detail {
-    border-left: 1px solid $bg-th-bar-border;
+    border-left: 1px solid $bg-th-bar-border !important;
 }
 
 .btn-link {
@@ -17,7 +17,7 @@
     position: relative;
     min-width: 224rpx;
     height: 44rpx;
-    margin: 0 5rpx;
+    margin: 0 5rpx !important;
     overflow: hidden;
     background-color: #cdcdcd;
     border-radius: 8rpx;

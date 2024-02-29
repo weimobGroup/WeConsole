@@ -56,14 +56,16 @@ class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
                     resolve(mpData);
                     return;
                 }
-                getChildrenElements(getApp()).then((children) => {
-                    children.forEach((item) => {
-                        item.path = [item.id];
-                    });
-                    mpData['root.children'] = children;
-                    mpData['root.open'] = true;
-                    return resolve(mpData);
-                });
+                getChildrenElements(getApp(), undefined, this.$mx.Tool.$wcUIConfig.componentPagesGetter).then(
+                    (children) => {
+                        children.forEach((item) => {
+                            item.path = [item.id];
+                        });
+                        mpData['root.children'] = children;
+                        mpData['root.open'] = true;
+                        return resolve(mpData);
+                    }
+                );
                 return;
             }
             let currentChildren: MpElement[] = [];
@@ -76,15 +78,17 @@ class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
                     rootChildren = this.data.root.children;
                     return Promise.resolve(rootChildren);
                 }
-                return getChildrenElements(getApp()).then((children) => {
-                    children.forEach((item) => {
-                        item.path = [item.id];
-                    });
-                    rootChildren = children;
-                    mpData['root.children'] = children;
-                    mpData['root.open'] = true;
-                    return rootChildren;
-                });
+                return getChildrenElements(getApp(), undefined, this.$mx.Tool.$wcUIConfig.componentPagesGetter).then(
+                    (children) => {
+                        children.forEach((item) => {
+                            item.path = [item.id];
+                        });
+                        rootChildren = children;
+                        mpData['root.children'] = children;
+                        mpData['root.open'] = true;
+                        return rootChildren;
+                    }
+                );
             };
             let mpPath = 'root.children';
             let index = 0;
@@ -115,7 +119,8 @@ class ComponentReader extends MpComponent<Data, NonNullable<unknown>> {
 
                     getChildrenElements(
                         ins,
-                        readyItem.group ? readyItem.attrs.find((at) => at.name === 'is')?.content || '' : ''
+                        readyItem.group ? readyItem.attrs.find((at) => at.name === 'is')?.content || '' : '',
+                        this.$mx.Tool.$wcUIConfig.componentPagesGetter
                     ).then((children) => {
                         mpPath += `[${readyIndex}].children`;
                         if (!children.length) {

@@ -7,7 +7,7 @@
 
 ![组件效果](./docs/img/ad.png)
 
-## 更新记录
+# 更新记录
 
 -   v1.4.0 （待发布）
 
@@ -21,6 +21,7 @@
             -   优化样式
         -   优化`Component`面板
             -   显示`<App>`环境版本和版本号
+        -   提供`cli`工具方便向小程序项目一键注入 weconsole 代码
     -   修复 BUG
         -   修复`Api`面板切换详情时 json 数据未变的问题
         -   修复`Console`面板复制对象存在循环引用情况下无法复制并报错的问题
@@ -70,7 +71,7 @@
         -   `自定义 data-grid action`支持长按复制单元格内容
         -   `data-grid`组件支持多行文本
 
-## 一、背景与简介
+# 一、背景与简介
 
 在传统的 PC Web 前端开发中，浏览器为开发者提供了体验良好、功能丰富且强大的开发调试工具，比如常见的 Chrome devtools 等，这些调试工具极大的方便了开发者，它们普遍提供查看页面结构、监听网络请求、管理本地数据存储、debugger 代码、使用 Console 快速显示数据等功能。
 
@@ -82,15 +83,15 @@
 
 <img src='./docs/img/wcapi.gif' width="400"></img>
 
-## 二、安装与使用
+# 二、安装与使用
 
-### 1、通过 npm 安装
+## 1、通过 npm 安装
 
 ```bash
 npm i weconsole -S
 ```
 
-### 2、普通方式安装
+## 2、普通方式安装
 
 > 此方式会将`WeConsole`依赖的所有 npm 代码包都自动引入，无需再通过开发者工具进行 npm 编译。
 
@@ -99,14 +100,14 @@ npm i weconsole -S
 -   `微信小程序`：请将`dist/full`目录中的文件拷贝至项目目录中；
 -   `支付宝小程序`：请将`dist/my/full`目录中的文件拷贝至项目目录中；
 
-### 3、引用
+## 3、引用
 
 WeConsole 分为`核心`和`组件`两部分，使用时需要全部引用后方可使用：
 
 -   `核心`负责重写系统变量或方法，以达到全局监控的目的；
 -   `组件`负责将监控的数据显示出来。
 
-#### 3.1 在`app.js`文件中引用`核心`：
+### 3.1 在`app.js`文件中引用`核心`：
 
 -   `微信小程序`引用方式：
 
@@ -148,7 +149,7 @@ showWeConsole();
 -   当处于`体验版`时，显示
 -   当处于`正式版`时，**不显示**
 
-#### 3.2 在需要的地方引用`组件`：
+### 3.2 在需要的地方引用`组件`：
 
 -   `微信小程序`引用方式：
 
@@ -202,7 +203,7 @@ properties: {
 }
 ```
 
-### 4、建议
+## 4、建议
 
 如果不想将 weconsole 放置在主包中，建议将组件放在分包内使用，利用小程序的 [分包异步化](https://developers.weixin.qq.com/miniprogram/dev/framework/subpackages/async.html) 的特性，减少主包大小；
 
@@ -211,12 +212,12 @@ properties: {
 
 > 目前 weconsole 没有提供便捷的主包/分包文件分割功能，后续会提供
 
-## 三、功能
+# 三、功能
 
 <details>
 <summary>WeConsole 主要包括以下功能：</summary>
 
-### 1、Console
+## 1、Console
 
 -   界面如图 1
 -   实时显示`console.log/info/warn/error`记录；
@@ -243,7 +244,7 @@ properties: {
 
 图 2
 
-### 2、Api
+## 2、Api
 
 -   界面如图 3
 -   实时显示`wx`对象下的相关 api 执行记录
@@ -273,7 +274,7 @@ properties: {
 
 图 5
 
-### 3、Component
+## 3、Component
 
 -   界面如图 6
 -   树结构显示组件实例列表
@@ -294,7 +295,7 @@ properties: {
 
 图 7
 
-### 4、Storage
+## 4、Storage
 
 -   界面如图 8
 -   显示 Storage 记录
@@ -317,7 +318,7 @@ properties: {
 
 图 9
 
-### 5、其他
+## 5、其他
 
 -   界面如图 10
 -   默认显示 系统信息
@@ -423,35 +424,35 @@ setUIRunConfig({
 
 </details>
 
-## 四、API
+# 四、API
 
 <details>
 <summary>主要暴露以下API：</summary>
 
-### 通过以下方式使用 API
+## 通过以下方式使用 API
 
 ```javascript
 import { showWeConsole, ... } from 'weconsole';
 showWeConsole();
 ```
 
-### replace(scope:'App'|'Page'|'Component'|'Api'|'Console')
+## replace(scope:'App'|'Page'|'Component'|'Api'|'Console')
 
 替换系统变量或函数以达到监控，底层控制全局仅替换一次
 
-### restore(scope:'App'|'Page'|'Component'|'Api'|'Console')
+## restore(scope:'App'|'Page'|'Component'|'Api'|'Console')
 
 还原被替换的系统变量或函数，还原后界面将不在显示相关数据
 
-### showWeConsole()
+## showWeConsole()
 
 显示`WeConsole`入口图标
 
-### hideWeConsole()
+## hideWeConsole()
 
 隐藏`WeConsole`入口图标
 
-### setUIConfig(config: Partial&lt;MpUIConfig&gt;)
+## setUIConfig(config: Partial&lt;MpUIConfig&gt;)
 
 设置`WeConsole`组件内的相关配置，可接受的配置项及含义如下：
 
@@ -484,7 +485,7 @@ interface MpUIConfig {
 // 配置项的详细types请参考源码目录：src/types
 ```
 
-### addCustomAction(action: WcCustomAction)
+## addCustomAction(action: WcCustomAction)
 
 添加一个定制化项目；当你添加的项目中需要显示你自己的组件时：
 
@@ -493,19 +494,19 @@ interface MpUIConfig {
 -   定制化项目的 case 被执行时，会将执行结果传递给`weconsole-customer`的`data`属性
 -   开发者根据`data`属性中的数据自行判断内部显示逻辑
 
-### removeCustomAction(actionId: string)
+## removeCustomAction(actionId: string)
 
 根据 ID 删除一个定制化项目
 
-### getWcControlMpViewInstances():any[]
+## getWcControlMpViewInstances():any[]
 
 获取小程序内 weconsole 已经监控到的所有的 App/Page/Component 实例
 
-### log(type = "log", ...args)
+## log(type = "log", ...args)
 
 因为 console 被重写，当你想使用最原始的 console 方法时，可以通过该方式，type 就是 console 的方法名
 
-### on/once/off/emit
+## on/once/off/emit
 
 提供一个事件总线功能，全局事件及相关函数定义如下：
 
@@ -533,7 +534,7 @@ interface IEventEmitter<T = any> {
 
 </details>
 
-## 五、后续规划
+# 五、后续规划
 
 -   [x] 优化包大小
 -   [x] 体验优化
@@ -544,14 +545,14 @@ interface IEventEmitter<T = any> {
 -   [-] 标准化
 -   [-] 支持 H5
 
-## 六、贡献流程
+# 六、贡献流程
 
 请阅读 [贡献流程](./CONTRIBUTING.md) 文档来参与项目的迭代与开发，我们将会非常感谢您的付出。
 
-## 七、License
+# 七、License
 
 WeConsole 使用 [MIT](./LICENSE) 协议.
 
-## 八、声明
+# 八、声明
 
 生产环境请谨慎使用。

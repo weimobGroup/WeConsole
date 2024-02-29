@@ -16,7 +16,7 @@
 }
 
 .collapse-action {
-    margin-right: 20rpx;
+    margin-right: 20rpx !important;
     font-size: 20rpx;
     font-weight: normal;
 }
@@ -34,7 +34,7 @@
 }
 
 .wc-link {
-    margin: 0 20rpx;
+    margin: 0 20rpx !important;
     font-size: 80%;
     font-weight: normal;
     color: $bg-primary;

@@ -63,10 +63,10 @@ const getPageAllChildren = (page): MpElement[] => {
     }, []);
 };
 
-export const getChildrenElements = (vw: any, group?: string): Promise<MpElement[]> => {
+export const getChildrenElements = (vw: any, group?: string, getPages?: () => any[]): Promise<MpElement[]> => {
     const vwType = getMpViewType(vw);
     if (vwType === 'App') {
-        const pages = getCurrentPages() as any[];
+        const pages = (getPages || getCurrentPages)() as any[];
         if (!pages || !pages.length) {
             return Promise.resolve([]);
         }
@@ -141,7 +141,7 @@ const isPageChild = (component: any, page: any): boolean => {
 export const hasChild = (vw: any): boolean => {
     const MpViewInstances = getWcControlMpViewInstances();
     if (supportSelectOwnerComponent()) {
-        return MpViewInstances.some((item) => item.selectOwnerComponent?.() === vw);
+        return MpViewInstances.some((item) => item.selectOwnerComponent?.() === vw && item !== vw);
     }
     if (isPage(vw)) {
         return MpViewInstances.some((item) => isPageChild(item, vw));

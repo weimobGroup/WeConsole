@@ -51,7 +51,7 @@
     z-index: 1000;
     display: none;
     background-color: #fff;
-    border-top: 1px solid $bg-tab-border;
+    border-top: 1px solid $bg-tab-border !important;
 
     &.is-show {
         display: block;
@@ -75,14 +75,14 @@
     left: 0;
     box-sizing: border-box;
     height: 100rpx;
-    margin-bottom: -1px;
-    border-top: 1px solid $bg-tab-border;
+    margin-bottom: -1px !important;
+    border-top: 1px solid $bg-tab-border !important;
     font-family: $ft-code;
     font-size: 40rpx;
     font-weight: bold;
     color: #ccc;
     text-align: center;
-    padding-top: 20rpx;
+    padding-top: 20rpx !important;
 }
 
 .fc-modal-body {
@@ -101,7 +101,7 @@
     opacity: 0.6;
     font-weight: 300;
     display: flex;
-    padding: 10rpx 30rpx;
+    padding: 10rpx 30rpx !important;
     font-size: 17rpx;
     white-space: nowrap;
     position: absolute;

@@ -1,7 +1,7 @@
 @import '../style/var.scss';
 
 .json-viewer {
-    padding: 20rpx;
+    padding: 20rpx !important;
     font-family: $ft-code;
     font-size: 0;
     line-height: 0;
@@ -10,7 +10,7 @@
     &.console-jw {
         display: inherit;
         min-width: 100%;
-        padding: 0;
+        padding: 0 !important;
     }
 }
 .json-title {
@@ -24,7 +24,7 @@
 }
 
 .json-string {
-    padding: 20rpx;
+    padding: 20rpx !important;
     font-family: $ft-code;
     font-size: 20rpx;
     color: #424242;

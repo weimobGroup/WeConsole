@@ -6,13 +6,13 @@
 .wc-elements {
     box-sizing: border-box;
     height: 100%;
-    padding: 0 20rpx;
+    padding: 0 20rpx !important;
 }
 
 .action-bar {
     position: relative;
     height: $ht-tab-bar - 20rpx;
-    border-bottom: 1px solid $bg-tab-border;
+    border-bottom: 1px solid $bg-tab-border !important;
 }
 
 .fc-detail-close {
@@ -30,7 +30,7 @@
     bottom: 0;
     left: 30%;
     background-color: #fff;
-    border-left: 2px solid $bg-tab-border;
+    border-left: 2px solid $bg-tab-border !important;
 }
 
 .detail-scroll {
@@ -53,8 +53,8 @@
 }
 
 .fc-headers-item {
-    padding-right: 20rpx;
-    padding-left: 20rpx;
+    padding-right: 20rpx !important;
+    padding-left: 20rpx !important;
 }
 
 .fc-detail-action {
@@ -85,19 +85,19 @@
     right: 0;
     bottom: 0;
     left: $ht-tab-bar - 20rpx;
-    padding-right: 20rpx;
-    padding-left: 20rpx;
+    padding-right: 20rpx !important;
+    padding-left: 20rpx !important;
     font-size: 28rpx;
     line-height: $ht-tab-bar - 20rpx;
     color: #424242;
 }
 
 .death-tip {
-    padding: 15rpx;
-    margin-bottom: 15rpx;
+    padding: 15rpx !important;
+    margin-bottom: 15rpx !important;
     font-size: 20rpx;
     color: #8a6d3b;
     text-align: center;
     background-color: #fcf8e3;
-    border-bottom: 1px solid #faebcc;
+    border-bottom: 1px solid #faebcc !important;
 }

@@ -19,7 +19,7 @@
         top: 50%;
         width: 100%;
         height: $width;
-        margin-top: -($width/2);
+        margin-top: -($width/2) !important;
         background-color: $color;
     }
 
@@ -63,7 +63,7 @@
         top: 50%;
         width: 100%;
         height: $width;
-        margin-top: -($width/2);
+        margin-top: -($width/2) !important;
         background-color: $color;
     }
 
@@ -114,7 +114,7 @@
     &.wic-clear::before {
         width: 100%;
         height: 100%;
-        border: $width solid $color;
+        border: $width solid $color !important;
         border-radius: 50%;
     }
 
@@ -122,9 +122,9 @@
         top: 50%;
         width: 100%;
         height: $width;
-        margin-top: -($width/2);
+        margin-top: -($width/2) !important;
         background-color: $color;
-        transform: rotate(45deg);
+        transform: rotate(45deg) scale(0.95);
     }
 }
 
@@ -139,7 +139,7 @@
     &.wic-expand .wic-arrow-2 {
         width: 40%;
         height: 40%;
-        border: $width solid $color;
+        border: $width solid $color !important;
     }
 
     &.wic-compress::before,
@@ -153,31 +153,31 @@
     &.wic-expand::before {
         top: 0;
         left: 0;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
     }
 
     &.wic-compress::after,
     &.wic-expand::after {
         top: 0;
         right: 0;
-        border-bottom-color: transparent;
-        border-left-color: transparent;
+        border-bottom-color: transparent !important;
+        border-left-color: transparent !important;
     }
 
     &.wic-compress .wic-arrow-1,
     &.wic-expand .wic-arrow-1 {
         bottom: 0;
         left: 0;
-        border-top-color: transparent;
-        border-right-color: transparent;
+        border-top-color: transparent !important;
+        border-right-color: transparent !important;
     }
 
     &.wic-compress .wic-arrow-2,
     &.wic-expand .wic-arrow-2 {
         right: 0;
         bottom: 0;
-        border-top-color: transparent;
-        border-left-color: transparent;
+        border-top-color: transparent !important;
+        border-left-color: transparent !important;
     }
 }

@@ -5,7 +5,7 @@
     display: block;
     height: 100%;
     background-color: #fff;
-    border-left: 2px solid $bg-th-bar-border;
+    border-left: 2px solid $bg-th-bar-border !important;
 
     &.fc-status-container {
         display: flex;
@@ -16,7 +16,7 @@
         color: $cr-muted;
 
         .fc-status-action {
-            margin-top: 15rpx;
+            margin-top: 15rpx !important;
         }
     }
 }

@@ -38,4 +38,5 @@ export interface MpUIConfig {
     multiplePageStateEnabled?: boolean;
     /** 全局对象，如果你的小程序存在沙盒环境，请务必传递一个可供全局存储数据的单例对象 */
     globalObject?: any;
+    componentPagesGetter?: () => any[];
 }

@@ -6,7 +6,7 @@
             <view class="progress-text">{{currentSize}}kb/{{limitSize}}kb</view>
         </view>
     </filter-bar>
-    <data-table class="fc-reader-body has-bar" rowHeight="{{30}}" selected="{{[detailMaterialId]}}" affixed="{{affixed}}"
+    <data-table class="fc-reader-body has-bar" rowHeight="{{rowHeight}}" selected="{{[detailMaterialId]}}" affixed="{{affixed}}"
         cols="{{readerCols}}" bind:ready="$vlOnVirtualListComponentReady" bind:interact="onItemInteractEvent"></data-table>
     <view wx:if="{{detailMaterialId && detailFrom!=='longpressRow'}}" class="fc-reader-detail-container has-th has-bar">
         <scroll-view class="fc-detail" scroll-y>

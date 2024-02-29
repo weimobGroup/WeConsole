@@ -30,10 +30,10 @@
     flex-grow: 0;
     flex-shrink: 0;
     justify-content: center;
-    padding: 6rpx 10rpx;
+    padding: 6rpx 10rpx !important;
     font-size: $sz-datagrid-th - 2rpx;
     line-height: 1.2;
-    border-right: 1px solid transparent;
+    border-right: 1px solid transparent !important;
 
     &.wc-last {
         border-right: none;
@@ -41,10 +41,10 @@
 
     &.wc-col-head {
         height: 100%;
-        border-right: 1px solid $bg-datagrid-border;
-        border-bottom: 1px solid $bg-datagrid-border;
+        border-right: 1px solid $bg-datagrid-border !important;
+        border-bottom: 1px solid $bg-datagrid-border !important;
         &.wc-last {
-            border-right: none;
+            border-right: none !important;
         }
     }
 }

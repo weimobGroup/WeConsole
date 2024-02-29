@@ -1,9 +1,8 @@
 /** 提供向小程序项目所有页面注入weconsole标签的能力 */
-import { readFile, writeFile, copyPromise } from './fs';
+import { readFile, writeFile, copyDir, rmDir } from './fs';
 import { MpXmlFileSuffix, ROOT_DIR } from './vars';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as rimraf from 'rimraf';
 
 interface InjectConfig {
     /** 要注入的小程序项目目录 */
@@ -112,7 +111,7 @@ const injectPages = (config: InjectConfig, appJSON: any, platform: 'wx' | 'alipa
     }
 };
 
-export const injectMpProject = (config: InjectConfig): Promise<void> => {
+export const injectMpProject = (config: InjectConfig) => {
     if (!config?.projectDir) {
         throw new Error('请提供projectDir配置项');
     }
@@ -165,7 +164,7 @@ export const injectMpProject = (config: InjectConfig): Promise<void> => {
                 path.posix.sep + path.join('weconsole', 'dist', 'alipay', 'full', 'main', 'index.js');
             platformDir.mainComponentFile =
                 path.posix.sep +
-                path.join('weconsole', 'dist', 'alipay', 'npm', 'subpackage', 'components', 'main', 'index');
+                path.join('weconsole', 'dist', 'alipay', 'full', 'subpackage', 'components', 'main', 'index');
         }
     }
     let injectContent = `require("${platformDir.initFile}");`;
@@ -177,16 +176,14 @@ export const injectMpProject = (config: InjectConfig): Promise<void> => {
     injectPages(config, injectAppJSON(config.projectDir, platformDir.mainComponentFile), platform);
     if (config.mode === 'full' && config.copy) {
         const targetDir = path.join(config.projectDir, 'weconsole');
-        rimraf.sync(targetDir);
-        const s = path.join(ROOT_DIR, 'dist', platform === 'wx' ? '' : platform, 'full', '**', '*.*');
+        rmDir(targetDir);
+        const s = path.join(ROOT_DIR, 'dist', platform === 'wx' ? '' : platform, 'full');
         const t = path.join(targetDir, 'dist', platform === 'wx' ? '' : platform, 'full');
-        console.log(`s=${s},  t=${t}`);
-        return copyPromise(s, t);
+        copyDir(s, t, true);
     }
-    return Promise.resolve();
 };
 
-export const parseInjectConfig = (argv: string[]) => {
+export const parseInjectConfig = (argv: string[], cwd: string) => {
     const config: InjectConfig = {
         projectDir: '',
         replace: false,
@@ -201,7 +198,7 @@ export const parseInjectConfig = (argv: string[]) => {
     const keys = Object.keys(config);
     let hasPlatform;
     let dir = '';
-    argv.slice(2).forEach((arg) => {
+    argv.slice(3).forEach((arg) => {
         const arr = arg.split('=');
         if (keys.includes(arr[0])) {
             hasPlatform = hasPlatform || arr[0] === 'mode';
@@ -226,7 +223,13 @@ export const parseInjectConfig = (argv: string[]) => {
         config.projectDir = dir;
     }
     if (!config.projectDir) {
-        config.projectDir = argv[0];
+        config.projectDir = cwd;
+    }
+    if (
+        config.projectDir &&
+        (config.projectDir.startsWith('.') || (!config.projectDir.startsWith('/') && !config.projectDir.includes(':')))
+    ) {
+        config.projectDir = path.resolve(cwd, config.projectDir);
     }
     if (config.mode !== 'full' && config.copy) {
         delete config.copy;

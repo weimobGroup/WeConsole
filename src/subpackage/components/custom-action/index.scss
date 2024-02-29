@@ -4,8 +4,8 @@
     box-sizing: border-box;
     display: block;
     height: 60rpx;
-    padding: 0 20rpx;
-    margin-bottom: 15rpx;
+    padding: 0 20rpx !important;
+    margin-bottom: 15rpx !important;
     overflow: hidden;
     font-size: 24rpx;
     line-height: 60rpx;
@@ -27,11 +27,11 @@
 }
 
 .ca-section {
-    padding: 20rpx;
+    padding: 20rpx !important;
 }
 
 .ca-text {
-    padding: 0 15rpx;
+    padding: 0 15rpx !important;
     font-size: 24rpx;
     line-height: 1.4;
     word-break: break-all;
@@ -39,7 +39,7 @@
 }
 
 .ca-err {
-    padding: 0 15rpx;
+    padding: 0 15rpx !important;
     font-family: $ft-code;
     font-size: 24rpx;
     line-height: 1.4;
@@ -60,5 +60,5 @@
     right: 0;
     bottom: 0;
     left: 0;
-    border-top: 1px solid #ededed;
+    border-top: 1px solid #ededed !important;
 }

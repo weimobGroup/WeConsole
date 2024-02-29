@@ -17,7 +17,7 @@
 
         .fc-tab-title {
             height: $ht-tab-bar - 20rpx;
-            padding: 0 15rpx;
+            padding: 0 15rpx !important;
             font-size: $sz-tab-head - 6rpx;
             line-height: $ht-tab-bar - 20rpx;
         }
@@ -52,7 +52,7 @@
     box-sizing: border-box;
     flex-shrink: 0;
     height: $ht-tab-bar;
-    padding: 0 20rpx;
+    padding: 0 20rpx !important;
     font-size: $sz-tab-head;
     line-height: $ht-tab-bar;
     text-align: center;

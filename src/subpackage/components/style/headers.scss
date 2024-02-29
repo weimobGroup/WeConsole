@@ -1,7 +1,7 @@
 @import './var.scss';
 
 .fc-headers-item {
-    padding: 8rpx 10rpx;
+    padding: 8rpx 10rpx !important;
     font-family: $ft-code;
     font-size: 24rpx;
     line-height: 1.6;
@@ -22,8 +22,8 @@
 // }
 
 .fc-headers-hr {
-    margin: 6rpx 0;
-    border-bottom: 1px solid $bg-tab-border;
+    margin: 6rpx 0 !important;
+    border-bottom: 1px solid $bg-tab-border !important;
 }
 
 .fc-headers-name {
@@ -32,8 +32,8 @@
 
     &::after {
         display: inline;
-        margin-right: 8rpx;
-        margin-left: 2rpx;
+        margin-right: 8rpx !important;
+        margin-left: 2rpx !important;
         content: ':';
     }
 }

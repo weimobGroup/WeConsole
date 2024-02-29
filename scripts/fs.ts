@@ -1,7 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import * as rimraf from 'rimraf';
-import copy from 'copy';
 
 export const isDir = (fileName: string): boolean => {
     return fs.statSync(fileName).isDirectory();
@@ -25,9 +23,18 @@ export const clearDir = (dirName: string, deep = true) => {
     return true;
 };
 
+export const rmEmptyDir = (dirName: string, checkExists = true) => {
+    if ((checkExists && fs.existsSync(dirName)) || !checkExists) {
+        fs.rmdirSync(dirName);
+    }
+};
+
 /** 删除目录 */
 export const rmDir = (dirName: string, checkExists = true) => {
-    ((checkExists && fs.existsSync(dirName)) || !checkExists) && rimraf.sync(dirName);
+    if ((checkExists && fs.existsSync(dirName)) || !checkExists) {
+        clearDir(dirName, true);
+        rmEmptyDir(dirName, checkExists);
+    }
 };
 
 /** 创建目录 */
@@ -169,12 +176,4 @@ export const replaceFileExt = (fileName: string, ext: string): string => {
 };
 export const getFileExt = (fileName: string): string => {
     return fileName.substr(fileName.lastIndexOf('.'));
-};
-
-export const copyPromise = (source: string, target: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-        copy(source, target, (err) => {
-            err ? reject(err) : resolve();
-        });
-    });
 };

@@ -1,7 +1,7 @@
 @import './var.scss';
 
 .fc-table-container {
-    padding: 15rpx;
+    padding: 15rpx !important;
 }
 
 .fc-table {
@@ -10,7 +10,7 @@
     font-size: 20rpx;
     color: $cr-bar;
     border-collapse: collapse;
-    border: 1px solid $bg-tab-border;
+    border: 1px solid $bg-tab-border !important;
 }
 
 .fc-table-tr {
@@ -28,14 +28,14 @@
 .fc-table-th,
 .fc-table-td {
     display: table-cell;
-    padding: 6rpx;
+    padding: 6rpx !important;
     word-break: break-all;
     white-space: normal;
-    border-right: 1px solid $bg-tab-border;
+    border-right: 1px solid $bg-tab-border !important;
 }
 
 .fc-table-th {
     font-size: 22rpx;
     background-color: $bg-tab-head;
-    border-bottom: 1px solid $bg-tab-border;
+    border-bottom: 1px solid $bg-tab-border !important;
 }

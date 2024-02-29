@@ -1,5 +1,6 @@
 import { compileFile } from './sass';
-import { copyPromise, getFiles, readFile, writeFile } from './fs';
+import { getFiles, readFile, writeFile } from './fs';
+import { copyPromise } from './_copy';
 import { renameSync } from 'fs';
 import { toXhsML } from './translator/xhs';
 import { toAliXml } from './translator/ali';
