@@ -76,13 +76,32 @@
     box-sizing: border-box;
     height: 100rpx;
     margin-bottom: -1px !important;
-    border-top: 1px solid $bg-tab-border !important;
-    font-family: $ft-code;
-    font-size: 40rpx;
+    border-top: 1px solid #ccc !important;
+    font-family: consolas, menlo, monaco, 'Courier New', monospace;
+    font-size: 19rpx;
     font-weight: bold;
     color: #ccc;
     text-align: center;
-    padding-top: 20rpx !important;
+    padding: 20rpx 30rpx !important;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+}
+
+.fc-ad-title {
+    font-size: 40rpx;
+    opacity: 0.8;
+}
+
+.fc-ad {
+    opacity: 0.6;
+    font-weight: 300;
+}
+
+.fc-ad text {
+    display: block;
+    font-size: 65%;
 }
 
 .fc-modal-body {
@@ -91,29 +110,6 @@
     right: 0;
     bottom: 0;
     left: 0;
-}
-
-.fc-ad-title {
-    opacity: 0.8;
-}
-
-.fc-ad {
-    opacity: 0.6;
-    font-weight: 300;
-    display: flex;
-    padding: 10rpx 30rpx !important;
-    font-size: 17rpx;
-    white-space: nowrap;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    align-items: center;
-    justify-content: space-between;
-    text {
-        display: block;
-        font-size: 65%;
-    }
 }
 
 .fc-tabs-action {
