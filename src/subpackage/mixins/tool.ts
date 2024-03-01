@@ -67,6 +67,14 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
                 delete this.$wcCanvasContextResolves;
             }
         });
+        this.$wcOn(WeConsoleEvents.WcCanvasContextFail, () => {
+            if (this.$wcCanvasContextResolves) {
+                this.$wcCanvasContextResolves.forEach((item) => {
+                    item?.(true);
+                });
+                delete this.$wcCanvasContextResolves;
+            }
+        });
         this.$wcOn(WeConsoleEvents.WcCanvasContextDestory, () => {
             delete this.$wcCanvasContext;
         });
@@ -97,14 +105,17 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
         }
     }
     noop() {}
-    $getCanvasContext(): Promise<any> {
+    $getCanvasContext(): Promise<void> {
         if (this.$wcCanvasContext) {
-            return Promise.resolve(this.$wcCanvasContext);
+            return Promise.resolve();
+        }
+        if (WcScope.CanvasContextFail) {
+            return Promise.reject(new Error('CanvasContext获取失败'));
         }
         const ctx = WcScope.CanvasContext;
         if (ctx) {
             this.$wcCanvasContext = ctx;
-            return Promise.resolve(this.$wcCanvasContext);
+            return Promise.resolve();
         }
 
         return new Promise((resolve) => {
@@ -112,6 +123,10 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
                 this.$wcCanvasContextResolves = [];
             }
             this.$wcCanvasContextResolves.push(resolve);
+        }).then((isFail) => {
+            if (isFail) {
+                return Promise.reject(new Error('CanvasContext获取失败'));
+            }
         });
     }
 

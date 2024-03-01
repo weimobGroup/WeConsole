@@ -171,13 +171,19 @@ class MainComponent extends MpComponent {
                     : this.data[prop];
         });
         this.$mx.Tool.$updateData(data);
-        this.getCanvasCtx().then((ctx) => {
-            if (this.$mx.Tool.$wcComponentIsDestroyed) {
-                return;
-            }
-            WcScope.CanvasContext = ctx;
-            this.$mx.Tool.$wcEmit(WeConsoleEvents.WcCanvasContextReady, ctx);
-        });
+        this.getCanvasCtx()
+            .then((ctx) => {
+                if (this.$mx.Tool.$wcComponentIsDestroyed) {
+                    return;
+                }
+                delete WcScope.CanvasContextFail;
+                WcScope.CanvasContext = ctx;
+                this.$mx.Tool.$wcEmit(WeConsoleEvents.WcCanvasContextReady, ctx);
+            })
+            .catch(() => {
+                this.$mx.Tool.$wcEmit(WeConsoleEvents.WcCanvasContextFail);
+                WcScope.CanvasContextFail = true;
+            });
     }
     changeSysTab(e) {
         this.$mx.Tool.$forceData({
@@ -314,14 +320,6 @@ class MainComponent extends MpComponent {
             };
             fire();
         });
-
-        return new Promise<void>((resolve) => {
-            if (BUILD_TARGET === 'my' && !this.isCanvasReadyResolve) {
-                this.onCanvasReadyResolve = resolve;
-            } else {
-                resolve();
-            }
-        }).then(() => {});
     }
     init() {
         if (!MainStateController.getState('winHeight')) {

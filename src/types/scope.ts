@@ -18,6 +18,7 @@ export const enum WeConsoleEvents {
     WcVisibleChange = 'WcVisibleChange',
     /** CanvasContext准备好时，CanvasContext用于JSON树组件的界面文字宽度计算 */
     WcCanvasContextReady = 'WcCanvasContextReady',
+    WcCanvasContextFail = 'WcCanvasContextFail',
     /** CanvasContext销毁时 */
     WcCanvasContextDestory = 'WcCanvasContextDestory',
     /** 主组件的宽高发生变化时 */
@@ -34,4 +35,5 @@ export interface WeConsoleScope {
     SingleMap?: WeConsoleScopeSingleMap;
     /** 公用Canvas Context */
     CanvasContext?: any;
+    CanvasContextFail?: boolean;
 }
