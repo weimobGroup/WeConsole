@@ -263,7 +263,7 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
         if (!this.initPromise) {
             this.initPromise = Promise.all([
                 this.$mx.Tool.$getBoundingClientRect('.json-viewer'),
-                this.$mx.Tool.$getCanvasContext()
+                this.$mx.Tool.$getCanvasContext().catch(() => {})
             ])
                 .then(([{ width }]) => {
                     const target =
