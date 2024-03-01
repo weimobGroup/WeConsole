@@ -1,4 +1,5 @@
 import type { MpStackInfo } from '@/types/common';
+import type { TableCell, TableCellTextItem } from '@/types/table';
 
 export const removeEndZero = (num: number | string): string => {
     const str = String(num);
@@ -40,6 +41,33 @@ export const computeTime = (total: number): string => {
         timeVal = removeEndZero((total / (60 * 60 * 1000)).toFixed(1));
     }
     return `${timeVal}${timeUnit}`;
+};
+
+export const computeTimeCell = (total: number): TableCell => {
+    const text = computeTime(total);
+    const textItem: TableCellTextItem = {
+        type: 'text',
+        content: text,
+        style: ''
+    };
+    if (text.includes('ms')) {
+        if (parseFloat(text) > 500) {
+            textItem.style = 'color:#ffa400;';
+        } else if (parseFloat(text) < 100) {
+            textItem.style = 'color:green;';
+        }
+    } else {
+        textItem.style = 'color:red;';
+    }
+    return {
+        tableCell: true,
+        blocks: [
+            {
+                block: true,
+                items: [textItem]
+            }
+        ]
+    };
 };
 
 export const findValue = (obj: any, prop: string): any => {

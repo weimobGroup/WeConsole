@@ -6,7 +6,7 @@ import type { MpUIConfig } from '@/types/config';
 import type { MpApiMaterial, MpConsoleMaterial, MpConsoleMaterialItem, MpProduct } from '@/types/product';
 import { getCategoryValue } from '@/sub/modules/category';
 import {
-    computeTime,
+    computeTimeCell,
     convertStockToInitiatorDesc,
     convertStockToInitiatorName,
     getStatusText,
@@ -213,7 +213,7 @@ export const convertApiMaterial = (
         material.endTime = product.endTime || product.execEndTime;
     }
     if (material.endTime && material.startTime) {
-        material.time = computeTime(material.endTime - material.startTime);
+        material.time = computeTimeCell(material.endTime - material.startTime);
     }
 
     const { code, status, statusDesc } = getApiStatusInfo(product) || {};

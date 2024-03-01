@@ -37,7 +37,7 @@ export interface MpApiMaterial extends MpMaterial {
     statusDesc?: string;
     startTime?: number;
     endTime?: number;
-    time?: string;
+    time?: TableCell;
     initiator?: string;
     initiatorDesc?: string;
     rowStyle?: string;

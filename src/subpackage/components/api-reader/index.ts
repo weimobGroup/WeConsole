@@ -16,7 +16,7 @@ import { ToolMixin } from '@/sub/mixins/tool';
 import type { ReaderStateController } from '@/main/modules/reader-state';
 import { VlMixin } from '@/sub/mixins/vl';
 import type { MpEvent } from '@/types/view';
-import { computeTime } from '@/sub/modules/util';
+import { computeTimeCell } from '@/sub/modules/util';
 import { getUIConfig } from '@/main/config';
 import { rpxToPx } from '@/main/modules/util';
 import { nextTick, setClipboardData } from 'cross-mp-power';
@@ -125,7 +125,7 @@ class ApiReaderComponent extends MpComponent<Data, NonNullable<unknown>> {
     }
     onReplaceActiveMaterial(material: MpApiMaterial) {
         if (material.endTime && material.startTime) {
-            material.time = computeTime(material.endTime - material.startTime);
+            material.time = computeTimeCell(material.endTime - material.startTime);
         }
         this.$mx.Vl.$vlReplaceItem(material.id, material);
     }
