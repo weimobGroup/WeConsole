@@ -29,8 +29,11 @@ const loopTranslator = (nodes: FxNode[]) => {
                 translatorAttr(attr, node);
             });
         }
-        if (node.name === 'wxs' && (notAttr || !hasSrcAttr)) {
-            throw new Error('转换xhs不支持内联的wxs');
+        if (node.name === 'wxs') {
+            if (notAttr || !hasSrcAttr) {
+                throw new Error('转换xhs不支持内联的wxs');
+            }
+            node.name = 'sjs';
         }
         if (node.children) {
             loopTranslator(node.children);

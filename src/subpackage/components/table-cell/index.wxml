@@ -1,14 +1,14 @@
 <view class="table-cell {{col.wrap===false?'wc-nowrap':''}}">
     <block wx:if="{{value.tableCell}}">
-        <view wx:for="{{value.blocks}}" wx:key="blockIndex" wx:for-item="block" wx:for-index="blockIndex">
+        <view class="table-cell-block" wx:for="{{value.blocks}}" wx:key="blockIndex" wx:for-item="block" wx:for-index="blockIndex">
             <block wx:for="{{block.items}}" wx:key="index">
-                <text wx:if="{{item.type==='text'}}" style="{{item.style}}">{{item.content}}</text>
+                <text class="table-cell-block-text" wx:if="{{item.type==='text'}}" style="{{item.style}}">{{item.content}}</text>
                 <json-viewer wx:elif="{{item.type==='json'}}" from="{{from}}_{{blockIndex}}_{{index}}" mode="{{2}}"
                     init="{{false}}" bind:toggle="onJSONViewerToggle" data-block="{{blockIndex}}"
                     data-index="{{index}}"></json-viewer>
-                <text wx:else>{{item}}</text>
+                <text class="table-cell-block-text" wx:else>{{item}}</text>
             </block>
         </view>
     </block>
-    <block wx:else>{{value}}</block>
+    <text class="table-cell-block-text" wx:else>{{value}}</text>
 </view>

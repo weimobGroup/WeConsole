@@ -1,16 +1,16 @@
-<wxs module="movable" src="../../mpxs/movable.wxs"></wxs>
 <block wx:if="{{!disabled}}">
-    <view wx:if="{{showIcon && inited}}"
-        class="fc-hand {{customHand?'':'fc-hand-prefect'}} {{isFullScreenPhone?'fc-adap':''}} {{visible?'is-hide':''}}"
-        bind:touchstart="{{movable.touchStart}}" bind:touchmove="{{movable.touchMove}}"
-        bind:touchend="{{movable.touchEnd}}" bind:touchcancel="{{movable.touchEnd}}" data-movid="wc_hand"
-        data-movmaxx="{{winWidth}}" data-movmaxy="{{winHeight}}" data-movend="handMovableEnd"
-        style="z-index:{{zIndex}};{{handStyle||''}};left:{{handX}};top:{{handY}};">
-        <view class="fc-hand-toggle" bindtap="toggleVisible">
-            <slot wx:if="{{customHand}}" name="hand"></slot>
-            <image wx:else class="fc-hand-icon {{iconStyle||''}}" src="{{icon}}"></image>
+    <movable wx:if="{{showIcon && inited}}" containerStyle="position: fixed;z-index:{{zIndex||500}};{{customHand|| handX || handY?'':'right: 20rpx;top: 50%;'}} {{handX?'left:'+handX:''}};{{handY?'top:'+handY:''}};"
+        bind:end="handMovableEnd">
+        <view
+            class="fc-hand {{customHand?'':'fc-hand-prefect'}} {{visible?'is-hide':''}}"
+            style="{{handStyle||''}}">
+            <view class="fc-hand-toggle" bindtap="toggleVisible">
+                <slot wx:if="{{customHand}}" name="hand"></slot>
+                <image wx:else class="fc-hand-icon {{iconStyle||''}}" src="{{icon}}"></image>
+            </view>
         </view>
-    </view>
+    </movable>
+
     <view wx:if="{{showIcon && inited && pageVisible && (visible || mounted)}}"
         class="fc-modal {{isFullScreenPhone?'fc-adap-scroll':''}} {{visible?'is-show':''}} {{fullScreen?'is-full':''}}"
         style="{{fullScreen&&(isFullScreenPhone?adapFullTop:fullTop)?('top:'+(isFullScreenPhone?adapFullTop:fullTop)+';'):''}}z-index:{{zIndex}};">
@@ -44,11 +44,11 @@
             </tabs>
         </view>
         <view wx:if="{{isFullScreenPhone}}" class="fc-modal-adap" bindtap="copyAd">
-            <view class="fc-ad"><text>Github:</text>
+            <view class="fc-ad"><text class="fc-label">Github:</text>
                 <view>weimob-tech/WeConsole</view>
             </view>
             <view class="fc-ad-title">WeConsole</view>
-            <view class="fc-ad"><text>Collaborator:</text>
+            <view class="fc-ad"><text class="fc-label">Collaborator:</text>
                 <view>github@imingyu</view>
             </view>
         </view>

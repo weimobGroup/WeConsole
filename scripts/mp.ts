@@ -78,8 +78,10 @@ export const compilerMpResource = (
             if (fileName.endsWith('.wxs')) {
                 const newFileName = fileName.substring(0, fileName.length - 4) + `.${xjsFileSuffix[targetPlatform]}`;
                 renameSync(fileName, newFileName);
-                const content = readFile(newFileName);
-                writeFile(newFileName, content.replace('module.exports = ', 'export default'));
+                if (targetPlatform === 'my') {
+                    const content = readFile(newFileName);
+                    writeFile(newFileName, content.replace('module.exports = ', 'export default'));
+                }
                 return;
             }
         });

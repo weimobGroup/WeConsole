@@ -4,11 +4,10 @@ import type { RollupOptions, OutputOptions } from 'rollup';
 import { rollup } from 'rollup';
 import NodeResolve from '@rollup/plugin-node-resolve';
 import { ROOT_DIR, VERSION } from './vars';
-import { getFiles, readFile, writeFile } from './fs';
+import { getFiles, readFile, rmDir, writeFile } from './fs';
 import { copyPromise } from './_copy';
 import typescript from '@rollup/plugin-typescript';
 import { compilerMpResource } from './mp';
-import { rimraf } from 'rimraf';
 
 const RollupReplace = require('@rollup/plugin-replace');
 const commonjs = require('@rollup/plugin-commonjs');
@@ -151,6 +150,7 @@ const getBuildOptions = (mode: 'full' | 'npm'): [RollupOptions, () => void] => {
                 })
                 .then(() => {
                     if (mode === 'full') {
+                        rmDir(`${ROOT_DIR}/examples/${process.env.BUILD_TARGET}/full/weconsole`);
                         return copyPromise(
                             `${ROOT_DIR}/dist/${distDir}${mode}/**/*`,
                             `${ROOT_DIR}/examples/${process.env.BUILD_TARGET}/full/weconsole`
@@ -185,7 +185,7 @@ export const build = () => {
     const fullTask = getBuildOptions('full');
     const npmTask = getBuildOptions('npm');
     const vlTempDir = `${ROOT_DIR}/src/subpackage/vl-temp`;
-    rimraf.sync(vlTempDir);
+    rmDir(vlTempDir);
     return copyPromise(`${ROOT_DIR}/node_modules/@cross-virtual-list/mp-wx/dist/npm/**/*.js`, vlTempDir)
         .then(() => {
             getFiles(vlTempDir, true).forEach((item) => {

@@ -2,12 +2,6 @@
 @import '../style/icon.scss';
 
 .fc-hand {
-    position: fixed;
-    z-index: 500;
-    &.fc-adap {
-        bottom: 120rpx;
-    }
-
     &:hover,
     &:focus {
         outline: none;
@@ -20,9 +14,6 @@
 }
 
 .fc-hand-prefect {
-    right: 20rpx;
-    top: 50%;
-
     .fc-hand-toggle {
         display: flex;
         align-items: center;
@@ -99,7 +90,7 @@
     font-weight: 300;
 }
 
-.fc-ad text {
+.fc-ad .fc-label {
     display: block;
     font-size: 65%;
 }

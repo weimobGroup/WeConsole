@@ -2,6 +2,7 @@
     "component": true,
     "usingComponents": {
         "tabs": "../tabs/index",
+        "movable": "../movable/index",
         "json-viewer": "../json-viewer/index",
         "api-reader": "../api-reader/index",
         "console-reader": "../console-reader/index",

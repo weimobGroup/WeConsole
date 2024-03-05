@@ -6,8 +6,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 
-    view,
-    text {
+    .table-cell-block,
+    .table-cell-block-text {
         flex-wrap: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

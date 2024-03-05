@@ -1,0 +1,4 @@
+<view class="wc-movable" bind:touchstart="touchStart" bind:touchmove="touchMove"
+    bind:touchend="touchEnd" bind:touchcancel="touchEnd" style="{{containerStyle||''}};{{innerStyle}}">
+    <slot></slot>
+</view>

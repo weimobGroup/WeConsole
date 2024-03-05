@@ -23,7 +23,7 @@
         "build:scripts": "rimraf ./scripts-dist && tsc -p ./scripts/tsconfig.json",
         "build:before": "pnpm lint && pnpm build:scripts",
         "build:wx": "pnpm build:before && rimraf ./dist/full && rimraf ./dist/npm && cross-env BUILD_TARGET=wx node ./scripts-dist/cli.js",
-        "build:my": "pnpm build:before && rimraf ./dist/my && cross-env BUILD_TARGET=my node ./scripts-dist/cli.js",
+        "build:my": "pnpm build:before && rimraf ./dist/alipay && cross-env BUILD_TARGET=my node ./scripts-dist/cli.js",
         "build:qq": "pnpm build:before && rimraf ./dist/qq && cross-env BUILD_TARGET=qq node ./scripts-dist/cli.js",
         "build:xhs": "pnpm build:before && rimraf ./dist/xhs && cross-env BUILD_TARGET=xhs node ./scripts-dist/cli.js",
         "build": "pnpm build:wx && pnpm build:my",
