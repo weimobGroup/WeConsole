@@ -7,6 +7,7 @@ import {
     getCurrentEnvVersion,
     supportSelectOwnerComponent
 } from 'cross-mp-power';
+import type { MpViewInstance } from 'typescript-mp-component';
 
 const getGroup = (children: MpElement[]): MpElement[] => {
     const map: { [prop: string]: MpElement } = {};
@@ -54,13 +55,8 @@ const isPage = (vm) => {
 };
 
 // 只有不支持selectOwnerComponent时才会调用此方法
-const getPageAllChildren = (page): MpElement[] => {
-    return getWcControlMpViewInstances().reduce((sum: MpElement[], item) => {
-        if (item !== page && !isApp(item) && isPageChild(item, page)) {
-            sum.push(getElement(item));
-        }
-        return sum;
-    }, []);
+const getPageAllChildren = (page) => {
+    return getWcControlMpViewInstances().filter((item) => item !== page && !isApp(item) && isPageChild(item, page));
 };
 
 export const getChildrenElements = (vw: any, group?: string, getPages?: () => any[]): Promise<MpElement[]> => {
@@ -72,21 +68,31 @@ export const getChildrenElements = (vw: any, group?: string, getPages?: () => an
         }
         return Promise.all(pages.map((item) => getElement(item)));
     }
-    if (vwType === 'Component' && !supportSelectOwnerComponent()) {
-        return Promise.resolve([]);
+
+    let children: MpViewInstance[] = [];
+    if (BUILD_TARGET !== 'xhs' && !supportSelectOwnerComponent()) {
+        if (vwType === 'Component') {
+            children = [];
+        } else if (isPage(vw)) {
+            children = getPageAllChildren(vw);
+        }
     }
-    if (isPage(vw) && !supportSelectOwnerComponent()) {
-        return Promise.resolve(getPageAllChildren(vw));
+
+    if (BUILD_TARGET === 'xhs' || supportSelectOwnerComponent()) {
+        const MpViewInstances = getWcControlMpViewInstances();
+        children = uniq(
+            MpViewInstances.filter((item) => {
+                if (group) {
+                    return item.is === group;
+                }
+                if (BUILD_TARGET === 'xhs') {
+                    return item !== vw && (item as any).ownerComponent && (item as any).ownerComponent === vw;
+                }
+                return item.selectOwnerComponent?.() === vw;
+            })
+        );
     }
-    const MpViewInstances = getWcControlMpViewInstances();
-    const children = uniq(
-        MpViewInstances.filter((item) => {
-            if (group) {
-                return item.is === group;
-            }
-            return item.selectOwnerComponent?.() === vw;
-        })
-    );
+
     return Promise.all(children.map((item) => getElement(item))).then((list) => {
         if (group) {
             return list;
@@ -135,11 +141,17 @@ const isPageChild = (component: any, page: any): boolean => {
     if (BUILD_TARGET === 'qq') {
         return component.__wxWebviewId__ && page.__wxWebviewId__ && component.__wxWebviewId__ === page.__wxWebviewId__;
     }
+    if (BUILD_TARGET === 'xhs') {
+        return component.ownerComponent === page;
+    }
     return false;
 };
 
 export const hasChild = (vw: any): boolean => {
     const MpViewInstances = getWcControlMpViewInstances();
+    if (BUILD_TARGET === 'xhs') {
+        return MpViewInstances.some((item) => (item as any).ownerComponent === vw);
+    }
     if (supportSelectOwnerComponent()) {
         return MpViewInstances.some((item) => item.selectOwnerComponent?.() === vw && item !== vw);
     }
@@ -156,15 +168,15 @@ export const getElementId = (vm: any): string => {
     if (BUILD_TARGET === 'my') {
         return vm.$id;
     }
+    if (BUILD_TARGET === 'xhs') {
+        return vm.nodeId || vm.pageId;
+    }
     // TODO: 其他渠道
     return '';
 };
 
 export const getElementLabel = (vm: any): string => {
-    if (BUILD_TARGET === 'wx' || BUILD_TARGET === 'qq' || BUILD_TARGET === 'my') {
-        return vm.is || vm.route || vm.__route__;
-    }
-    return '';
+    return vm.is || vm.componentPath || vm.route || vm.__route__ || vm.uri;
 };
 
 const getAppAttrs = () => {
