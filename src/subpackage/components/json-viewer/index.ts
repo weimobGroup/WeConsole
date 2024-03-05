@@ -197,6 +197,12 @@ export class JsonViewer extends MpComponent<MpJSONViewerComponentData, MpJSONVie
             return;
         }
         this.setPathVisible(open, path);
+        if (BUILD_TARGET === 'xhs') {
+            setTimeout(() => {
+                this.triggerEvent('toggle', e.detail);
+            }, 100);
+            return;
+        }
         this.triggerEvent('toggle', e.detail);
     }
     buildComputeObject(path: JSONPropPath) {
