@@ -5,7 +5,7 @@ export const getBoundingClientRect = (ctx: any, selector: string, retryCount = 3
     return new Promise((resolve, reject) => {
         const fire = () => {
             selectBoundingClientRect({
-                selector: '.wc-movable',
+                selector,
                 ctx,
                 retryCount,
                 retryDelay: 200
