@@ -1,3 +1,5 @@
+@import '../style/var.scss';
+
 $entity-mgr: 6rpx;
 
 .json-chunk,
@@ -30,13 +32,13 @@ $entity-mgr: 6rpx;
 .left-boundary.string,
 .right-boundary.string,
 .json-content.string {
-    color: #c41a16;
+    color: $cr-str;
 }
 
 .json-content.num,
 .json-content.bool,
 .json-content.func {
-    color: #1c00cf;
+    color: $cr-num;
 }
 
 .json-node-content.has-arrow,
@@ -76,4 +78,9 @@ $entity-mgr: 6rpx;
 .class-name,
 .ellipsis {
     color: #808080;
+}
+
+.undefined,
+.null {
+    color: $cr-nail;
 }

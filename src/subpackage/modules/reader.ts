@@ -259,46 +259,87 @@ export const convertApiMaterial = (
     return material;
 };
 
+const parseConsoleItem = (item: any, index: number, sum: MpConsoleMaterialItem[]) => {
+    if (item === undefined || item === null) {
+        sum.push({
+            type: 'nail',
+            index
+        });
+        return;
+    }
+    const type = typeof item;
+    // anonymous
+    if (type === 'function') {
+        const str = item.toString() as string;
+        const i1 = str.indexOf('{');
+        let before = str.substring(0, i1) + str.substring(i1, 50);
+        before = before.substring(0, 200);
+        sum.push({
+            type: 'fun',
+            index,
+            content: before.length === str.length ? str : before.substring(0, 200) + '...}'
+        });
+        return;
+    }
+    if (type === 'number') {
+        sum.push({
+            type: 'num',
+            index,
+            content: String(item)
+        });
+        return;
+    }
+    if (type === 'boolean') {
+        sum.push({
+            type: 'bool',
+            index,
+            content: String(item)
+        });
+        return;
+    }
+    if (type === 'string') {
+        if (item.indexOf('\n') === -1) {
+            sum.push({
+                type: 'str',
+                index,
+                content: item
+            });
+            return;
+        }
+        item.split('\n').forEach((str) => {
+            sum.push({
+                type: 'str',
+                index,
+                content: str
+            });
+            sum.push({
+                type: 'br',
+                index
+            });
+        });
+        sum.pop();
+        return;
+    }
+    sum.push({
+        type: 'json',
+        index
+    });
+};
+
 export const convertConsoleMaterial = (product: Partial<MpProduct>, mpRunConfig?: MpUIConfig): MpConsoleMaterial => {
     return {
         id: product.id as string,
         categorys: getCategoryValue(product, mpRunConfig),
         method: product.category as string,
         items: product.request?.reduce((sum: MpConsoleMaterialItem[], item, index, arr) => {
-            if (typeof item === 'string') {
-                if (item.indexOf('\n') === -1) {
-                    sum.push({
-                        type: 'str',
-                        index,
-                        content: item
-                    });
-                } else {
-                    item.split('\n').forEach((str) => {
-                        sum.push({
-                            type: 'str',
-                            index,
-                            content: str
-                        });
-                        sum.push({
-                            type: 'br',
-                            index
-                        });
-                    });
-                    sum.pop();
-                }
-            } else {
-                sum.push({
-                    type: 'json',
-                    index
-                });
-            }
+            parseConsoleItem(item, index, sum);
             if (index !== arr.length - 1) {
                 sum.push({
                     type: 'division',
+                    content: ' ',
                     index
                 });
             }
-
             return sum;
         }, [])
     };

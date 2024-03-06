@@ -6,13 +6,11 @@
     <view wx:if="{{value.method==='warn'}}" class="console-wic wic-warn"></view>
     <view wx:if="{{value.method==='info'}}" class="console-wic wic-info"></view>
     <block wx:for="{{value.items}}" wx:for-item="rowItem" wx:for-index="rowItemIndex" wx:key="rowItemIndex">
-        <view class="console-br" wx:if="{{rowItem.type==='br'}}"></view>
-        <view class="console-division" wx:if="{{rowItem.type==='division'}}">{{' '}}</view>
-        <view class="console-json" wx:elif="{{rowItem.type==='json'}}">
+        <view wx:if="{{rowItem.type!=='json'}}" class="console-item type-{{rowItem.type}}">{{rowItem.content||''}}</view>
+        <view class="console-item type-json" wx:else>
             <json-viewer bind:toggle="rowJSONViewerToggle" outerClass="console-jw"
                 from="Console_{{state.type||'row'}}_{{value.id}}_{{rowItem.index}}_{{state.from}}" fontSize="{{22}}"
                 smallFontSize="{{22*0.8}}" data-index="{{rowItem.index}}" mode="{{2}}"></json-viewer>
         </view>
-        <view class="console-str" wx:else>{{rowItem.content}}</view>
     </block>
 </view>

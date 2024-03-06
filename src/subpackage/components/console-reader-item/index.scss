@@ -104,22 +104,33 @@
     display: block;
 }
 
-.console-json,
-.console-str {
+.console-item {
     font-size: 22rpx;
     word-break: break-all;
     white-space: pre-wrap;
-}
-
-.console-str,
-.console-division {
     display: inline;
-}
 
-.console-division {
-    padding-left: 16rpx !important;
-}
-
-.console-json {
-    display: inline-block;
+    &.type-json {
+        display: inline-block;
+    }
+    &.type-fun {
+        display: inline-block;
+        font-family: $ft-code;
+        font-style: italic;
+        &:active,
+        &:focus {
+            background-color: #fff;
+            box-shadow: 0 0 10rpx rgba(128, 128, 128, 0.1);
+        }
+    }
+    &.type-division {
+        padding-left: 16rpx !important;
+    }
+    &.type-nail {
+        color: $cr-nail;
+    }
+    &.type-num,
+    &.type-bool {
+        color: $cr-num;
+    }
 }

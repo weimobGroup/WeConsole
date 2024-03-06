@@ -44,7 +44,7 @@ export interface MpApiMaterial extends MpMaterial {
 }
 
 export interface MpConsoleMaterialItem {
-    type: 'str' | 'json' | 'br' | 'division';
+    type: 'str' | 'nail' | 'num' | 'fun' | 'bool' | 'json' | 'br' | 'division';
     index: number;
     content?: string;
 }

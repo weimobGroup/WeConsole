@@ -26,6 +26,7 @@ $bg-renderer-row-active: $bg-active;
 $bg-filter-active: #aaa;
 
 // 颜色
+$cr-nail: #ccc;
 $cr-error: #f00;
 $cr-warn: #ffa400;
 $cr-info: $bg-secondary;
@@ -41,6 +42,8 @@ $cr-filter-active: $cr-active;
 $cr-renderer-row: $cr-bar;
 $cr-renderer-row-muted: $cr-muted;
 $cr-renderer-row-active: #fff;
+$cr-num: #1c00cf;
+$cr-str: #c41a16;
 
 // 文字尺寸
 $sz-tab-head: $zoom * 28rpx;
