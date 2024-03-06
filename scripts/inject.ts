@@ -17,7 +17,7 @@ interface InjectConfig {
      */
     mode?: 'npm' | 'full';
     /** 注入的小程序项目属于哪个平台？ */
-    platform?: 'wx' | 'alipay';
+    platform?: 'wx' | 'alipay' | 'xhs';
     /** 注入weconsole标签时传入的fullTop属性值 */
     fullTop?: string;
     /** 注入weconsole标签时传入的adapFullTop属性值 */
@@ -34,12 +34,15 @@ interface PlatformDir {
     mainComponentFile: string;
 }
 
-const computeProjectPlatform = (projectDir: string): 'wx' | 'alipay' | undefined => {
+const computeProjectPlatform = (projectDir: string): 'wx' | 'alipay' | 'xhs' | undefined => {
     if (fs.existsSync(path.join(projectDir, '.mini-ide'))) {
         return 'alipay';
     }
     if (fs.existsSync(path.join(projectDir, 'mini.project.json'))) {
         return 'alipay';
+    }
+    if (fs.existsSync(path.join(projectDir, 'xhs-sumi'))) {
+        return 'xhs';
     }
     if (fs.existsSync(path.join(projectDir, 'project.config.json'))) {
         return 'wx';
@@ -73,7 +76,7 @@ const injectAppJSON = (projectDir: string, mainComponentFile: string) => {
     return appJSON;
 };
 
-const injectPages = (config: InjectConfig, appJSON: any, platform: 'wx' | 'alipay') => {
+const injectPages = (config: InjectConfig, appJSON: any, platform: 'wx' | 'alipay' | 'xhs') => {
     const { projectDir } = config;
     if (Array.isArray(appJSON.subPackages)) {
         appJSON.subPackages.forEach((item) => {
@@ -150,12 +153,12 @@ export const injectMpProject = (config: InjectConfig) => {
         }
     } else {
         if (config.mode === 'npm') {
-            platformDir.initFile = path.join('weconsole', 'dist', 'alipay', 'npm', 'main', 'init.js');
-            platformDir.indexFile = path.join('weconsole', 'dist', 'alipay', 'npm', 'main', 'index.js');
+            platformDir.initFile = path.join('weconsole', 'dist', platform, 'npm', 'main', 'init.js');
+            platformDir.indexFile = path.join('weconsole', 'dist', platform, 'npm', 'main', 'index.js');
             platformDir.mainComponentFile = path.join(
                 'weconsole',
                 'dist',
-                'alipay',
+                platform,
                 'npm',
                 'subpackage',
                 'components',
@@ -163,12 +166,12 @@ export const injectMpProject = (config: InjectConfig) => {
                 'index'
             );
         } else {
-            platformDir.initFile = path.posix.sep + path.join('weconsole', 'dist', 'alipay', 'full', 'main', 'init.js');
+            platformDir.initFile = path.posix.sep + path.join('weconsole', 'dist', platform, 'full', 'main', 'init.js');
             platformDir.indexFile =
-                path.posix.sep + path.join('weconsole', 'dist', 'alipay', 'full', 'main', 'index.js');
+                path.posix.sep + path.join('weconsole', 'dist', platform, 'full', 'main', 'index.js');
             platformDir.mainComponentFile =
                 path.posix.sep +
-                path.join('weconsole', 'dist', 'alipay', 'full', 'subpackage', 'components', 'main', 'index');
+                path.join('weconsole', 'dist', platform, 'full', 'subpackage', 'components', 'main', 'index');
         }
     }
     let injectContent = `require("${platformDir.initFile}");`;

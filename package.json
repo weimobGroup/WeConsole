@@ -1,6 +1,6 @@
 {
     "name": "weconsole",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "description": "功能全面、界面与体验对标 Chrome devtools 的可定制化的跨平台小程序开发调试面板",
     "main": "dist/npm/main/index.js",
     "miniprogram": "dist/npm",
@@ -57,7 +57,7 @@
     },
     "homepage": "https://github.com/weimob-tech/WeConsole#readme",
     "devDependencies": {
-        "@cross-virtual-list/mp-wx": "0.3.0",
+        "@cross-virtual-list/mp-wx": "0.3.1",
         "typescript": "^5.1.6",
         "@babel/core": "^7.22.9",
         "@babel/preset-env": "^7.22.9",
@@ -101,12 +101,12 @@
         "watch": "^1.0.2"
     },
     "dependencies": {
-        "@cross-virtual-list/core": "0.3.0",
-        "@cross-virtual-list/types": "0.3.0",
+        "@cross-virtual-list/core": "0.3.1",
+        "@cross-virtual-list/types": "0.3.1",
         "@mpkit/func-helper": "^1.1.2",
         "@mpkit/types": "^1.1.2",
         "@mpkit/util": "^1.1.2",
-        "cross-mp-power": "0.1.7",
+        "cross-mp-power": "0.2.0",
         "typescript-mp-component": "0.1.1"
     }
 }

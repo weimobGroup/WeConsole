@@ -9,6 +9,18 @@
 
 # 更新记录
 
+-   v1.5.0
+
+    -   功能升级
+        -   支持`小红书`平台
+        -   优化`Console`面板
+            -   函数类型数据样式优化
+            -   非 object 类型数据直接展示，不使用`json-viewer`组件
+        -   一键注入
+            -   支持注入`小红书`小程序
+    -   其他
+        -   添加`小红书`小程序示例代码
+
 -   v1.4.1
 
     -   功能升级
@@ -23,6 +35,8 @@
             -   显示`<App>`环境版本和版本号
             -   调整字号
         -   提供`cli`工具方便向小程序项目一键注入 weconsole 代码
+            -   支持注入`微信`小程序
+            -   支持注入`支付宝`小程序
     -   修复 BUG
         -   修复`Api`面板切换详情时 json 数据未变的问题
         -   修复`Console`面板复制对象存在循环引用情况下无法复制并报错的问题
@@ -100,6 +114,7 @@ npm i weconsole -S
 
 -   `微信小程序`：请将`dist/full`目录中的文件拷贝至项目目录中；
 -   `支付宝小程序`：请将`dist/alipay/full`目录中的文件拷贝至项目目录中；
+-   `小红书小程序`：请将`dist/xhs/full`目录中的文件拷贝至项目目录中；
 
 ## 3、引用
 
@@ -128,6 +143,16 @@ import 'weconsole/dist/alipay/npm/main/init';
 
 // 普通方式引用
 import '{复制后的【dist/alipay/full】的路径}/main/init';
+```
+
+-   `小红书小程序`引用方式：
+
+```javascript
+// NPM方式引用
+import 'weconsole/dist/xhs/npm/main/init';
+
+// 普通方式引用
+import '{复制后的【dist/xhs/full】的路径}/main/init';
 ```
 
 引入`main/init`后，就是默认将 App、Page、Component、Api、Console 全部重写监控！如果想按需重写，可以使用如下方式进行：
@@ -175,12 +200,26 @@ showWeConsole();
 ```javascript
 // NPM方式引用
 "usingComponents": {
-    "weconsole": "weconsole/dist/my/npm/subpackage/components/main/index"
+    "weconsole": "weconsole/dist/alipay/npm/subpackage/components/main/index"
 }
 
 // 普通方式引用
 "usingComponents": {
     "weconsole": "{复制后的【dist/alipay/full】的路径}/subpackage/components/main/index"
+}
+```
+
+-   `小红书小程序`引用方式：
+
+```javascript
+// NPM方式引用
+"usingComponents": {
+    "weconsole": "weconsole/dist/xhs/npm/subpackage/components/main/index"
+}
+
+// 普通方式引用
+"usingComponents": {
+    "weconsole": "{复制后的【dist/xhs/full】的路径}/subpackage/components/main/index"
 }
 ```
 
@@ -220,6 +259,9 @@ properties: {
 -   支付宝小程序：
     -   主包文件：`dist/alipay/{full|npm}/main/*`
     -   分包文件：`dist/alipay/{full|npm}/subpackage/*`
+-   小红书小程序：
+    -   主包文件：`dist/xhs/{full|npm}/main/*`
+    -   分包文件：`dist/xhs/{full|npm}/subpackage/*`
 
 ## 5、一键注入
 
@@ -247,7 +289,7 @@ interface InjectConfig {
      */
     mode?: 'npm' | 'full';
     /** 注入的小程序项目属于哪个平台？ */
-    platform?: 'wx' | 'alipay';
+    platform?: 'wx' | 'alipay' | 'xhs';
     /** 注入weconsole标签时传入的fullTop属性值 */
     fullTop?: string;
     /** 注入weconsole标签时传入的adapFullTop属性值 */
