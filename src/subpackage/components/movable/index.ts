@@ -3,7 +3,8 @@ import type { MpEvent } from '@/types/view';
 import type { MpComponentProperties } from 'typescript-mp-component';
 import { MpComponent } from 'typescript-mp-component';
 import type { CrossMpClientRect } from 'cross-mp-power';
-import { selectBoundingClientRect, getSystemInfo } from 'cross-mp-power';
+import { getSystemInfo } from 'cross-mp-power';
+import { getBoundingClientRect } from '@/sub/modules/rect';
 
 interface Data {
     innerStyle: string;
@@ -101,7 +102,7 @@ class Movable extends MpComponent<Data, Props> {
         if (!force && this.rectQueryPromise) {
             return this.rectQueryPromise;
         }
-        this.rectQueryPromise = selectBoundingClientRect('.wc-movable', this, undefined, 3, 100).then((rect) => {
+        this.rectQueryPromise = getBoundingClientRect(this, '.wc-movable').then((rect) => {
             this.rect = rect;
 
             return rect;

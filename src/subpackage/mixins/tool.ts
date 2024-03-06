@@ -1,5 +1,5 @@
 import { isEmptyObject, isFunc, isValidObject } from '@mpkit/util';
-import { log, each } from '@/main/modules/util';
+import { each } from '@/main/modules/util';
 import { MpComponentMixin } from 'typescript-mp-component';
 import type { AnyFunction, EventHandler } from '@/types/util';
 import type { MpUIConfig } from '@/types/config';
@@ -9,7 +9,8 @@ import { WeConsoleEvents } from '@/types/scope';
 import type { IMpProductController } from '@/types/hook';
 import { wcScope, wcScopeSingle } from '@/main/config';
 import type { CrossMpClientRect } from 'cross-mp-power';
-import { nextTick, selectBoundingClientRect, showActionSheet } from 'cross-mp-power';
+import { nextTick, showActionSheet } from 'cross-mp-power';
+import { getBoundingClientRect } from '../modules/rect';
 function OnProduct(type, data) {
     this && this.onWcProduct && this.onWcProduct(type, data);
 }
@@ -165,30 +166,8 @@ export class ToolMixin<D extends object = any> extends MpComponentMixin {
             fireSetData(this);
         }, 100);
     }
-    $getBoundingClientRect(selector: string, retryCount = 3, delay = 200): Promise<CrossMpClientRect> {
-        return new Promise((resolve, reject) => {
-            const fire = () => {
-                selectBoundingClientRect(selector, this)
-                    .then(resolve)
-                    .catch(() => {
-                        retryCount--;
-                        if (retryCount <= 0 || this.$wcComponentIsDestroyed) {
-                            const err = new Error(
-                                this.$wcComponentIsDestroyed
-                                    ? `组件已被销毁，无法获取元素${selector}的boundingClientRect`
-                                    : `无法找到元素${selector}进而获取其boundingClientRect`
-                            );
-                            (err as any).com = this;
-                            log('log', err);
-                            return reject(err);
-                        }
-                        setTimeout(() => {
-                            fire();
-                        }, delay);
-                    });
-            };
-            fire();
-        });
+    $getBoundingClientRect(selector: string): Promise<CrossMpClientRect> {
+        return getBoundingClientRect(this, selector);
     }
     $showActionSheet(items: string[], title?: string): Promise<number> {
         return showActionSheet(items, title);

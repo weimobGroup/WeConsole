@@ -36,4 +36,5 @@ export interface WeConsoleScope {
     /** 公用Canvas Context */
     CanvasContext?: any;
     CanvasContextFail?: boolean;
+    apiCallMark?: string;
 }

@@ -225,7 +225,11 @@ export class Hooker implements IHooker {
         };
         const config = getUIConfig();
         const onlyHookApiNames: Record<string, 1> = {};
-        const ignoreHookApiNames: Record<string, 1> = {};
+        const ignoreHookApiNames: Record<string, 1> = {
+            // 内置这些API属于强制忽略的名单
+            nextTick: 1,
+            createSelectorQuery: 1
+        };
         let isOnlyHook;
         if (Array.isArray(config.onlyHookApiNames)) {
             isOnlyHook = true;

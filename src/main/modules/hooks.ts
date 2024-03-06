@@ -34,8 +34,17 @@ export const FormatApiMethodCallbackHook: MkFuncHook<WeFuncHookState> = {
     }
 };
 
+const isDisableMonitor = (args: any[]) => {
+    return args.some((item) => {
+        return typeof item === 'object' && item && item.__wcDisableMonitor__;
+    });
+};
+
 export const MpProductHook: MkFuncHook<WeFuncHookState> = {
     before(state) {
+        if (isDisableMonitor(state.args)) {
+            return;
+        }
         state.state.product = {
             id: state.state.id,
             time: now(),
@@ -48,12 +57,18 @@ export const MpProductHook: MkFuncHook<WeFuncHookState> = {
         state.state.controller.create(state.state.product);
     },
     after(state) {
+        if (isDisableMonitor(state.args)) {
+            return;
+        }
         const { product, controller } = state.state;
         product.endTime = product.execEndTime = now();
         product.result = state.result;
         controller.change(product);
     },
     complete(state) {
+        if (isDisableMonitor(state.args)) {
+            return;
+        }
         const { controller, product } = state.state;
         const response = state.fulfilled
             ? [state.value]
@@ -65,6 +80,9 @@ export const MpProductHook: MkFuncHook<WeFuncHookState> = {
         controller.change(product);
     },
     catch(state) {
+        if (isDisableMonitor(state.args)) {
+            return;
+        }
         const { controller, product } = state.state;
         const response = [state.errors?.[state.errors.length - 1].error, state.errors?.[state.errors.length - 1].type];
         if (state.state.scope === HookScope.Console) {
