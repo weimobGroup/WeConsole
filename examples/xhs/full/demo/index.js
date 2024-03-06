@@ -36,6 +36,10 @@ Component({
                     this.consoleType === 3 ? new Error(Date.now()) : Date.now(),
                     global
                 );
+                xhs.showToast({
+                    title: `已打印console.${consoleType[this.consoleType]}，请前往Console查看`,
+                    icon: 'none'
+                });
                 this.consoleType++;
                 this.consoleType = this.consoleType > 3 ? 0 : this.consoleType;
                 return;

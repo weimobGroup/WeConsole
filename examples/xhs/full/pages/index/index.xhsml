@@ -11,3 +11,25 @@
 </view>
 
 <weconsole></weconsole>
+
+<button type="primary" bindtap="pk">对比小红书原生Console调试</button>
+<view xhs:if="{{pkShow}}" class="pk-modal">
+    <button class="btn-close" type="warn" bindtap="closePk">关闭对比</button>
+    <view class="pk-tip alert-warn">小红书无法通过API方式开启调试，请参考截图（可左右滑动）</view>
+    <view class="pk-content">
+        <swiper autoplay>
+            <swiper-item>
+                <image src="/pages/index/console.jpg" mode="aspectFit"></image>
+            </swiper-item>
+            <swiper-item>
+                <image src="/pages/index/net.jpg" mode="aspectFit"></image>
+            </swiper-item>
+            <swiper-item>
+                <image src="/pages/index/el.jpg" mode="aspectFit"></image>
+            </swiper-item>
+            <swiper-item>
+                <image src="/pages/index/xhs.jpg" mode="aspectFit"></image>
+            </swiper-item>
+        </swiper>
+    </view>
+</view>
