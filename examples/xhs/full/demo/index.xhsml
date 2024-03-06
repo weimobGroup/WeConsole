@@ -6,4 +6,8 @@
     <view class="action" bind:tap="callWxMethod" data-method="removeStorage">xhs.removeStorage</view>
     <view class="action {{requesting?'lock':''}}" bind:tap="callWxMethod" data-method="request">xhs.request{{requesting?'(发送中...)':''}}</view>
 </view>
-<demo2></demo2>
+<demo2 tabs="{{tabs}}">
+    <block xhs:for="{{tabs}}">
+        <view slot="tab-{{item.value}}">9999{{item.value}}</view>
+    </block>
+</demo2>

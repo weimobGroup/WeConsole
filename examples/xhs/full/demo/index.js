@@ -7,7 +7,17 @@ const consoleType = {
 Component({
     data: {
         requesting: false,
-        message: 'hi demo'
+        message: 'hi demo',
+        tabs: [
+            {
+                name: '1',
+                value: '1'
+            },
+            {
+                name: '2',
+                value: '2'
+            }
+        ]
     },
     created() {
         this.storageIndex = 0;

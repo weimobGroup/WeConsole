@@ -1,4 +1,3 @@
-import type { MpNameValue } from '@/types/common';
 import { getCustomActions } from '@/sub/modules/custom-action';
 import { WeConsoleEvents } from '@/types/scope';
 import { wcScope } from '@/main/config';
@@ -20,11 +19,19 @@ import type { MpEvent } from '@/types/view';
 
 const WcScope = wcScope();
 
-const getSysTabs = (): MpNameValue<string>[] =>
-    getCustomActions().map((item) => ({
-        name: item.title || item.id,
-        value: item.id
-    }));
+const getSysTabs = () =>
+    getCustomActions().reduce(
+        (sum, item, index) => {
+            sum.map[String(index)] = item.id;
+            sum.list.push({
+                name: item.title || item.id,
+                value: index,
+                id: item.id
+            });
+            return sum;
+        },
+        { map: {}, list: [] as any[] }
+    );
 
 class MainComponent extends MpComponent {
     canvasCtx?: any;

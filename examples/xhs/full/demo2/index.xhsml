@@ -1,1 +1,3 @@
-<view></view>
+<view xhs:for="{{tabs}}">
+    <slot name="tab-{{item.value}}"></slot>
+</view>

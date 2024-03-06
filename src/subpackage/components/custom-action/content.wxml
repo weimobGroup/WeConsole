@@ -25,8 +25,7 @@
                 rowKeyField="{{caseState[caseButton.value].rowKeyField || ''}}"
                 colMinWidth="{{caseState[caseButton.value].colMinWidth || 5}}" bind:ready="gridReady"
                 data-case="{{caseButton.value}}" bind:interact="onItemInteractEvent"
-                from="{{selfHash}}_CustomActionTable_{{action}}_{{caseButton.value}}" bind:tapCell="tapGridCell"
-                bind:longpressCell="longpressGridCell" selected="{{gridSelected[caseButton.value] || []}}"></data-table>
+                from="{{selfHash}}_CustomActionTable_{{action}}_{{caseButton.value}}" selected="{{gridSelected[caseButton.value] || []}}"></data-table>
         </view>
     </view>
     <view wx:if="{{caseState[caseButton.value].mode==='component'}}" class="ca-container">

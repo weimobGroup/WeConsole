@@ -1,9 +1,8 @@
 <block wx:if="{{!disabled}}">
-    <movable wx:if="{{showIcon && inited}}" containerStyle="position: fixed;z-index:{{zIndex||500}};{{customHand|| handX || handY?'':'right: 20rpx;top: 50%;'}} {{handX?'left:'+handX:''}};{{handY?'top:'+handY:''}};"
+    <movable wx:if="{{showIcon && inited}}"
+        containerStyle="position: fixed;z-index:{{zIndex||500}};{{customHand|| handX || handY?'':'right: 20rpx;top: 50%;'}} {{handX?'left:'+handX:''}};{{handY?'top:'+handY:''}};"
         bind:end="handMovableEnd">
-        <view
-            class="fc-hand {{customHand?'':'fc-hand-prefect'}} {{visible?'is-hide':''}}"
-            style="{{handStyle||''}}">
+        <view class="fc-hand {{customHand?'':'fc-hand-prefect'}} {{visible?'is-hide':''}}" style="{{handStyle||''}}">
             <view class="fc-hand-toggle" bindtap="toggleVisible">
                 <slot wx:if="{{customHand}}" name="hand"></slot>
                 <image wx:else class="fc-hand-icon {{iconStyle||''}}" src="{{icon}}"></image>
@@ -34,11 +33,72 @@
                 <storage-reader wx:if="{{activeTabIndex===3 || tabMountState.s3}}"
                     slot="panel-storage"></storage-reader>
                 <view wx:if="{{activeTabIndex===4 || tabMountState.s4}}" class="fc-tab-panel-reader" slot="panel-other">
-                    <tabs tabs="{{sysTabs}}" active="{{activeSysTab}}" size="small" bind:change="changeSysTab">
-                        <block wx:for="{{sysTabs}}" wx:for-item="sysTab" wx:for-index="sysTabIndex" wx:key="name">
-                            <custom-action wx:if="{{activeSysTab===sysTabIndex || sysTabMountState['s'+sysTabIndex]}}"
-                                slot="panel-{{sysTab.value}}" action="{{sysTab.value}}"></custom-action>
-                        </block>
+                    <tabs tabs="{{sysTabs.list}}" active="{{activeSysTab}}" size="small" bind:change="changeSysTab">
+                        <!-- xhs不支持动态slot，使用此方式做兼容 -->
+                        <view wx:if="{{sysTabs.list.length>0}}" class="sys-tab-panel" slot="panel-0">
+                            <custom-action wx:if="{{activeSysTab===0 || sysTabMountState.s0}}"
+                                action="{{sysTabs.map[0]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>1}}" class="sys-tab-panel" slot="panel-1">
+                            <custom-action wx:if="{{activeSysTab===1 || sysTabMountState.s1}}"
+                                action="{{sysTabs.map[1]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>2}}" class="sys-tab-panel" slot="panel-2">
+                            <custom-action wx:if="{{activeSysTab===2 || sysTabMountState.s2}}"
+                                action="{{sysTabs.map[2]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>3}}" class="sys-tab-panel" slot="panel-3">
+                            <custom-action wx:if="{{activeSysTab===3 || sysTabMountState.s3}}"
+                                action="{{sysTabs.map[3]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>4}}" class="sys-tab-panel" slot="panel-4">
+                            <custom-action wx:if="{{activeSysTab===4 || sysTabMountState.s4}}"
+                                action="{{sysTabs.map[4]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>5}}" class="sys-tab-panel" slot="panel-5">
+                            <custom-action wx:if="{{activeSysTab===5 || sysTabMountState.s5}}"
+                                action="{{sysTabs.map[5]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>6}}" class="sys-tab-panel" slot="panel-6">
+                            <custom-action wx:if="{{activeSysTab===6 || sysTabMountState.s6}}"
+                                action="{{sysTabs.map[6]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>7}}" class="sys-tab-panel" slot="panel-7">
+                            <custom-action wx:if="{{activeSysTab===7 || sysTabMountState.s7}}"
+                                action="{{sysTabs.map[7]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>8}}" class="sys-tab-panel" slot="panel-8">
+                            <custom-action wx:if="{{activeSysTab===8 || sysTabMountState.s8}}"
+                                action="{{sysTabs.map[8]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>9}}" class="sys-tab-panel" slot="panel-9">
+                            <custom-action wx:if="{{activeSysTab===9 || sysTabMountState.s9}}"
+                                action="{{sysTabs.map[9]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>10}}" class="sys-tab-panel" slot="panel-10">
+                            <custom-action wx:if="{{activeSysTab===10 || sysTabMountState.s10}}"
+                                action="{{sysTabs.map[10]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>11}}" class="sys-tab-panel" slot="panel-11">
+                            <custom-action wx:if="{{activeSysTab===11 || sysTabMountState.s11}}"
+                                action="{{sysTabs.map[11]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>12}}" class="sys-tab-panel" slot="panel-12">
+                            <custom-action wx:if="{{activeSysTab===12 || sysTabMountState.s12}}"
+                                action="{{sysTabs.map[12]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>13}}" class="sys-tab-panel" slot="panel-13">
+                            <custom-action wx:if="{{activeSysTab===13 || sysTabMountState.s13}}"
+                                action="{{sysTabs.map[13]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>14}}" class="sys-tab-panel" slot="panel-14">
+                            <custom-action wx:if="{{activeSysTab===14 || sysTabMountState.s14}}"
+                                action="{{sysTabs.map[14]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
+                        <view wx:if="{{sysTabs.list.length>=15}}" class="sys-tab-panel" slot="panel-15">
+                            <custom-action wx:if="{{activeSysTab===15 || sysTabMountState.s15}}"
+                                action="{{sysTabs.map[15]}}" style="display:block;height: 100%;"></custom-action>
+                        </view>
                     </tabs>
                 </view>
             </tabs>
