@@ -5,6 +5,10 @@ Component({
         }
     },
     data: {
-        message: 'hi demo2'
+        message: 'hi demo2',
+        name: 456,
+        val: {
+            age: 123
+        }
     }
 });

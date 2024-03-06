@@ -17,7 +17,11 @@ Component({
                 name: '2',
                 value: '2'
             }
-        ]
+        ],
+        name: 456,
+        val: {
+            age: 123
+        }
     },
     created() {
         this.storageIndex = 0;

@@ -29,7 +29,10 @@ export const SystemInfoCustomAction: WcCustomAction = {
             button: 'App对象',
             showMode: WcCustomActionShowMode.json,
             handler(): any {
-                return getApp({ allowDefault: true });
+                if (BUILD_TARGET === 'wx') {
+                    return getApp({ allowDefault: true });
+                }
+                return getApp();
             }
         },
         {

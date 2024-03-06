@@ -25,9 +25,26 @@ interface Props {
     action: string;
 }
 
-class CustomActionComponent extends MpComponent {
+interface TabInfo extends MpNameValue<number> {
+    id: string;
+    button?: string;
+}
+
+interface Data {
+    selfHash: string;
+    caseList: TabInfo[];
+    noUICaseList: TabInfo[];
+    caseValueMap: Record<number, string>;
+    everyNoUI: boolean;
+    activeCaseIndex: number;
+    caseState: Record<string, any>;
+    caseTabState: Record<string, 1>;
+    gridSelected: Record<string, string[]>;
+}
+
+class CustomActionComponent extends MpComponent<Data> {
     $mx = {
-        Tool: new ToolMixin()
+        Tool: new ToolMixin<Data>()
     };
     caseJSONViewer?: Record<string, JsonViewer>;
     actionDetail?: WcCustomAction;
@@ -51,9 +68,10 @@ class CustomActionComponent extends MpComponent {
             }
         }
     };
-    initData = {
+    initData: Data = {
         selfHash: '',
         caseList: [],
+        caseValueMap: {},
         noUICaseList: [],
         everyNoUI: false,
         activeCaseIndex: 0,
@@ -123,8 +141,8 @@ class CustomActionComponent extends MpComponent {
         this.actionDetail = actions.find((item) => item.id === this.data.action);
         if (!this.actionDetail) {
             this.$mx.Tool.$updateData({
-                caseList: null,
-                noUICaseList: null,
+                caseList: [],
+                noUICaseList: [],
                 caseState: {},
                 caseTabState: {
                     s0: 1
@@ -136,11 +154,12 @@ class CustomActionComponent extends MpComponent {
         const action: WcCustomAction = this.actionDetail;
         const noneCases: WcCustomActionCase[] = [];
         const uiCases: WcCustomActionCase[] = [];
-        const buttonTexts: [MpNameValue<string>[], MpNameValue<string>[]] = [[], []];
-        action.cases.forEach((item) => {
-            const nv = {
+        const buttonTexts: [TabInfo[], TabInfo[]] = [[], []];
+        action.cases.forEach((item, index) => {
+            const nv: TabInfo = {
                 name: item.title || item.button || item.id,
-                value: item.id,
+                id: item.id,
+                value: index,
                 button: item.button
             };
             if (!item.showMode || item.showMode === WcCustomActionShowMode.none) {
@@ -151,8 +170,9 @@ class CustomActionComponent extends MpComponent {
                 buttonTexts[1].push(nv);
             }
         });
-        let caseList: MpNameValue<string>[];
-        let noUICaseList: MpNameValue<string>[];
+        let caseList: TabInfo[];
+        let noUICaseList: TabInfo[];
+        const caseValueMap: Record<number, string> = {};
         const everyNoUI: boolean = noneCases.length === action.cases.length;
         if (noneCases.length <= 1) {
             caseList = buttonTexts[0].concat(buttonTexts[1]);
@@ -160,14 +180,20 @@ class CustomActionComponent extends MpComponent {
         } else {
             noUICaseList = buttonTexts[0];
             caseList = buttonTexts[1];
+            caseValueMap[caseList.length] = NoUICaseId;
             caseList.unshift({
                 name: '无界面',
-                value: NoUICaseId
+                id: NoUICaseId,
+                value: caseList.length
             });
         }
+        caseList.forEach((item) => {
+            caseValueMap[item.value as number] = item.id;
+        });
         this.$mx.Tool.$updateData({
             everyNoUI,
             caseList,
+            caseValueMap,
             noUICaseList,
             activeCaseIndex: 0,
             caseTabState: {

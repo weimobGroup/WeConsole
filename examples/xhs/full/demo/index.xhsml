@@ -1,13 +1,24 @@
+<import src="../demo2/tpl.xhsml" />
+
 <view class="action-list">
     <view class="action" bind:tap="callWxMethod" data-method="console">随机console</view>
     <view class="action" bind:tap="callWxMethod" data-method="showToast">xhs.showToast</view>
     <view class="action" bind:tap="callWxMethod" data-method="setStorageSync">xhs.setStorageSync</view>
     <view class="action" bind:tap="callWxMethod" data-method="getStorage">xhs.getStorage</view>
     <view class="action" bind:tap="callWxMethod" data-method="removeStorage">xhs.removeStorage</view>
-    <view class="action {{requesting?'lock':''}}" bind:tap="callWxMethod" data-method="request">xhs.request{{requesting?'(发送中...)':''}}</view>
+    <view class="action {{requesting?'lock':''}}" bind:tap="callWxMethod" data-method="request">
+        xhs.request{{requesting?'(发送中...)':''}}</view>
 </view>
 <demo2 tabs="{{tabs}}">
     <block xhs:for="{{tabs}}">
         <view slot="tab-{{item.value}}">9999{{item.value}}</view>
     </block>
+    <!-- <view slot="tab-1">
+        <view>哈哈哈</view>
+        <template is="t1" data="{{ name:123, val:{age:20} }}"></template>
+        <template is="t1" data="{{ name, val }}"></template>
+    </view> -->
 </demo2>
+
+<!-- <template is="t1" data="{{ name:123, val:{age:20} }}"></template>
+<template is="t1" data="{{ name, val }}"></template> -->

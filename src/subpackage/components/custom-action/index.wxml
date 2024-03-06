@@ -1,14 +1,140 @@
 <import src="./content.wxml" />
 <import src="./buttons.wxml" />
 <block wx:if="{{selfHash && caseList && caseList.length}}">
-    <template wx:if="{{everyNoUI}}" is="ca-buttons" data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
-    <template wx:elif="{{caseList.length===1}}" is="ca-content" data="{{caseState, caseButton:caseList[0], caseLoading, action, gridSelected, selfHash}}"></template>
-    <tabs wx:else tabs="{{caseList}}" active="{{activeCaseIndex}}" bind:change="changeCaseTab" size="small" style="height:100%;display:block;">
-        <block wx:for="{{caseList}}" wx:key="value">
-            <view wx:if="{{index===activeCaseIndex || buttonTabState['s'+index]}}" class="ca-scroll" slot="panel-{{item.value}}">
-                <template wx:if="{{item.value==='$$$NO_UI$$$'}}" is="ca-buttons" data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
-                <template wx:else is="ca-content" data="{{caseState, caseButton:item, caseLoading, action, gridSelected, selfHash}}"></template>
-            </view>
-        </block>
+    <template wx:if="{{everyNoUI}}" is="ca-buttons"
+        data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+    <template wx:elif="{{caseList.length===1}}" is="ca-content"
+        data="{{caseState, caseButton:caseList[0], caseLoading, action, gridSelected, selfHash}}"></template>
+    <tabs wx:else tabs="{{caseList}}" active="{{activeCaseIndex}}" bind:change="changeCaseTab" size="small"
+        style="height:100%;display:block;">
+        <!-- xhs不支持动态slot，使用此方式做兼容 -->
+        <view wx:if="{{caseList.length>0}}" class="case-tab-panel" slot="panel-0">
+            <block wx:if="{{activeCaseIndex===0 || buttonTabState.s0}}">
+                <template wx:if="{{caseValueMap[0]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[0], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>1}}" class="case-tab-panel" slot="panel-1">
+            <block wx:if="{{activeCaseIndex===1 || buttonTabState.s1}}">
+                <template wx:if="{{caseValueMap[1]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[1], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>2}}" class="case-tab-panel" slot="panel-2">
+            <block wx:if="{{activeCaseIndex===2 || buttonTabState.s2}}">
+                <template wx:if="{{caseValueMap[2]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[2], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>3}}" class="case-tab-panel" slot="panel-3">
+            <block wx:if="{{activeCaseIndex===3 || buttonTabState.s3}}">
+                <template wx:if="{{caseValueMap[3]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[3], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>4}}" class="case-tab-panel" slot="panel-4">
+            <block wx:if="{{activeCaseIndex===4 || buttonTabState.s4}}">
+                <template wx:if="{{caseValueMap[4]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[4], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>5}}" class="case-tab-panel" slot="panel-5">
+            <block wx:if="{{activeCaseIndex===5 || buttonTabState.s5}}">
+                <template wx:if="{{caseValueMap[5]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[5], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>6}}" class="case-tab-panel" slot="panel-6">
+            <block wx:if="{{activeCaseIndex===6 || buttonTabState.s6}}">
+                <template wx:if="{{caseValueMap[6]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[6], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>7}}" class="case-tab-panel" slot="panel-7">
+            <block wx:if="{{activeCaseIndex===7 || buttonTabState.s7}}">
+                <template wx:if="{{caseValueMap[7]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[7], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>8}}" class="case-tab-panel" slot="panel-8">
+            <block wx:if="{{activeCaseIndex===8 || buttonTabState.s8}}">
+                <template wx:if="{{caseValueMap[8]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[8], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>9}}" class="case-tab-panel" slot="panel-9">
+            <block wx:if="{{activeCaseIndex===9 || buttonTabState.s9}}">
+                <template wx:if="{{caseValueMap[9]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[9], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>10}}" class="case-tab-panel" slot="panel-10">
+            <block wx:if="{{activeCaseIndex===10 || buttonTabState.s10}}">
+                <template wx:if="{{caseValueMap[10]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[10], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>11}}" class="case-tab-panel" slot="panel-11">
+            <block wx:if="{{activeCaseIndex===11 || buttonTabState.s11}}">
+                <template wx:if="{{caseValueMap[11]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[11], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>12}}" class="case-tab-panel" slot="panel-12">
+            <block wx:if="{{activeCaseIndex===12 || buttonTabState.s12}}">
+                <template wx:if="{{caseValueMap[12]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[12], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>13}}" class="case-tab-panel" slot="panel-13">
+            <block wx:if="{{activeCaseIndex===13 || buttonTabState.s13}}">
+                <template wx:if="{{caseValueMap[13]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[13], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>14}}" class="case-tab-panel" slot="panel-14">
+            <block wx:if="{{activeCaseIndex===14 || buttonTabState.s14}}">
+                <template wx:if="{{caseValueMap[14]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[14], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
+        <view wx:if="{{caseList.length>15}}" class="case-tab-panel" slot="panel-15">
+            <block wx:if="{{activeCaseIndex===15 || buttonTabState.s15}}">
+                <template wx:if="{{caseValueMap[15]==='$$$NO_UI$$$'}}" is="ca-buttons"
+                    data="{{caseState, buttons:noUICaseList, caseLoading, selfHash}}"></template>
+                <template wx:else is="ca-content"
+                    data="{{caseState, caseButton:caseList[15], caseLoading, action, gridSelected, selfHash}}"></template>
+            </block>
+        </view>
     </tabs>
 </block>

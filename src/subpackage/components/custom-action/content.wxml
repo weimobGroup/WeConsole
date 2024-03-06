@@ -1,61 +1,61 @@
 <template name="ca-content">
-    <view wx:if="{{!caseState[caseButton.value]}}" class="ca-section">
-        <button class="ca-button {{caseLoading[caseButton.value]?'disabled':''}}" data-id="{{caseButton.value}}"
-            disabled="{{caseLoading[caseButton.value]}}" bind:tap="tapCaseButton">
+    <view wx:if="{{!caseState[caseButton.id]}}" class="ca-section">
+        <button class="ca-button {{caseLoading[caseButton.id]?'disabled':''}}" data-id="{{caseButton.id}}"
+            disabled="{{caseLoading[caseButton.id]}}" bind:tap="tapCaseButton">
             {{caseButton.button||caseButton.name}}
         </button>
     </view>
-    <scroll-view wx:elif="{{caseState[caseButton.value].errMsg}}" scroll-y class="ca-scroll">
+    <scroll-view wx:elif="{{caseState[caseButton.id].errMsg}}" scroll-y class="ca-scroll">
         <view class="ca-err">
-            <view>{{caseState[caseButton.value].errMsg}}</view>
-            {{caseState[caseButton.value].errStack}}
+            <view>{{caseState[caseButton.id].errMsg}}</view>
+            {{caseState[caseButton.id].errStack}}
         </view>
     </scroll-view>
-    <view wx:elif="{{caseState[caseButton.value].mode==='grid'}}" class="ca-container">
+    <view wx:elif="{{caseState[caseButton.id].mode==='grid'}}" class="ca-container">
         <view class="ca-section">
-            <button class="ca-button {{caseLoading[caseButton.value]?'disabled':''}}" data-id="{{caseButton.value}}"
-                disabled="{{caseLoading[caseButton.value]}}" bind:tap="tapCaseButton">
+            <button class="ca-button {{caseLoading[caseButton.id]?'disabled':''}}" data-id="{{caseButton.id}}"
+                disabled="{{caseLoading[caseButton.id]}}" bind:tap="tapCaseButton">
                 {{caseButton.button||caseButton.name}}
             </button>
         </view>
         <view class="ca-grid">
-            <data-table wx:if="{{caseState[caseButton.value].cols && caseState[caseButton.value].cols.length}}"
-                cols="{{caseState[caseButton.value].cols}}" rowHeight="{{caseState[caseButton.value].rowHeight}}"
-                rowHeightMode="{{caseState[caseButton.value].rowHeightMode}}"
-                rowKeyField="{{caseState[caseButton.value].rowKeyField || ''}}"
-                colMinWidth="{{caseState[caseButton.value].colMinWidth || 5}}" bind:ready="gridReady"
-                data-case="{{caseButton.value}}" bind:interact="onItemInteractEvent"
-                from="{{selfHash}}_CustomActionTable_{{action}}_{{caseButton.value}}" selected="{{gridSelected[caseButton.value] || []}}"></data-table>
+            <data-table wx:if="{{caseState[caseButton.id].cols && caseState[caseButton.id].cols.length}}"
+                cols="{{caseState[caseButton.id].cols}}" rowHeight="{{caseState[caseButton.id].rowHeight}}"
+                rowHeightMode="{{caseState[caseButton.id].rowHeightMode}}"
+                rowKeyField="{{caseState[caseButton.id].rowKeyField || ''}}"
+                colMinWidth="{{caseState[caseButton.id].colMinWidth || 5}}" bind:ready="gridReady"
+                data-case="{{caseButton.id}}" bind:interact="onItemInteractEvent"
+                from="{{selfHash}}_CustomActionTable_{{action}}_{{caseButton.id}}" selected="{{gridSelected[caseButton.id] || []}}"></data-table>
         </view>
     </view>
-    <view wx:if="{{caseState[caseButton.value].mode==='component'}}" class="ca-container">
+    <view wx:if="{{caseState[caseButton.id].mode==='component'}}" class="ca-container">
         <view class="ca-section">
-            <button class="ca-button {{caseLoading[caseButton.value]?'disabled':''}}" data-id="{{caseButton.value}}"
-                disabled="{{caseLoading[caseButton.value]}}" bind:tap="tapCaseButton">
+            <button class="ca-button {{caseLoading[caseButton.id]?'disabled':''}}" data-id="{{caseButton.id}}"
+                disabled="{{caseLoading[caseButton.id]}}" bind:tap="tapCaseButton">
                 {{caseButton.button||caseButton.name}}
             </button>
         </view>
         <view class="ca-component">
-            <weconsole-customer data="{{caseState[caseButton.value].data}}"></weconsole-customer>
+            <weconsole-customer data="{{caseState[caseButton.id].data}}"></weconsole-customer>
         </view>
     </view>
-    <scroll-view wx:if="{{caseState[caseButton.value].mode==='text'}}" scroll-y class="ca-scroll">
+    <scroll-view wx:if="{{caseState[caseButton.id].mode==='text'}}" scroll-y class="ca-scroll">
         <view class="ca-section">
-            <button class="ca-button {{caseLoading[caseButton.value]?'disabled':''}}" data-id="{{caseButton.value}}"
-                disabled="{{caseLoading[caseButton.value]}}" bind:tap="tapCaseButton">
+            <button class="ca-button {{caseLoading[caseButton.id]?'disabled':''}}" data-id="{{caseButton.id}}"
+                disabled="{{caseLoading[caseButton.id]}}" bind:tap="tapCaseButton">
                 {{caseButton.button||caseButton.name}}
             </button>
         </view>
-        <view class="ca-text">{{caseState[caseButton.value].data}}</view>
+        <view class="ca-text">{{caseState[caseButton.id].data}}</view>
     </scroll-view>
-    <scroll-view wx:if="{{caseState[caseButton.value].mode==='json'}}" scroll-y class="ca-scroll">
+    <scroll-view wx:if="{{caseState[caseButton.id].mode==='json'}}" scroll-y class="ca-scroll">
         <view class="ca-section">
-            <button class="ca-button {{caseLoading[caseButton.value]?'disabled':''}}" data-id="{{caseButton.value}}"
-                disabled="{{caseLoading[caseButton.value]}}" bind:tap="tapCaseButton">
+            <button class="ca-button {{caseLoading[caseButton.id]?'disabled':''}}" data-id="{{caseButton.id}}"
+                disabled="{{caseLoading[caseButton.id]}}" bind:tap="tapCaseButton">
                 {{caseButton.button||caseButton.name}}
             </button>
         </view>
-        <json-viewer catch:tap="noop" from="{{selfHash}}_CustomAction_{{action}}_{{caseButton.value}}" mode="{{2}}"
+        <json-viewer catch:tap="noop" from="{{selfHash}}_CustomAction_{{action}}_{{caseButton.id}}" mode="{{2}}"
             init="{{false}}"></json-viewer>
     </scroll-view>
 </template>

@@ -1,3 +1,7 @@
+<import src="./tpl.xhsml" />
 <view xhs:for="{{tabs}}">
     <slot name="tab-{{item.value}}"></slot>
 </view>
+
+<!-- <template is="t1" data="{{ name:123, val:{age:20} }}"></template>
+<template is="t1" data="{{ name, val }}"></template> -->

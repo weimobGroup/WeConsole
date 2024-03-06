@@ -44,7 +44,7 @@ addCustomAction({
                                               {
                                                   block: true,
                                                   items: [
-                                                      '门店信息：',
+                                                      '门店信息',
                                                       {
                                                           type: 'text',
                                                           content: '='

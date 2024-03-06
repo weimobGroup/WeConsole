@@ -72,7 +72,9 @@ class MainComponent extends MpComponent {
         fullScreen: MainStateController.getState('fullScreen') || false,
         activeTabIndex: MainStateController.getState('activeTabIndex') || 0,
         isFullScreenPhone: MainStateController.getState('isFullScreenPhone') || false,
-        tabMountState: MainStateController.getState('tabMountState', {}),
+        tabMountState: MainStateController.getState('tabMountState', {
+            [`s${MainStateController.getState('activeTabIndex') || 0}`]: 1
+        }),
         tabs: [
             {
                 name: 'Console',
@@ -97,7 +99,9 @@ class MainComponent extends MpComponent {
         ],
         sysTabs: getSysTabs(),
         activeSysTab: MainStateController.getState('activeSysTab') || 0,
-        sysTabMountState: MainStateController.getState('sysTabMountState', {})
+        sysTabMountState: MainStateController.getState('sysTabMountState', {
+            [`s${MainStateController.getState('activeSysTab') || 0}`]: 1
+        })
     };
     attached() {
         const selfId = getElementId(this);
