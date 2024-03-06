@@ -26,7 +26,7 @@
         "build:my": "pnpm build:before && rimraf ./dist/alipay && cross-env BUILD_TARGET=my node ./scripts-dist/cli.js",
         "build:qq": "pnpm build:before && rimraf ./dist/qq && cross-env BUILD_TARGET=qq node ./scripts-dist/cli.js",
         "build:xhs": "pnpm build:before && rimraf ./dist/xhs && cross-env BUILD_TARGET=xhs node ./scripts-dist/cli.js",
-        "build": "pnpm build:wx && pnpm build:my",
+        "build": "pnpm build:wx && pnpm build:my && pnpm build:xhs",
         "dev": "pnpm tsc --outDir ./dist/full -w && node ./build/watch.js",
         "beta": "npm publish --tag=beta",
         "pub": "npm publish --tag=latest",
